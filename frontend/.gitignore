@@ -6,8 +6,6 @@
 .pnp.js
 
 # Ignore virtual environment folder
-/venv/
-/venv
 venv/
 
 # testing
