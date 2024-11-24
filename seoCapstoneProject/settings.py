@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -54,6 +55,7 @@ MIDDLEWARE = [
 
 # CORS_ALLOWED_ORIGINS setting
 CORS_ALLOWED_ORIGINS = [
+    
     "http://localhost:3000",  # URL for your React development server
 ]
 
@@ -132,4 +134,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ORIGIN_WHITELIST = [
      'http://localhost:3000'
+]
+
+CORS_ALLOW_HEADERS = [
+    'content-type',
+    'authorization',
+    # any other headers you need
+]
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS',
 ]

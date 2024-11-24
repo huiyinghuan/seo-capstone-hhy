@@ -17,10 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.urls import include, path
-
+from django.shortcuts import redirect
 
 
 urlpatterns = [
+    # Redirect the root URL (/) to /seoProject/
+    path('', lambda request: redirect('/seoProject/')),
+
     path("seoProject/", include("seoProject.urls")),
     path('admin/', admin.site.urls),
     
