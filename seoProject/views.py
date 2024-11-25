@@ -13,7 +13,7 @@ import json
 
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the SEO Main Page.")
+    return render(request, 'index.html')
 
 def sitemap_view(request):
     sitemap_urls = []

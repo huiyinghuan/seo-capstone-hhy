@@ -20,11 +20,15 @@ from django.urls import include, path
 from django.shortcuts import redirect
 
 
-urlpatterns = [
-    # Redirect the root URL (/) to /seoProject/
-    path('', lambda request: redirect('/seoProject/')),
 
-    path("seoProject/", include("seoProject.urls")),
+
+urlpatterns = [
+    # # Redirect the root URL (/) to /seoProject/
+    # path('', lambda request: redirect('/seoProject/')),
+
+   
     path('admin/', admin.site.urls),
+    path("", include("seoProject.urls")),
+    # path("", views.index, name="index")
     
 ]

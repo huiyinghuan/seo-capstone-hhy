@@ -1,0 +1,24 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# Ignore virtual environment
+venv/
+
+# Python bytecode files
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE or editor-specific files
+.vscode/
+.idea/
+
+# Django specific files
+*.log
+*.sqlite3
+*.db
+
+# Environment variable files
+.env
+
+# Other files to ignore
+.DS_Store
