@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@material-tailwind/react": "^2.1.10",
+    "lucide-react": "^0.468.0",
+    "react-router-dom": "^7.0.2"
+  }
+}
