@@ -22,3 +22,5 @@ __pycache__/
 
 # Other files to ignore
 .DS_Store
+
+node_modules/
