@@ -1,15 +1,16 @@
 import React from 'react';
 import SearchBar from '../components/SearchBar';
+import Navbar from '../layout/NavBar';
 import './HomePage.css';
 
 const HomePage = () => {
   const handleSearch = () => {
-    alert("Search functionality not implemented yet!");
+    // alert("Search functionality not implemented yet!");
   };
 
   return (
     <div className="homepage-container">
-      <SearchBar placeholder="Enter website URL..." onSearch={handleSearch} />
+        <SearchBar placeholder="Enter website URL..." onSearch={handleSearch} />
     </div>
   );
 };

@@ -1,8 +1,11 @@
 import logo from './logo.svg';
+
 import './App.css';
 import React from 'react';
 import './App.css';
+import NavBar from './layout/NavBar';
 import HomePage from './pages/HomePage';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 // function App() {
@@ -28,6 +31,7 @@ import HomePage from './pages/HomePage';
 function App() {
   return (
     <div className="App">
+      <NavBar />
       <HomePage />
     </div>
   );

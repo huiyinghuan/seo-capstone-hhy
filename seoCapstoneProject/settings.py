@@ -60,7 +60,13 @@ CORS_ALLOWED_ORIGINS = [
     
     "http://localhost:3000",  # URL for your React development server
 ]
+# Include this for Django's CSRF checks
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",  # React frontend
+]
 
+# Ensure localhost is included in allowed hosts
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 ROOT_URLCONF = 'seoCapstoneProject.urls'
 
 TEMPLATES = [
