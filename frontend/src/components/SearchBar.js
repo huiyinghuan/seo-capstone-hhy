@@ -20,6 +20,7 @@
 
   import React, { useState } from 'react';
   import { Search } from 'lucide-react';
+  import { Check as CheckIcon, Close as CloseIcon } from '@mui/icons-material'; 
   import './SearchBar.css'; // Import the CSS file
 
   //for table 
@@ -71,16 +72,60 @@
       }
     };
 
+    const validateLength = (value, min, max) => {
+      return value.length >= min && value.length <= max;
+    };
+
     const rows = result
       ? [
-          { label: 'HTML Type', value: result.html_type },
-          { label: 'Title', value: result.title || 'No title' },
-          { label: 'Meta Description', value: result.meta_description || 'No meta description' },
-          { label: 'Canonical', value: result.canonical || 'No canonical tag' },
-          { label: 'Robots Meta Tag', value: result.robots || 'No robots meta tag' },
-          { label: 'Sitemap Status', value: result.sitemap_status || 'No sitemap' },
-          { label: 'Mobile Friendly', value: result.mobile_friendly || 'Unknown' },
-          { label: 'Page Speed', value: result.page_speed || 'Unknown' },
+          { label: 'HTML Type', 
+            value: result.html_type, 
+            requirement:'NIL',
+            valid: 'N/A', 
+            recommendation: 'N/A',
+          },
+          { label: 'Title', 
+            value: result.title || 'No title', 
+            requirement:'50 - 60 Characters',
+            valid: validateLength(result.title || '', 50, 60), 
+            recommendation: 'Ensure the title is between 50-60 characters'
+          },
+          { label: 'Meta Description', 
+            value: result.meta_description || 'No meta description', 
+            requirement: '150 - 160 Characters'
+          },
+          { label: 'Canonical', 
+            value: result.canonical || 'No canonical tag', 
+            requirement: 'Point to preferred version of page to avoid duplicate content issues',
+            valid: result.canonical !== 'No canonical tag', 
+            recommendation: 'Add a canonical tag to prevent duplicate content issues'
+          },
+          { label: 'Robots Meta Tag', 
+            value: result.robots || 'No robots meta tag', 
+            requirement: 'Use no noindex to prevent page from being indexed & nofollow to prevent links from being followed',
+            valid: result.robots !== 'No robots meta tag', 
+            recommendation: 'Ensure robots meta tag is properly set'
+          },
+          { label: 'Sitemap Status', 
+            value: result.sitemap_status || 'No sitemap', 
+            requirement: 'Submmited to Search Engine',
+            valid: result.sitemap_status !== 'No sitemap', 
+            recommendation: 'Submit a sitemap to search engines for better crawling'
+
+          },
+          { label: 'Mobile Friendly', 
+            value: result.mobile_friendly || 'Unknown', 
+            requirement: 'Responsive & works well on mobile devices',
+            valid: result.mobile_friendly === 'Yes', 
+            recommendation: 'Ensure the site is responsive and mobile-friendly'
+          },
+          { label: 'Page Speed', 
+            value: result.page_speed || 'Unknown', 
+            requirement: 'Aim for faster loading times to improve user experience',
+            valid: result.page_speed === 'Good', 
+            recommendation: 'Improve page speed for better user experience'
+          },
+
         ]
       : [];
 
@@ -167,6 +212,9 @@
                     <TableRow>
                       <TableCell><strong>Attribute</strong></TableCell>
                       <TableCell><strong>Value</strong></TableCell>
+                      <TableCell><strong>Requirement</strong></TableCell>
+                      <TableCell><strong>Valid</strong></TableCell>
+                      <TableCell><strong>Recommendation</strong></TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -176,6 +224,15 @@
                           {row.label}
                         </TableCell>
                         <TableCell>{row.value}</TableCell>
+                        <TableCell>{row.requirement}</TableCell>
+                        <TableCell>
+                          {row.valid ? (
+                            <CheckIcon style={{ color: 'green' }} />
+                          ) : (
+                            <CloseIcon style={{ color: 'red' }} />
+                          )}
+                        </TableCell>
+                        <TableCell>{row.recommendation}</TableCell>
                       </TableRow>
                     ))}
                     {result.headings && (

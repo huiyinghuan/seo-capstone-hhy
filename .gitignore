@@ -5,6 +5,7 @@ venv/
 
 # Python bytecode files
 __pycache__/
+seoProject/__pycache__/
 *.pyc
 *.pyo
 
@@ -22,5 +23,6 @@ __pycache__/
 
 # Other files to ignore
 .DS_Store
+
 
 node_modules/

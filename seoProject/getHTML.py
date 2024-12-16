@@ -128,6 +128,11 @@ def fetch_html(url):
         static_data["sitemap_status"] = sitemap_status
         static_data["mobile_friendly"] = check_mobile_friendly(url)
         static_data["page_speed"] = check_page_speed(url)
+
+        # Validate data
+        validation_results = validate_seo_data(static_data)
+        static_data["validation"] = validation_results
+
         print("Static HTML", static_data)
         return "Static HTML", static_data
         
@@ -138,11 +143,50 @@ def fetch_html(url):
         dynamic_data["sitemap_status"] = sitemap_status
         dynamic_data["mobile_friendly"] = check_mobile_friendly(url)
         dynamic_data["page_speed"] = check_page_speed(url)
+
+        # Validate data
+        validation_results = validate_seo_data(dynamic_data)
+        dynamic_data["validation"] = validation_results
+
         return "Dynamic HTML", dynamic_data
 
     return "Failed", None
 
 
+
+def validate_seo_data(data):
+    """
+    Validate the scraped SEO data against recommended guidelines.
+    """
+    # Define validation requirements
+    recommendations = {
+        "title": (50, 60, "Title length should be between 50-60 characters."),
+        "meta_description": (150, 160, "Meta description length should be between 150-160 characters."),
+        # Add more fields if needed
+    }
+
+    # Store validation results
+    validation_results = {}
+
+    # Validate each field
+    for field, (min_length, max_length, message) in recommendations.items():
+        if field in data and data[field]:
+            length = len(data[field])
+            validation_results[field] = {
+                "value": data[field],
+                "length": length,
+                "is_valid": min_length <= length <= max_length,
+                "requirement": message,
+            }
+        else:
+            validation_results[field] = {
+                "value": "No data",
+                "length": 0,
+                "is_valid": False,
+                "requirement": message,
+            }
+
+    return validation_results
 
 
 # Unified function for fetching either static or dynamic HTML
