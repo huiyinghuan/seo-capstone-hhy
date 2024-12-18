@@ -10,7 +10,17 @@ const HomePage = () => {
 
   return (
     <div className="homepage-container">
-        <SearchBar placeholder="Enter website URL..." onSearch={handleSearch} />
+      <div className="container">
+          <div className="section">
+            <h1 className="heading">
+              Optimize Your Website's SEO
+            </h1>
+            <p className="subheading">
+              Get detailed insights and recommendations to improve your website's search engine rankings
+            </p>
+            <SearchBar placeholder="Enter website URL..." onSearch={handleSearch} />
+          </div>
+      </div>
     </div>
   );
 };

@@ -1,0 +1,39 @@
+/* Navbar Styles */
+.navbar-container {
+    background-color: white !important;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .search-icon {
+    color: #16a34a;
+  }
+  
+  .navbar-title {
+    font-weight: bold;
+    color: #374151;
+  }
+  
+  .nav-link {
+    text-decoration: none;
+    color: #6b7280;
+    padding: 0.5rem 1rem;
+    transition: color 0.2s ease-in-out;
+  }
+  
+  .nav-link:hover {
+    color: #1f2937;
+  }
+  
+  .connect-button {
+    background-color: #15803d !important;
+    color: white !important;
+    text-transform: none !important;
+    margin-left: 1rem !important;
+    border-radius: 50px;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .connect-button:hover {
+    background-color: #14532d !important;
+  }
+  

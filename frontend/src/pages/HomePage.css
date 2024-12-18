@@ -1,8 +1,61 @@
 .homepage-container {
-    display: flex;
+    /* display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100vh; */
     background-color: #f9f9f9;
+  }
+  
+  .heading {
+    font-size: 2.25rem; /* Equivalent to text-4xl */
+    font-size: 3rem; /* Equivalent to md:text-5xl for larger screens */
+    font-weight: 700; /* Equivalent to font-bold */
+    color: #1f2937; /* Equivalent to text-gray-900 */
+    margin-bottom: 1.5rem; /* Equivalent to mb-6 */
+  }
+  
+  .subheading {
+    font-size: 1.25rem; /* Equivalent to text-xl */
+    color: #4b5563; /* Equivalent to text-gray-600 */
+    margin-bottom: 3rem; /* Equivalent to mb-12 */
+    max-width: 32rem; /* Equivalent to max-w-2xl */
+    margin-left: auto; /* Equivalent to mx-auto */
+    margin-right: auto; /* Equivalent to mx-auto */
+  }
+  
+
+  .container {
+    max-width: 80rem; /* Equivalent to max-w-7xl */
+    margin-left: auto; /* Equivalent to mx-auto */
+    margin-right: auto; /* Equivalent to mx-auto */
+    padding-left: 1rem; /* Equivalent to px-4 */
+    padding-right: 1rem; /* Equivalent to px-4 */
+  }
+  
+  @media (min-width: 640px) {
+    .container {
+      padding-left: 1.5rem; /* Equivalent to sm:px-6 */
+      padding-right: 1.5rem; /* Equivalent to sm:px-6 */
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .container {
+      padding-left: 2rem; /* Equivalent to lg:px-8 */
+      padding-right: 2rem; /* Equivalent to lg:px-8 */
+    }
+  }
+  
+  .section {
+    text-align: center; /* Equivalent to text-center */
+    padding-top: 4rem; /* Equivalent to py-16 */
+    padding-bottom: 4rem; /* Equivalent to py-16 */
+  }
+  
+  @media (min-width: 768px) {
+    .section {
+      padding-top: 6rem; /* Equivalent to md:py-24 */
+      padding-bottom: 6rem; /* Equivalent to md:py-24 */
+    }
   }
   

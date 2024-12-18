@@ -38,20 +38,16 @@
   height: 20%;
   max-width: 32rem; /* Equivalent to max-w-2xl in Tailwind */
 
-  position: fixed; /* Keeps the search bar fixed on the screen */
-  top: 50%; /* Center vertically */
-  left: 50%; /* Center horizontally */
+  position: relative; /* Keeps the search bar fixed on the screen */
+  top: 50%;  /*Center vertically */
+  left: 50%;  /* Center horizontally */
   transform: translate(-50%, -50%); /* Adjust for centering */
   width: 100%;
   max-width: 32rem; /* Equivalent to max-w-2xl in Tailwind */
   z-index: 1000; /* Ensure it appears above other content */
 }
 
-.search-bar-container {
-  position: relative;
-  
-}
-
+/*shape of the searchbar*/
 .search-bar-input {
   width: 100%;
   padding: 1.5rem 3rem 1.5rem 1.25rem; /* px-4 py-3 pl-5 pr-12 */
@@ -60,7 +56,6 @@
   outline: none;
   transition: all 0.2s;
 }
-
 
 
 .search-bar-input:focus {
@@ -72,8 +67,8 @@
 
 .search-bar-button {
   position: absolute;
-  right: -4rem;/* right-2 */
-  top: 50%;
+  right: 1rem;
+  top: 61%;
   transform: translateY(-50%); /* center vertically */
   background-color: #3b82f6; /* bg-blue-500 */
   color: white;
@@ -92,10 +87,9 @@
   height: 1.25rem; /* h-5 */
 }
 
-
+/* 
 .scrollable-table-container {
-  
-  margin-top: calc(50% + 10px); /* Space below search bar */
+  margin-top: calc(50% + 10px); // Space below search bar 
   width: 100%;
   max-width: 800px;
   margin-left: auto;
@@ -103,13 +97,19 @@
   padding: 20px;
   overflow-y: auto;
   position: relative;
-}
+} */
 
 
 .results-table {
   max-height: calc(100vh - 100px); /* Adjust for spacing */
   overflow-y: auto; /* Enable vertical scrolling within the table */
   overflow-x: auto; /* Enable horizontal scrolling for wide tables */
+}
+
+.table-cell-header {
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #6b7280;
 }
 
 /* html, body {

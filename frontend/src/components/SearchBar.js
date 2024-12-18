@@ -22,6 +22,10 @@
   import { Search } from 'lucide-react';
   import { Check as CheckIcon, Close as CloseIcon } from '@mui/icons-material'; 
   import './SearchBar.css'; // Import the CSS file
+  import SEOAuditResultTable from "./SEOAuditResultTable";
+  
+  import { CheckCircle, XCircle } from "lucide-react";
+  
 
   //for table 
   import Table from '@mui/material/Table';
@@ -31,16 +35,6 @@
   import TableHead from '@mui/material/TableHead';
   import TableRow from '@mui/material/TableRow';
   import Paper from '@mui/material/Paper';
-
-  import Box from '@mui/material/Box';
-  import TextField from '@mui/material/TextField';
-
-  import InputBase from '@mui/material/InputBase';
-  import Divider from '@mui/material/Divider';
-  import IconButton from '@mui/material/IconButton';
-  import MenuIcon from '@mui/icons-material/Menu';
-  import SearchIcon from '@mui/icons-material/Search';
-  import DirectionsIcon from '@mui/icons-material/Directions';
 
   const SearchBar = ({ onSearch }) => {
     const [domain, setDomain] = useState('');
@@ -88,11 +82,13 @@
             value: result.title || 'No title', 
             requirement:'50 - 60 Characters',
             valid: validateLength(result.title || '', 50, 60), 
-            recommendation: 'Ensure the title is between 50-60 characters'
+            recommendation: 'Ensure the title is between 50 - 60 characters'
           },
           { label: 'Meta Description', 
             value: result.meta_description || 'No meta description', 
-            requirement: '150 - 160 Characters'
+            requirement: '150 - 160 Characters',
+            valid: validateLength(result.meta_description || '', 150, 160), 
+            recommendation: 'Ensure the meta descrption is between 150 - 160 characters'
           },
           { label: 'Canonical', 
             value: result.canonical || 'No canonical tag', 
@@ -133,58 +129,6 @@
       <div className="container">
         <form onSubmit={handleSubmit} className="search-bar-form">
           <div className="search-bar-container">
-          <Paper
-            component="form"
-            sx={{
-              p: '0px', 
-              display: 'flex', 
-              alignItems: 'center', 
-              width: '100%',
-              maxWidth: '100%', 
-              borderRadius: '34px', // Fully rounded corners
-              border: '1px solid #d1d5db', /* border-gray-300 */
-              outline: 'none',
-              transition: 'all 0.2s',
-              padding: '0.5rem 3rem 0.5rem 1.25rem',
-              overflow: 'hidden', // Ensures no overflow from children
-              '&:focus-within': {
-                
-                color: '#d1d5db', /* focus:ring-blue-500 */
-                bordeColor: '#3b82f6',
-              },
-              
-            }}
-          >
-            <InputBase 
-              sx={{
-                flex: 1,
-                px: 2, // Adjust padding inside the input
-                py: 1.5, // Vertical padding for height
-                fontSize: '1rem', // Adjust font size
-              }}
-              placeholder="Search "
-              inputProps={{ 'aria-label': 'Enter your website domain.com ' }}
-              type="text"
-              value={domain}
-              onChange={(e) => setDomain(e.target.value)}
-              // className="search-bar-input"
-            />
-            <IconButton type="button" 
-              sx={{ 
-                p: 0, // Remove padding from the button
-                width: 50, // Circle size
-                height: 50, // Circle size
-                backgroundColor: '#3b82f6', // Blue background
-                color: 'white',
-                borderRadius: '50%', // Circular button
-                '&:hover': {
-                  backgroundColor: '#2563eb', // Darker blue on hover
-                },
-              }} 
-              aria-label="search">
-              <SearchIcon />
-            </IconButton>
-          </Paper>
           <br></br>
             <input
               type="text"
@@ -199,73 +143,75 @@
           </div>
         </form>
 
-        <div className="scrollable-table-container">
+
+        {/* <div className="scrollable-table-container">
           {result && (
-              <TableContainer component={Paper} className="results-table" 
-              style={{ 
-                marginTop: '20px',
-                maxHeight: '400px', // Restrict the height
-                overflowY: 'auto', // Ensure scrolling only within the container
-                }}>
-                <Table stickyHeader sx={{ minWidth: 650 }} aria-label="SEO Audit Results">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell><strong>Attribute</strong></TableCell>
-                      <TableCell><strong>Value</strong></TableCell>
-                      <TableCell><strong>Requirement</strong></TableCell>
-                      <TableCell><strong>Valid</strong></TableCell>
-                      <TableCell><strong>Recommendation</strong></TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {rows.map((row, index) => (
-                      <TableRow key={index}>
-                        <TableCell component="th" scope="row">
-                          {row.label}
-                        </TableCell>
-                        <TableCell>{row.value}</TableCell>
-                        <TableCell>{row.requirement}</TableCell>
-                        <TableCell>
-                          {row.valid ? (
-                            <CheckIcon style={{ color: 'green' }} />
-                          ) : (
-                            <CloseIcon style={{ color: 'red' }} />
-                          )}
-                        </TableCell>
-                        <TableCell>{row.recommendation}</TableCell>
-                      </TableRow>
-                    ))}
-                    {result.headings && (
-                      <TableRow>
-                        <TableCell component="th" scope="row">Headings</TableCell>
-                        <TableCell>
-                          {Object.entries(result.headings).map(([tag, headings]) => (
-                            <div key={tag}>
-                              <strong>{tag.toUpperCase()}:</strong>
-                              <ul>
-                                {headings.map((heading, index) => (
-                                  <li key={index}>{heading}</li>
-                                ))}
-                              </ul>
-                            </div>
-                          ))}
-                        </TableCell>
-                      </TableRow>
-                    )}
-                    {/* {result.structured_data && (
-                      <TableRow>
-                        <TableCell component="th" scope="row">Structured Data</TableCell>
-                        <TableCell>
-                          <pre>{JSON.stringify(result.structured_data, null, 2)}</pre>
-                        </TableCell>
-                      </TableRow>
-                    )} */}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+            <Paper sx={{ width: "100%", overflow: "hidden", borderRadius: "8px" }}>
+            <TableContainer component={Paper} elevation={3} sx={{ borderRadius: "8px", maxHeight: "440px" }}>
+        <Table stickyHeader sx={{ minWidth: 650 }} aria-label="SEO Audit Results">
+          <TableHead sx={{ backgroundColor: "#f9fafb" }}>
+            <TableRow>
+              <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
+                Attribute
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
+                Value
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
+                Requirement
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
+                Valid
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
+                Recommendation
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row, index) => (
+              <TableRow key={index}>
+                <TableCell>{row.label}</TableCell>
+                <TableCell>{row.value}</TableCell>
+                <TableCell>{row.requirement}</TableCell>
+                <TableCell>
+                {row.valid ? (
+                  <CheckIcon style={{ color: 'green' }} />
+                ) : (
+                  <CloseIcon style={{ color: 'red' }} />
+                )}
+                </TableCell>
+                <TableCell>{row.recommendation}</TableCell>
+              </TableRow>
+            ))}
+            {result.headings && (
+              <TableRow>
+                <TableCell component="th" scope="row">Headings</TableCell>
+                <TableCell colSpan={4}>
+                  {Object.entries(result.headings).map(([tag, headings]) => (
+                    <div key={tag}>
+                      <strong>{tag.toUpperCase()}:</strong>
+                      <ul>
+                        {headings.map((heading, index) => (
+                          <li key={index}>{heading}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </TableCell>
+              </TableRow>
             )}
-          </div>
-        </div>
+          </TableBody>
+        </Table>
+      </TableContainer>
+          </Paper>
+          )}
+        </div> */}
+
+      <div className="scrollable-table-container">
+        {result && <SEOAuditResultTable rows={rows} headings={result.headings} />}
+      </div>
+      </div>
     );
   };
 
