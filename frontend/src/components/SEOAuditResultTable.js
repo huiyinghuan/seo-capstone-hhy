@@ -8,10 +8,47 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import './SearchBar.css'; // Import the CSS file
+import * as XLSX from "xlsx"; // Import the xlsx library
 
 const SEOAuditResultTable = ({ rows, headings }) => {
+   // Function to export data to Excel
+   const exportToExcel = () => {
+    const formattedRows = rows.map((row) => ({
+      Attribute: row.label,
+      Value: row.value,
+      Requirement: row.requirement,
+      Valid: row.valid ? "✔️" : "❌",
+      Recommendation: row.recommendation,
+    }));
+
+    if (headings) {
+      formattedRows.push({
+        Attribute: "Headings",
+        Value: Object.entries(headings)
+          .map(([tag, headingsList]) => `${tag.toUpperCase()}: ${headingsList.join(", ")}`)
+          .join("; "),
+        Requirement: "",
+        Valid: "",
+        Recommendation: "",
+      });
+    }
+
+    // Create a new workbook and worksheet
+    const worksheet = XLSX.utils.json_to_sheet(formattedRows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "SEO Audit Results");
+
+    // Trigger download
+    XLSX.writeFile(workbook, "SEO_Audit_Results.xlsx");
+  };
   return (
     <Paper sx={{ width: "100%", overflow: "hidden", borderRadius: "8px" }}>
+      <div style={{ display: "flex", justifyContent: "flex-end", padding: "8px" }}>
+        <button onClick={exportToExcel} style={{ padding: "8px 16px", background: "#3b82f6", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" }}>
+          Export to Excel
+        </button>
+      </div>
+      
       <TableContainer
         component={Paper}
         elevation={3}
@@ -80,3 +117,4 @@ const SEOAuditResultTable = ({ rows, headings }) => {
 };
 
 export default SEOAuditResultTable;
+

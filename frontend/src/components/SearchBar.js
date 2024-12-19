@@ -37,32 +37,52 @@
   import Paper from '@mui/material/Paper';
 
   const SearchBar = ({ onSearch }) => {
+    // for setting use state for the my domain and competitor domain
     const [domain, setDomain] = useState('');
     const [result, setResult] = useState(null);
+    const [competitorDomain, setCompetitorDomain] = useState('');
+    const [competitorResult, setCompetitorResult] = useState(null);
 
+    // handle domain submit 
     const handleSubmit = async (e) => {
       e.preventDefault();
       onSearch(domain);
     
-    try {
-        const response = await fetch(`http://localhost:8000/seo-audit/?url=${encodeURIComponent(domain)}`);
-        
-        // Log the raw response object for debugging
-        console.log('Raw Response:', response);
+      try {
+          const response = await fetch(`http://localhost:8000/seo-audit/?url=${encodeURIComponent(domain)}`);
+          
+          // Log the raw response object for debugging
+          console.log('Raw Response:', response);
 
+          const data = await response.json();
+
+          // Debug: log the parsed JSON data
+          console.log('Parsed Response Data:', data);
+
+          if (data.error) {
+            alert(data.error);
+          } else {
+            setResult(data);
+          }
+        } catch (error) {
+          console.error('Error fetching SEO data:', error);
+          
+        }
+    };
+
+    // handle comptitor submit request 
+    const handleCompetitorDomainSubmit = async (e) => {
+      e.preventDefault();
+      try {
+        const response = await fetch(`http://localhost:8000/seo-audit/?url=${encodeURIComponent(competitorDomain)}`);
         const data = await response.json();
-
-        // Debug: log the parsed JSON data
-        console.log('Parsed Response Data:', data);
-
         if (data.error) {
           alert(data.error);
         } else {
-          setResult(data);
+          setCompetitorResult(data);
         }
       } catch (error) {
-        console.error('Error fetching SEO data:', error);
-        
+        console.error('Error fetching SEO data for competitor website:', error);
       }
     };
 
@@ -129,88 +149,74 @@
       <div className="container">
         <form onSubmit={handleSubmit} className="search-bar-form">
           <div className="search-bar-container">
-          <br></br>
-            <input
-              type="text"
-              value={domain}
-              onChange={(e) => setDomain(e.target.value)}
-              placeholder="Enter your website domain.com"
-              className="search-bar-input"
-            />
+            <div className="search-bar-wrapper">
+              <label
+                htmlFor="search-input"
+                className={`search-bar-label ${
+                  domain ? "active" : ""
+                }`}
+              >
+                {/* Enter your website domain.com */}
+              </label>
+              <br></br>
+              <input
+                id="search-input"
+                type="text"
+                value={domain}
+                onChange={(e) => setDomain(e.target.value)}
+                placeholder=""
+                className="search-bar-input"
+              />
+              <label htmlFor="search-input" className="search-bar-label">
+                Enter your website domain.com
+              </label>
+            </div>
             <button type="submit" className="search-bar-button">
               <Search className="search-bar-icon" />
             </button>
           </div>
         </form>
 
+        {/* Competitor's Searchbar */}
+        <br></br>
+        <form onSubmit={handleCompetitorDomainSubmit} className="search-bar-form">
+          <div className="search-bar-container">
+            <div className="search-bar-wrapper">
+              <label
+                htmlFor="search-input"
+                className={`search-bar-label ${
+                  competitorDomain ? "active" : ""
+                }`}
+              >
+                {/* Enter your website domain.com */}
+              </label>
+              <br></br>
+              <input
+                id="search-input"
+                type="text"
+                value={competitorDomain}
+                onChange={(e) => setCompetitorDomain(e.target.value)}
+                placeholder=""
+                className="search-bar-input"
+              />
+              <label htmlFor="search-input" className="search-bar-label">
+                Enter competitor website domain.com
+              </label>
+            </div>
+            <button type="submit" className="search-bar-button">
+              <Search className="search-bar-icon" />
+            </button>
+          </div>
+        </form>
+        
 
-        {/* <div className="scrollable-table-container">
-          {result && (
-            <Paper sx={{ width: "100%", overflow: "hidden", borderRadius: "8px" }}>
-            <TableContainer component={Paper} elevation={3} sx={{ borderRadius: "8px", maxHeight: "440px" }}>
-        <Table stickyHeader sx={{ minWidth: 650 }} aria-label="SEO Audit Results">
-          <TableHead sx={{ backgroundColor: "#f9fafb" }}>
-            <TableRow>
-              <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
-                Attribute
-              </TableCell>
-              <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
-                Value
-              </TableCell>
-              <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
-                Requirement
-              </TableCell>
-              <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
-                Valid
-              </TableCell>
-              <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
-                Recommendation
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row, index) => (
-              <TableRow key={index}>
-                <TableCell>{row.label}</TableCell>
-                <TableCell>{row.value}</TableCell>
-                <TableCell>{row.requirement}</TableCell>
-                <TableCell>
-                {row.valid ? (
-                  <CheckIcon style={{ color: 'green' }} />
-                ) : (
-                  <CloseIcon style={{ color: 'red' }} />
-                )}
-                </TableCell>
-                <TableCell>{row.recommendation}</TableCell>
-              </TableRow>
-            ))}
-            {result.headings && (
-              <TableRow>
-                <TableCell component="th" scope="row">Headings</TableCell>
-                <TableCell colSpan={4}>
-                  {Object.entries(result.headings).map(([tag, headings]) => (
-                    <div key={tag}>
-                      <strong>{tag.toUpperCase()}:</strong>
-                      <ul>
-                        {headings.map((heading, index) => (
-                          <li key={index}>{heading}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-          </Paper>
-          )}
-        </div> */}
-
-      <div className="scrollable-table-container">
-        {result && <SEOAuditResultTable rows={rows} headings={result.headings} />}
-      </div>
+        <div className="scrollable-table-container">
+          {result && <SEOAuditResultTable rows={rows} headings={result.headings} />}
+        </div>
+        <br></br>
+        <div className="scrollable-table-container">
+          {competitorResult && <SEOAuditResultTable rows={rows} headings={competitorResult.headings} />}
+        </div>
       </div>
     );
   };
