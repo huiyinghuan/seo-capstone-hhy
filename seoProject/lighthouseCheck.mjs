@@ -1,6 +1,6 @@
-// import fs from 'fs';
-// import lighthouse from 'lighthouse';
-// import * as chromeLauncher from 'chrome-launcher';
+import fs from 'fs';
+import lighthouse from 'lighthouse';
+import * as chromeLauncher from 'chrome-launcher';
 
 // // Define the URL you want to test (replace with actual URL)
 // const url = 'https://thebiguglywebsite.com/';
@@ -51,59 +51,60 @@
 // // Close the Chrome instance after the audit
 // chrome.kill();
 
-import fs from 'fs';
-import lighthouse from 'lighthouse';
-import * as chromeLauncher from 'chrome-launcher';
-async function runLighthouse(url) {
-    const chrome = await chromeLauncher.launch({ chromeFlags: ['--headless'] });
-    const options = { logLevel: 'info', output: 'json', onlyCategories: ['best-practices'], port: chrome.port };
-    const runnerResult = await lighthouse(url, options);
-
-    // Debug and log all available audit keys
-    console.log('Available audit keys:', Object.keys(runnerResult.lhr.audits));
-
-    // Attempt to fetch viewport audit
-    const viewportAudit = runnerResult.lhr.audits['viewport'];
-
-    if (viewportAudit) {
-        console.log('Viewport audit:', viewportAudit);
-    } else {
-        console.log('Viewport audit is undefined. Check the audit keys and hierarchy.');
-    }
-
-    const fontSizeAudit = runnerResult.lhr.audits['font-size'];
-
-    if (fontSizeAudit) {
-        console.log('Font-Size Audit:', fontSizeAudit);
-    } else {
-        console.log('Font-Size audit is undefined. Check the audit keys and hierarchy.');
-    }
-
-    await chrome.kill();
-}
-
-
+// import fs from 'fs';
+// import lighthouse from 'lighthouse';
+// import * as chromeLauncher from 'chrome-launcher';
 // async function runLighthouse(url) {
 //     const chrome = await chromeLauncher.launch({ chromeFlags: ['--headless'] });
-//     const options = { logLevel: 'info', output: 'json', port: chrome.port };
+//     const options = { logLevel: 'info', output: 'json', onlyCategories: ['best-practices'], port: chrome.port };
 //     const runnerResult = await lighthouse(url, options);
 
-//     // Log all categories and their associated audits
-//     const categories = runnerResult.lhr.categories;
-//     const audits = runnerResult.lhr.audits;
+//     // Debug and log all available audit keys
+//     console.log('Available audit keys:', Object.keys(runnerResult.lhr.audits));
 
-//     console.log('Categories and their associated audit keys:\n');
+//     // Attempt to fetch viewport audit
+//     const viewportAudit = runnerResult.lhr.audits['viewport'];
 
-//     for (const [categoryId, category] of Object.entries(categories)) {
-//         console.log(`Category: ${category.title} (${categoryId})`);
-//         category.auditRefs.forEach((auditRef) => {
-//             const auditKey = auditRef.id;
-//             const auditTitle = audits[auditKey]?.title || 'Unknown title';
-//             console.log(`  - Audit Key: ${auditKey}, Title: ${auditTitle}`);
-//         });
-//         console.log('');
+//     if (viewportAudit) {
+//         console.log('Viewport audit:', viewportAudit);
+//     } else {
+//         console.log('Viewport audit is undefined. Check the audit keys and hierarchy.');
+//     }
+
+//     const fontSizeAudit = runnerResult.lhr.audits['font-size'];
+
+//     if (fontSizeAudit) {
+//         console.log('Font-Size Audit:', fontSizeAudit);
+//     } else {
+//         console.log('Font-Size audit is undefined. Check the audit keys and hierarchy.');
 //     }
 
 //     await chrome.kill();
 // }
+
+
+async function runLighthouse(url) {
+    const chrome = await chromeLauncher.launch({ chromeFlags: ['--headless'] });
+    const options = { logLevel: 'info', output: 'json', port: chrome.port };
+    const runnerResult = await lighthouse(url, options);
+
+    // Log all categories and their associated audits
+    const categories = runnerResult.lhr.categories;
+    const audits = runnerResult.lhr.audits;
+
+    console.log('Categories and their associated audit keys:\n');
+
+    for (const [categoryId, category] of Object.entries(categories)) {
+        console.log(`Category: ${category.title} (${categoryId})`);
+        category.auditRefs.forEach((auditRef) => {
+            const auditKey = auditRef.id;
+            const auditTitle = audits[auditKey]?.title || 'Unknown title';
+            console.log(`  - Audit Key: ${auditKey}, Title: ${auditTitle}`);
+        });
+        console.log('');
+    }
+
+    await chrome.kill();
+}
+//runLighthouse('https://www.straitstimes.com/singapore/govt-apologises-for-acra-lapse-will-accelerate-efforts-to-educate-public-on-proper-nric-use')
 runLighthouse('https://thebiguglywebsite.com/'); // Replace with your URL

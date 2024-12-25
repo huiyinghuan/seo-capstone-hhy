@@ -1,22 +1,3 @@
-  // import React from 'react';
-  // import './SearchBar.css';
-
-  // const SearchBar = ({ placeholder, onSearch }) => {
-  //   return (
-  //     <div className="search-bar-container">
-  //       <input
-  //         type="text"
-  //         placeholder={placeholder || "Enter website URL..."}
-  //         className="search-bar"
-  //       />
-  //       <button onClick={onSearch} className="search-button">
-  //         Search
-  //       </button> 
-  //     </div>
-  //   );
-  // };
-
-  // export default SearchBar;
 
   import React, { useState } from 'react';
   import { Search } from 'lucide-react';
@@ -26,15 +7,6 @@
   
   import { CheckCircle, XCircle } from "lucide-react";
   
-
-  //for table 
-  import Table from '@mui/material/Table';
-  import TableBody from '@mui/material/TableBody';
-  import TableCell from '@mui/material/TableCell';
-  import TableContainer from '@mui/material/TableContainer';
-  import TableHead from '@mui/material/TableHead';
-  import TableRow from '@mui/material/TableRow';
-  import Paper from '@mui/material/Paper';
 
   const SearchBar = ({ onSearch }) => {
     // for setting use state for the my domain and competitor domain
@@ -51,6 +23,10 @@
       try {
           const response = await fetch(`http://localhost:8000/seo-audit/?url=${encodeURIComponent(domain)}`);
           
+          if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+          }
+
           // Log the raw response object for debugging
           console.log('Raw Response:', response);
 
@@ -62,10 +38,14 @@
           if (data.error) {
             alert(data.error);
           } else {
-            setResult(data);
+            setResult({
+                ...data,
+                mobile_friendly: data.mobile_friendly,
+            });
           }
         } catch (error) {
           console.error('Error fetching SEO data:', error);
+          alert('Failed to fetch SEO data. Please try again later.');
           
         }
     };
@@ -131,8 +111,8 @@
           },
           { label: 'Mobile Friendly', 
             value: result.mobile_friendly || 'Unknown', 
-            requirement: 'Responsive & works well on mobile devices',
-            valid: result.mobile_friendly === 'Yes', 
+            requirement: 'Responsive & works well on mobile',
+            valid: result.mobile_friendly === 'Mobile-friendly',
             recommendation: 'Ensure the site is responsive and mobile-friendly'
           },
           { label: 'Page Speed', 
@@ -144,6 +124,19 @@
 
         ]
       : [];
+
+      const competitorRows = competitorResult
+      ? [
+          { label: 'HTML Type', value: competitorResult.html_type || 'Unknown', requirement: 'N/A', valid: 'N/A', recommendation: 'N/A' },
+          { label: 'Title', value: competitorResult.title || 'No title', requirement: '50 - 60 Characters', valid: validateLength(competitorResult.title || '', 50, 60), recommendation: 'Ensure the title is between 50 - 60 characters' },
+          { label: 'Meta Description', value: competitorResult.meta_description || 'No meta description', requirement: '150 - 160 Characters', valid: validateLength(competitorResult.meta_description || '', 150, 160), recommendation: 'Ensure the meta description is between 150 - 160 characters' },
+          { label: 'Canonical', value: competitorResult.canonical || 'No canonical tag', requirement: 'Point to preferred version of page to avoid duplicate content issues', valid: competitorResult.canonical !== 'No canonical tag', recommendation: 'Add a canonical tag to prevent duplicate content issues' },
+          { label: 'Robots Meta Tag', value: competitorResult.robots || 'No robots meta tag', requirement: 'Use noindex to prevent page from being indexed & nofollow to prevent links from being followed', valid: competitorResult.robots !== 'No robots meta tag', recommendation: 'Ensure robots meta tag is properly set' },
+          { label: 'Sitemap Status', value: competitorResult.sitemap_status || 'No sitemap', requirement: 'Submitted to Search Engine', valid: competitorResult.sitemap_status !== 'No sitemap', recommendation: 'Submit a sitemap to search engines for better crawling' },
+          { label: 'Mobile Friendly', value: competitorResult.mobile_friendly || 'Unknown', requirement: 'Responsive & works well on mobile devices', valid: competitorResult.mobile_friendly === 'Yes', recommendation: 'Ensure the site is responsive and mobile-friendly' },
+          { label: 'Page Speed', value: competitorResult.page_speed || 'Unknown', requirement: 'Aim for faster loading times to improve user experience', valid: competitorResult.page_speed === 'Good', recommendation: 'Improve page speed for better user experience' },
+        ]
+      : [];  
 
     return (
       <div className="container">
@@ -215,7 +208,7 @@
         </div>
         <br></br>
         <div className="scrollable-table-container">
-          {competitorResult && <SEOAuditResultTable rows={rows} headings={competitorResult.headings} />}
+          {competitorResult && <SEOAuditResultTable rows={competitorRows} headings={competitorResult.headings} />}
         </div>
       </div>
     );

@@ -3,6 +3,9 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from urllib.parse import urljoin
+import subprocess
+import json
+
 
 def fetch_static_html(url):
     try:
@@ -114,8 +117,35 @@ def fetch_xml_sitemap(url):
         return "Error checking sitemap"
 
 def check_mobile_friendly(url):
-    # Placeholder: Requires API integration or custom logic to check mobile-friendliness
-    return "Mobile-friendly check requires external API"
+    script_path = r"C:\Users\huiying\Downloads\SIT_Y3_Sem1\capstone\seo-capstone-hhy\seoProject\mobileFriendlyCheck.mjs"
+    try:
+        # Call the .mjs file using Node.js
+        result = subprocess.run(
+            
+            ["node", script_path, url],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            # encoding='utf-8' 
+        )
+
+        print("Raw stdout output:", result.stdout)  # Debug: print raw stdout
+        print("Raw stderr output:", result.stderr)  # Debug: print raw stderr
+
+        if result.returncode == 0:
+            # Parse the JSON output from the .mjs script
+            output = json.loads(result.stdout)
+            
+            font_size_status = output.get("fontSize", "Unknown")
+            viewport_status = output.get("viewport", "Unknown")
+            if font_size_status == "Pass" and viewport_status == "Pass":
+                return "Mobile-friendly"
+            else:
+                return f"Not mobile-friendly: Font Size - {font_size_status}, Viewport - {viewport_status}"
+        else:
+            return f"Error: {result.stderr}"
+    except Exception as e:
+        return f"Error checking mobile-friendliness: {e}"
 
 def check_page_speed(url):
     # Placeholder: Requires integration with Google PageSpeed Insights API or similar
