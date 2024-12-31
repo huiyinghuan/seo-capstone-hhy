@@ -41,6 +41,7 @@
             setResult({
                 ...data,
                 mobile_friendly: data.mobile_friendly,
+                page_speed:data.page_speed
             });
           }
         } catch (error) {
@@ -118,7 +119,7 @@
           { label: 'Page Speed', 
             value: result.page_speed || 'Unknown', 
             requirement: 'Aim for faster loading times to improve user experience',
-            valid: result.page_speed === 'Good', 
+            valid: result.page_speed === 'Pass', 
             recommendation: 'Improve page speed for better user experience'
           },
 

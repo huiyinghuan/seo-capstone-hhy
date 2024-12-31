@@ -125,7 +125,7 @@ def check_mobile_friendly(url):
             ["node", script_path, url],
             capture_output=True,
             text=True,
-            timeout=30,
+            timeout=60,
             # encoding='utf-8' 
         )
 
@@ -148,8 +148,39 @@ def check_mobile_friendly(url):
         return f"Error checking mobile-friendliness: {e}"
 
 def check_page_speed(url):
-    # Placeholder: Requires integration with Google PageSpeed Insights API or similar
-    return "Page speed check requires external API"
+    script_path = r"C:\Users\huiying\Downloads\SIT_Y3_Sem1\capstone\seo-capstone-hhy\seoProject\pageSpeedCheck.mjs"
+    try:
+        # Call the .mjs file using Node.js
+        result = subprocess.run(
+            
+            ["node", script_path, url],
+            capture_output=True,
+            text=True,
+            timeout=90,
+            # encoding='utf-8' 
+        )
+
+        print("Raw stdout output:", result.stdout)  # Debug: print raw stdout
+        print("Raw stderr output:", result.stderr)  # Debug: print raw stderr
+
+
+        # Parse the JSON output from the .mjs script
+        output = json.loads(result.stdout)
+        
+        assessment_result = output.get("Core Web Vital Assessment", "Unknown")
+        
+        if assessment_result == "Pass":
+            return "Pass"
+        elif assessment_result == "Fail":
+            print("Core Web Vitals Assessment: Fail")
+            print("Detailed Output:", json.dumps(output, indent=2))  # Print full output if failed
+            return "Fail"
+        
+        else:
+            return "Error Output"
+
+    except Exception as e:
+        return f"Error checking page speed: {e}"
 
 def fetch_html(url):
     static_data = fetch_static_html(url)
