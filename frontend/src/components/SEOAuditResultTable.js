@@ -19,6 +19,7 @@ const SEOAuditResultTable = ({ rows, headings }) => {
       Requirement: row.requirement,
       Valid: row.valid ? "✔️" : "❌",
       Recommendation: row.recommendation,
+      Score: row.valid ? 1 : 0, //(1 if valid, 0 if not)
     }));
 
     if (headings) {
@@ -30,6 +31,7 @@ const SEOAuditResultTable = ({ rows, headings }) => {
         Requirement: "",
         Valid: "",
         Recommendation: "",
+        Score: "", // No score for the headings row
       });
     }
 
@@ -41,6 +43,10 @@ const SEOAuditResultTable = ({ rows, headings }) => {
     // Trigger download
     XLSX.writeFile(workbook, "SEO_Audit_Results.xlsx");
   };
+
+  // Calculate the total score
+  const totalScore = rows.reduce((sum, row) => sum + (row.valid ? 1 : 0), 0);
+  
   return (
     <Paper sx={{ width: "100%", overflow: "hidden", borderRadius: "8px" }}>
       <div style={{ display: "flex", justifyContent: "flex-end", padding: "8px" }}>
@@ -72,6 +78,10 @@ const SEOAuditResultTable = ({ rows, headings }) => {
               <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
                 Recommendation
               </TableCell>
+              <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
+                Score
+              </TableCell>
+
             </TableRow>
           </TableHead>
           <TableBody>
@@ -88,6 +98,7 @@ const SEOAuditResultTable = ({ rows, headings }) => {
                   )}
                 </TableCell>
                 <TableCell>{row.recommendation}</TableCell>
+                <TableCell>{row.valid ? 1 : 0}</TableCell> {/* Display the score */}
               </TableRow>
             ))}
             {headings && (
@@ -109,6 +120,11 @@ const SEOAuditResultTable = ({ rows, headings }) => {
                 </TableCell>
               </TableRow>
             )}
+            <TableRow>
+              <TableCell colSpan={6} align="right" sx={{ fontWeight: "bold" }}>
+                Total Score: {totalScore}
+              </TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>

@@ -17,7 +17,7 @@
   .subheading {
     font-size: 1.25rem; /* Equivalent to text-xl */
     color: #4b5563; /* Equivalent to text-gray-600 */
-    margin-bottom: 3rem; /* Equivalent to mb-12 */
+   /* margin-bottom: 3rem;  Equivalent to mb-12 */
     max-width: 32rem; /* Equivalent to max-w-2xl */
     margin-left: auto; /* Equivalent to mx-auto */
     margin-right: auto; /* Equivalent to mx-auto */
