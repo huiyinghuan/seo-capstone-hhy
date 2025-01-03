@@ -70,11 +70,14 @@ const getCoreWebVitals = async (url, apiKey) => {
         return { error: error.message };
     }
 };
-//for testing
-//const url = "https://www.straitstimes.com/singapore/govt-apologises-for-acra-lapse-will-accelerate-efforts-to-educate-public-on-proper-nric-use";
+
 const apiKey = "AIzaSyAzkVUI6NA87EyU151_SuhD6-X71KJdR-w";
 
-// Fetch and display JSON results
+const url = process.argv[2];
+//for testing
+//const url = "https://www.straitstimes.com/singapore/govt-apologises-for-acra-lapse-will-accelerate-efforts-to-educate-public-on-proper-nric-use";
+
+//Fetch and display JSON results
 (async () => {
     const result = await getCoreWebVitals(url, apiKey);
     console.log(JSON.stringify(result, null, 2));
