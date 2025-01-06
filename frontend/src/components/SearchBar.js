@@ -1,11 +1,13 @@
 
-  import React, { useState } from 'react';
-  import { Search } from 'lucide-react';
-  import { Check as CheckIcon, Close as CloseIcon } from '@mui/icons-material'; 
-  import './SearchBar.css'; // Import the CSS file
-  import SEOAuditResultTable from "./SEOAuditResultTable";
-  import { FaPlusCircle } from "react-icons/fa";
-  import Button from '@mui/material/Button';
+import React, { useState } from 'react';
+import { Search } from 'lucide-react';
+import { Check as CheckIcon, Close as CloseIcon } from '@mui/icons-material'; 
+import './SearchBar.css'; // Import the CSS file
+import SEOAuditResultTable from "./SEOAuditResultTable";
+import { FaPlusCircle } from "react-icons/fa";
+import Button from '@mui/material/Button';
+import SSEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTable';
+
 
   // const SearchBar = ({ onSearch }) => {
   //   // for setting use state for the my domain and competitor domain
@@ -222,6 +224,7 @@
     const [result, setResult] = useState(null);
     const [competitorDomain, setCompetitorDomain] = useState('');
     const [competitorResult, setCompetitorResult] = useState(null);
+    const [combinedRows, setCombinedRows] = useState([]);
   
     const handleCombinedSubmit = async (e) => {
       if (!domain || !competitorDomain) {
@@ -392,6 +395,10 @@
             </Button>
           
         </div>
+        <div className="scrollable-table-container">
+          {result && <SSEOCompetitorAnalysisSummaryTable rows={rows} headings={result.headings} />}
+        </div>
+        <br></br>
         <div className="scrollable-table-container">
           {result && <SEOAuditResultTable rows={rows} headings={result.headings} />}
         </div>
