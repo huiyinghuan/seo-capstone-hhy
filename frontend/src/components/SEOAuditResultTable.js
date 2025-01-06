@@ -98,7 +98,7 @@ const SEOAuditResultTable = ({ rows, headings }) => {
                   )}
                 </TableCell>
                 <TableCell>{row.recommendation}</TableCell>
-                <TableCell>{row.valid ? 1 : 0}</TableCell> {/* Display the score */}
+                <TableCell>{row .valid ? 1 : 0}</TableCell> {/* Display the score */}
               </TableRow>
             ))}
             {headings && (

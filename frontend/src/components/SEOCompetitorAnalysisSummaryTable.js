@@ -93,6 +93,10 @@ import Paper from "@mui/material/Paper";
   
 //v3
 const SEOCompetitorAnalysisSummaryTable = ({ rows, domain, competitorDomain }) => {
+  // Calculate the total scores
+  const totalDomainScore = rows.reduce((sum, row) => sum + (row.domainValid ? 1 : 0), 0);
+  const totalCompetitorScore = rows.reduce((sum, row) => sum + (row.competitorValid ? 1 : 0), 0);
+
   return (
     <Paper sx={{ width: "100%", overflow: "hidden", borderRadius: "8px" }}>
       <TableContainer
@@ -107,10 +111,16 @@ const SEOCompetitorAnalysisSummaryTable = ({ rows, domain, competitorDomain }) =
                 Attribute
               </TableCell>
               <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
-                {domain} Valid
+                {domain} Domain
               </TableCell>
               <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
-                {competitorDomain} Valid
+                {domain} Score
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
+                {competitorDomain} Competitor 1
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
+                {competitorDomain} Score
               </TableCell>
             </TableRow>
           </TableHead>
@@ -125,6 +135,7 @@ const SEOCompetitorAnalysisSummaryTable = ({ rows, domain, competitorDomain }) =
                     <CloseIcon style={{ color: "red" }} />
                   )}
                 </TableCell>
+                <TableCell>{row.domainValid ? 1 : 0}</TableCell>
                 <TableCell>
                   {row.competitorValid ? (
                     <CheckIcon style={{ color: "green" }} />
@@ -132,8 +143,17 @@ const SEOCompetitorAnalysisSummaryTable = ({ rows, domain, competitorDomain }) =
                     <CloseIcon style={{ color: "red" }} />
                   )}
                 </TableCell>
+                <TableCell>{row.competitorValid ? 1 : 0}</TableCell>  
               </TableRow>
             ))}
+            {/* Summary Row for Total Scores */}
+            <TableRow>
+              <TableCell sx={{ fontWeight: "bold" }}>Total Score</TableCell>
+              <TableCell />
+              <TableCell sx={{ fontWeight: "bold" }}>{totalDomainScore}</TableCell>
+              <TableCell />
+              <TableCell sx={{ fontWeight: "bold" }}>{totalCompetitorScore}</TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
