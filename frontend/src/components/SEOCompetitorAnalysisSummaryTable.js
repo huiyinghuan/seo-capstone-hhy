@@ -8,7 +8,91 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-const SEOCompetitorAnalysisSummaryTable = ({ rows }) => {
+// const SEOCompetitorAnalysisSummaryTable = ({ rows }) => {
+//   return (
+//     <Paper sx={{ width: "100%", overflow: "hidden", borderRadius: "8px" }}>
+//       <TableContainer
+//         component={Paper}
+//         elevation={3}
+//         sx={{ borderRadius: "8px", maxHeight: "440px" }}
+//       >
+//         <Table stickyHeader sx={{ minWidth: 300 }} aria-label="SEO Audit Summary">
+//           <TableHead sx={{ backgroundColor: "#f9fafb" }}>
+//             <TableRow>
+//               <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
+//                 Attribute
+//               </TableCell>
+//               <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
+//                 Valid
+//               </TableCell>
+//             </TableRow>
+//           </TableHead>
+//           <TableBody>
+//             {rows.map((row, index) => (
+//               <TableRow key={index}>
+//                 <TableCell>{row.label}</TableCell>
+//                 <TableCell>
+//                   {row.valid ? (
+//                     <CheckIcon style={{ color: "green" }} />
+//                   ) : (
+//                     <CloseIcon style={{ color: "red" }} />
+//                   )}
+//                 </TableCell>
+//               </TableRow>
+//             ))}
+//           </TableBody>
+//         </Table>
+//       </TableContainer>
+//     </Paper>
+//   );
+// };
+ 
+// v2
+// const SEOCompetitorAnalysisSummaryTable = ({ rows }) => {
+//     return (
+//       <Paper sx={{ width: "100%", overflow: "hidden", borderRadius: "8px" }}>
+//         <TableContainer
+//           component={Paper}
+//           elevation={3}
+//           sx={{ borderRadius: "8px", maxHeight: "440px" }}
+//         >
+//           <Table stickyHeader sx={{ minWidth: 300 }} aria-label="SEO Combined Analysis">
+//             <TableHead sx={{ backgroundColor: "#f9fafb" }}>
+//               <TableRow>
+//                 <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
+//                   Attribute
+//                 </TableCell>
+//                 <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
+//                   Source
+//                 </TableCell>
+//                 <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
+//                   Valid
+//                 </TableCell>
+//               </TableRow>
+//             </TableHead>
+//             <TableBody>
+//               {rows.map((row, index) => (
+//                 <TableRow key={index}>
+//                   <TableCell>{row.label}</TableCell>
+//                   <TableCell>{row.source}</TableCell>
+//                   <TableCell>
+//                     {row.valid ? (
+//                       <CheckIcon style={{ color: "green" }} />
+//                     ) : (
+//                       <CloseIcon style={{ color: "red" }} />
+//                     )}
+//                   </TableCell>
+//                 </TableRow>
+//               ))}
+//             </TableBody>
+//           </Table>
+//         </TableContainer>
+//       </Paper>
+//     );
+//   };
+  
+//v3
+const SEOCompetitorAnalysisSummaryTable = ({ rows, domain, competitorDomain }) => {
   return (
     <Paper sx={{ width: "100%", overflow: "hidden", borderRadius: "8px" }}>
       <TableContainer
@@ -23,7 +107,10 @@ const SEOCompetitorAnalysisSummaryTable = ({ rows }) => {
                 Attribute
               </TableCell>
               <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
-                Valid
+                {domain} Valid
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
+                {competitorDomain} Valid
               </TableCell>
             </TableRow>
           </TableHead>
@@ -32,7 +119,14 @@ const SEOCompetitorAnalysisSummaryTable = ({ rows }) => {
               <TableRow key={index}>
                 <TableCell>{row.label}</TableCell>
                 <TableCell>
-                  {row.valid ? (
+                  {row.domainValid ? (
+                    <CheckIcon style={{ color: "green" }} />
+                  ) : (
+                    <CloseIcon style={{ color: "red" }} />
+                  )}
+                </TableCell>
+                <TableCell>
+                  {row.competitorValid ? (
                     <CheckIcon style={{ color: "green" }} />
                   ) : (
                     <CloseIcon style={{ color: "red" }} />
@@ -47,4 +141,5 @@ const SEOCompetitorAnalysisSummaryTable = ({ rows }) => {
   );
 };
 
+  
 export default SEOCompetitorAnalysisSummaryTable;

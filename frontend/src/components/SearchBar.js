@@ -6,7 +6,7 @@ import './SearchBar.css'; // Import the CSS file
 import SEOAuditResultTable from "./SEOAuditResultTable";
 import { FaPlusCircle } from "react-icons/fa";
 import Button from '@mui/material/Button';
-import SSEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTable';
+import SEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTable';
 
 
   // const SearchBar = ({ onSearch }) => {
@@ -224,7 +224,6 @@ import SSEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTa
     const [result, setResult] = useState(null);
     const [competitorDomain, setCompetitorDomain] = useState('');
     const [competitorResult, setCompetitorResult] = useState(null);
-    const [combinedRows, setCombinedRows] = useState([]);
   
     const handleCombinedSubmit = async (e) => {
       if (!domain || !competitorDomain) {
@@ -232,6 +231,7 @@ import SSEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTa
         alert("Please enter both domains before submitting.");
         return;
       }
+      // section that handles 1 search button with searching of 2 domains
   
       try {
         // Fetch user domain SEO data
@@ -268,7 +268,8 @@ import SSEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTa
         alert('Failed to fetch SEO data. Please try again later.');
       }
     };
-  
+    
+    // validating the length of meta description and title text 
     const validateLength = (value, min, max) => value.length >= min && value.length <= max;
   
     const rows = result
@@ -338,6 +339,49 @@ import SSEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTa
             { label: 'Page Speed', value: competitorResult.page_speed || 'Unknown', requirement: 'Aim for faster loading times to improve user experience', valid: competitorResult.page_speed === 'Pass', recommendation: 'Improve page speed for better user experience' },
           ]
         : [];
+
+        // const combinedRows = [...rows, ...competitorRows].map((row, index) => ({
+        //   ...row,
+        //   source: index < rows.length ? "Domain" : "Competitor",
+        // }));
+
+        const combinedRows = result && competitorResult
+        ? [
+            { label: 'HTML Type', 
+              domainValid: 'N/A', 
+              competitorValid: 'N/A'
+            },
+            { label: 'Title', 
+              domainValid: validateLength(result.title || '', 50, 60), 
+              competitorValid: validateLength(competitorResult.title || '', 50, 60)
+            },
+            { label: 'Meta Description', 
+              domainValid: validateLength(result.meta_description || '', 150, 160), 
+              competitorValid: validateLength(competitorResult.meta_description || '', 150, 160)
+            },
+            { label: 'Canonical', 
+              domainValid: result.canonical !== 'No canonical tag', 
+              competitorValid: competitorResult.canonical !== 'No canonical tag'
+            },
+            { label: 'Robots Meta Tag', 
+              domainValid: result.robots !== 'No robots meta tag', 
+              competitorValid: competitorResult.robots !== 'No robots meta tag'
+            },
+            { label: 'Sitemap Status', 
+              domainValid: result.sitemap_status !== 'No sitemap', 
+              competitorValid: competitorResult.sitemap_status !== 'No sitemap'
+            },
+            { label: 'Mobile Friendly', 
+              domainValid: result.mobile_friendly === 'Mobile-friendly', 
+              competitorValid: competitorResult.mobile_friendly === 'Yes'
+            },
+            { label: 'Page Speed', 
+              domainValid: result.page_speed === 'Pass', 
+              competitorValid: competitorResult.page_speed === 'Pass'
+            }
+          ]
+        : [];
+
   
     return (
       <div className="container">
@@ -396,7 +440,7 @@ import SSEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTa
           
         </div>
         <div className="scrollable-table-container">
-          {result && <SSEOCompetitorAnalysisSummaryTable rows={rows} headings={result.headings} />}
+          {result && <SEOCompetitorAnalysisSummaryTable rows={combinedRows} headings={result.headings} />}
         </div>
         <br></br>
         <div className="scrollable-table-container">
