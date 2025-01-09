@@ -1,4 +1,5 @@
-import React from "react";
+
+import React, { useState } from "react";
 import { Check as CheckIcon, Close as CloseIcon } from "@mui/icons-material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -7,10 +8,21 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Collapse from "@mui/material/Collapse";
+import IconButton from "@mui/material/IconButton";
+import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import './SearchBar.css'; // Import the CSS file
 import * as XLSX from "xlsx"; // Import the xlsx library
 
+
 const SEOAuditResultTable = ({ rows, headings }) => {
+  const [expandedRow, setExpandedRow] = useState(null); // State to track expanded row
+
+  // Function to toggle row expansion
+  const toggleRow = (index) => {
+    setExpandedRow(expandedRow === index ? null : index);
+  };
+
    // Function to export data to Excel
    const exportToExcel = () => {
     const formattedRows = rows.map((row) => ({
@@ -47,6 +59,25 @@ const SEOAuditResultTable = ({ rows, headings }) => {
   // Calculate the total score
   const totalScore = rows.reduce((sum, row) => sum + (row.valid ? 1 : 0), 0);
   
+  const pageSpeedDetails = {
+    "Core Web Vitals Assessment": "Fail",
+    DetailedOutput: {
+      lcp: {
+        distribution: { Good: "93.0%", NeedsImprovement: "5.2%", Poor: "1.8%" },
+        "75th Percentile": "1.06s",
+      },
+      inp: {
+        distribution: { Good: "96.7%", NeedsImprovement: "1.6%", Poor: "1.7%" },
+        "75th Percentile": "81.00ms",
+      },
+      cls: {
+        distribution: { Good: "19.0%", NeedsImprovement: "32.3%", Poor: "48.7%" },
+        "75th Percentile": "0.48",
+      },
+    },
+  };
+
+
   return (
     <Paper sx={{ width: "100%", overflow: "hidden", borderRadius: "8px" }}>
       <div style={{ display: "flex", justifyContent: "flex-end", padding: "8px" }}>
@@ -86,42 +117,40 @@ const SEOAuditResultTable = ({ rows, headings }) => {
           </TableHead>
           <TableBody>
             {rows.map((row, index) => (
-              <TableRow key={index}>
-                <TableCell>{row.label}</TableCell>
-                <TableCell>{row.value}</TableCell>
-                <TableCell>{row.requirement}</TableCell>
-                <TableCell>
-                  {row.valid ? (
-                    <CheckIcon style={{ color: "green" }} />
-                  ) : (
-                    <CloseIcon style={{ color: "red" }} />
-                  )}
-                </TableCell>
-                <TableCell>{row.recommendation}</TableCell>
-                <TableCell>{row .valid ? 1 : 0}</TableCell> {/* Display the score */}
-              </TableRow>
+              <React.Fragment key={index}>
+                <TableRow>
+                  <TableCell>
+                    <IconButton onClick={() => toggleRow(index)} size="small">
+                      {expandedRow === index ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+                    </IconButton>
+                  </TableCell>
+                  <TableCell>{row.label}</TableCell>
+                  <TableCell>{row.value}</TableCell>
+                  <TableCell>{row.requirement}</TableCell>
+                  <TableCell>
+                    {row.valid ? <CheckIcon style={{ color: "green" }} /> : <CloseIcon style={{ color: "red" }} />}
+                  </TableCell>
+                  <TableCell>{row.recommendation}</TableCell>
+                  <TableCell>{row.valid ? 1 : 0}</TableCell>
+                </TableRow>
+                {row.label === "Page Speed" && (
+                  <TableRow>
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+                      <Collapse in={expandedRow === index} timeout="auto" unmountOnExit>
+                        <div style={{ padding: "16px", background: "#f9fafb", borderRadius: "8px" }}>
+                          <h4>Core Web Vitals Assessment: {pageSpeedDetails["Core Web Vitals Assessment"]}</h4>
+                          <pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+                            {JSON.stringify(pageSpeedDetails.DetailedOutput, null, 2)}
+                          </pre>
+                        </div>
+                      </Collapse>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </React.Fragment>
             ))}
-            {headings && (
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  Headings
-                </TableCell>
-                <TableCell colSpan={4}>
-                  {Object.entries(headings).map(([tag, headingsList]) => (
-                    <div key={tag}>
-                      <strong>{tag.toUpperCase()}:</strong>
-                      <ul>
-                        {headingsList.map((heading, index) => (
-                          <li key={index}>{heading}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </TableCell>
-              </TableRow>
-            )}
             <TableRow>
-              <TableCell colSpan={6} align="right" sx={{ fontWeight: "bold" }}>
+              <TableCell colSpan={7} align="right" sx={{ fontWeight: "bold" }}>
                 Total Score: {totalScore}
               </TableCell>
             </TableRow>
