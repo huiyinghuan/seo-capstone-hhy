@@ -126,8 +126,13 @@ const SEOCompetitorAnalysisSummaryTable = ({ rows, domain, competitorDomain }) =
           </TableHead>
           <TableBody>
             {rows.map((row, index) => (
-              <TableRow key={index}>
-                <TableCell>{row.label}</TableCell>
+              <TableRow key={index}
+                sx={{
+                  backgroundColor:
+                    !row.domainValid || !row.competitorValid ? "#ffcccc" : "white", // Highlight invalid rows in red
+                }}
+              >
+                <TableCell>{row.label} </TableCell>
                 <TableCell>
                   {row.domainValid ? (
                     <CheckIcon style={{ color: "green" }} />
@@ -147,7 +152,16 @@ const SEOCompetitorAnalysisSummaryTable = ({ rows, domain, competitorDomain }) =
               </TableRow>
             ))}
             {/* Summary Row for Total Scores */}
-            <TableRow>
+            <TableRow
+              
+              sx={{
+                position: "sticky",
+                bottom: 0,
+                zIndex: 3,
+                backgroundColor: "#f9fafb", // Match header background for better visibility
+                fontWeight: "bold",
+              }}
+            >
               <TableCell sx={{ fontWeight: "bold" }}>Total Score</TableCell>
               <TableCell />
               <TableCell sx={{ fontWeight: "bold" }}>{totalDomainScore}</TableCell>

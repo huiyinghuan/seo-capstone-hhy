@@ -118,7 +118,11 @@ const SEOAuditResultTable = ({ rows, headings }) => {
           <TableBody>
             {rows.map((row, index) => (
               <React.Fragment key={index}>
-                <TableRow>
+                <TableRow
+                  style={{
+                    backgroundColor: row.valid ? "white" : "#ffcccc", // Highlight invalid rows with light red
+                  }}
+                >
                   <TableCell>
                     <IconButton onClick={() => toggleRow(index)} size="small">
                       {expandedRow === index ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
@@ -149,7 +153,15 @@ const SEOAuditResultTable = ({ rows, headings }) => {
                 )}
               </React.Fragment>
             ))}
-            <TableRow>
+            <TableRow
+              sx={{
+                position: "sticky",
+                bottom: 0,
+                zIndex: 3,
+                backgroundColor: "#f9fafb", // Match header background for better visibility
+                fontWeight: "bold",
+              }}
+            >
               <TableCell colSpan={7} align="right" sx={{ fontWeight: "bold" }}>
                 Total Score: {totalScore}
               </TableCell>

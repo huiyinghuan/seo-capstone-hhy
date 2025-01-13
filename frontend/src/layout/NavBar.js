@@ -35,9 +35,9 @@ const Navbar = () => {
             Reports
           </a>
           {/* Connect Button */}
-          <Button className="connect-button">
+          {/* <Button className="connect-button">
             Connect with GSC
-          </Button>
+          </Button> */}
           <GoogleOAuthRedirect />
         </Box>
       </Toolbar>
