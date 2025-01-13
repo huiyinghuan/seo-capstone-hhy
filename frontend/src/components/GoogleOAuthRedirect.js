@@ -1,6 +1,7 @@
 // src/components/GoogleOAuthRedirect.js
 import React from "react";
-
+import "../layout/NavBar.css"
+import {  Button } from "@mui/material";
 
 const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const REDIRECT_URI = process.env.REACT_APP_GOOGLE_REDIRECT_URI;
@@ -15,9 +16,9 @@ const GoogleOAuthRedirect = () => {
   };
 
   return (
-    <button className="connect-button" onClick={handleRedirect}>
+    <Button className="connect-button" onClick={handleRedirect}>
       Connect with GSC
-    </button>
+    </Button>
   );
 };
 
