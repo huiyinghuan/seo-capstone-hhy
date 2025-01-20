@@ -94,6 +94,9 @@ const SEOAuditResultTable = ({ rows, headings }) => {
         <Table stickyHeader sx={{ minWidth: 650 }} aria-label="SEO Audit Results">
           <TableHead sx={{ backgroundColor: "#f9fafb" }}>
             <TableRow>
+            <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
+                
+              </TableCell>
               <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
                 Attribute
               </TableCell>
@@ -170,6 +173,7 @@ const SEOAuditResultTable = ({ rows, headings }) => {
         </Table>
       </TableContainer>
     </Paper>
+    
   );
 };
 
