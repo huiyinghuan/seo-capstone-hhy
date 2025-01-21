@@ -3,7 +3,7 @@ import React from "react";
 import { AppBar, Toolbar, Button, Typography, IconButton, Box } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import "bootstrap/dist/css/bootstrap.min.css";
-import GoogleOAuthRedirect from "../components/GoogleOAuthRedirect"; // Import the GoogleOAuthRedirects
+// import GoogleOAuthRedirect from "../components/GoogleOAuthRedirect"; // Import the GoogleOAuthRedirects
 import "./NavBar.css"; 
 
 const Navbar = () => {
@@ -35,10 +35,10 @@ const Navbar = () => {
             Reports
           </a>
           {/* Connect Button */}
-          {/* <Button className="connect-button">
+          <Button className="connect-button">
             Connect with GSC
-          </Button> */}
-          <GoogleOAuthRedirect />
+          </Button>
+          {/* <GoogleOAuthRedirect /> */}
         </Box>
       </Toolbar>
     </AppBar>

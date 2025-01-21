@@ -767,6 +767,8 @@ import SEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTab
 
 const SearchBar = ({ onSearch }) => {
   const [domains, setDomains] = useState([{ domain: "", result: null }]);
+  const [searchTriggered, setSearchTriggered] = useState(false);  // Track if search has been triggered
+
 
   const validateLength = (value, min, max) => value.length >= min && value.length <= max;
 
@@ -815,24 +817,6 @@ const SearchBar = ({ onSearch }) => {
     setDomains(updatedDomains);
   };
 
-//   // Perform search for all domains
-//   const handleSearch = async () => {
-//     const updatedDomains = await Promise.all(
-//       domains.map(async (entry) => {
-//         const domainData = await fetchSEOData(entry.domain);
-//         if (!domainData) {
-//           alert("Please fill in all domain fields before searching.");
-//           return {
-//             ...entry,
-//             result: { domainData},
-//           };
-//         })
-//     );
-
-//     setDomains(updatedDomains);
-// };
-
-  // Perform search for all domains
   const handleSearch = async () => {
     console.log("Domains before search:", domains);
 
@@ -841,6 +825,10 @@ const SearchBar = ({ onSearch }) => {
       alert("Please fill in all domain fields before searching.");
       return;
     }
+
+    // Mark the search as triggered, if not it will be rendered immediately, affect ui view 
+    setSearchTriggered(true);
+
   
 
   // Proceed with SEO data fetching for each domain
@@ -877,16 +865,6 @@ const createRows = (data) => {
     { label: 'Page Speed', value: data.page_speed || 'Unknown', requirement: 'Aim for faster loading times to improve user experience', valid: data.page_speed === 'Pass', recommendation: 'Improve page speed for better user experience' },
   ];
 };
-
-// const combinedRows = domains
-//   .map((entry, index) => {
-//     const rows = entry.result ? createRows(entry.result.domainData) : [];
-//     return rows.map((row, i) => ({
-//       label: row.label,
-//       domainValid: row.valid,
-//     }));
-//   })
-//   .flat();
   
 const combinedRows = domains
   .map((entry) => {
@@ -897,6 +875,19 @@ const combinedRows = domains
     }));
   })
   .flat();
+
+  const combinedScores = domains.map((entry) => {
+    if (!entry.result) return { domain: entry.domain, scores: [] };
+
+    const rows = createRows(entry.result);
+    const scores = rows.map((row) => ({
+      label: row.label,
+      valid: row.valid,
+    }));
+
+    return { domain: entry.domain, scores };
+  });
+
 
   console.log("Combined rows:", combinedRows);
   return (
@@ -912,7 +903,11 @@ const combinedRows = domains
                 placeholder={`Enter domain ${index + 1}`}
                 className="search-bar-input"
               />
+              
               <Button
+              sx={{
+                marginTop: "10px"
+              }}
                 variant="outlined"
                 color="secondary"
                 onClick={() => handleRemoveSearchBar(index)}
@@ -922,7 +917,12 @@ const combinedRows = domains
             </div>
           </div>
         ))}
-        <Button variant="contained" onClick={handleAddSearchBar}>
+        <Button 
+          variant="contained" 
+          onClick={handleAddSearchBar} 
+          sx={{
+            margin: "0px 0px 10px 0px"
+          }}>
           Add Search Bar
         </Button>
         <Button variant="contained" onClick={handleSearch}>
@@ -930,9 +930,11 @@ const combinedRows = domains
         </Button>
       </div>
 
-      {/* Display results */}
+      {/* Competitor Summary Table */}
       <div className="scrollable-table-container">
-        {combinedRows.length > 0 && <SEOCompetitorAnalysisSummaryTable rows={combinedRows} />}
+        {searchTriggered && combinedScores.length > 0 && (
+          <SEOCompetitorAnalysisSummaryTable data={combinedScores} />
+        )}
       </div>
 
       <br />
@@ -941,6 +943,7 @@ const combinedRows = domains
         <div key={index} className="scrollable-table-container">
             {entry.result && <SEOAuditResultTable rows={createRows(entry.result) } />}
         </div>
+      
       ))}
 
       <br />
