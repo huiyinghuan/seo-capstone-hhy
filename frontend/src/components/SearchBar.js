@@ -767,6 +767,8 @@ import SEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTab
 
 const SearchBar = ({ onSearch }) => {
   const [domains, setDomains] = useState([{ domain: "", result: null }]);
+  const [searchTriggered, setSearchTriggered] = useState(false);  // Track if search has been triggered
+
 
   const validateLength = (value, min, max) => value.length >= min && value.length <= max;
 
@@ -815,24 +817,6 @@ const SearchBar = ({ onSearch }) => {
     setDomains(updatedDomains);
   };
 
-//   // Perform search for all domains
-//   const handleSearch = async () => {
-//     const updatedDomains = await Promise.all(
-//       domains.map(async (entry) => {
-//         const domainData = await fetchSEOData(entry.domain);
-//         if (!domainData) {
-//           alert("Please fill in all domain fields before searching.");
-//           return {
-//             ...entry,
-//             result: { domainData},
-//           };
-//         })
-//     );
-
-//     setDomains(updatedDomains);
-// };
-
-  // Perform search for all domains
   const handleSearch = async () => {
     console.log("Domains before search:", domains);
 
@@ -841,6 +825,10 @@ const SearchBar = ({ onSearch }) => {
       alert("Please fill in all domain fields before searching.");
       return;
     }
+
+    // Mark the search as triggered, if not it will be rendered immediately, affect ui view 
+    setSearchTriggered(true);
+
   
 
   // Proceed with SEO data fetching for each domain
@@ -901,14 +889,6 @@ const combinedRows = domains
   });
 
 
-// new addtion 
-// const primaryDomain = domains.length > 0 ? domains[0].domain : "PrimaryDomain";
-// const competitorDomains = domains.slice(1).map((entry) => entry.domain); // Extract competitor domains
-
-// console.log("Combined rows:", combinedRows);
-// console.log("Primary Domain:", primaryDomain);
-// console.log("Competitors:", competitorDomains);
-
   console.log("Combined rows:", combinedRows);
   return (
     <div className="container">
@@ -941,24 +921,9 @@ const combinedRows = domains
         </Button>
       </div>
 
-      {/* Display results
-      <div className="scrollable-table-container">
-        {combinedRows.length > 0 && <SEOCompetitorAnalysisSummaryTable rows={combinedRows} />}
-      </div> */}
-
-      {/* Display results */}
-      {/* <div className="scrollable-table-container">
-        {combinedRows.length > 0 && (
-          <SEOCompetitorAnalysisSummaryTable 
-            rows={combinedRows} 
-            domains={[primaryDomain, ...competitorDomains]} 
-          />
-        )}
-      </div> */}
-
       {/* Competitor Summary Table */}
       <div className="scrollable-table-container">
-        {combinedScores.length > 0 && (
+        {searchTriggered && combinedScores.length > 0 && (
           <SEOCompetitorAnalysisSummaryTable data={combinedScores} />
         )}
       </div>

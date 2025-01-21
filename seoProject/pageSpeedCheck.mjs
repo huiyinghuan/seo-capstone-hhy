@@ -71,8 +71,8 @@ const getCoreWebVitals = async (url, apiKey) => {
     }
 };
 
-const apiKey = "AIzaSyAzkVUI6NA87EyU151_SuhD6-X71KJdR-w";
-//const apiKey = "AIzaSyCmjvdDODGkhOaoe0EZ-Gq0BJHEg8LmTIw"; // for macbook
+//const apiKey = "AIzaSyAzkVUI6NA87EyU151_SuhD6-X71KJdR-w";
+const apiKey = "AIzaSyCmjvdDODGkhOaoe0EZ-Gq0BJHEg8LmTIw"; // for macbook
 
 const url = process.argv[2];
 //for testing

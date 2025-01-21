@@ -4,14 +4,17 @@ from . import views
 from django.conf.urls.static import static
 from django.conf import settings
 from .views import seo_audit
-from .googleOAuthRedirects import google_auth_callback
+# from .googleOAuthRedirects import google_auth_callback
+# from . import getGSCData
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
     path("", views.index, name="index"),
     path('seo-audit/', seo_audit, name='seo_audit'),
     path('api/sitemap/', views.get_sitemap, name='get_sitemap'),
     path('api/get-data/', views.get_data, name='get_data'),
-    path("auth/google/callback", google_auth_callback, name="google-auth-callback"),
+    # path("auth/google/callback", google_auth_callback, name="google-auth-callback"),
+    # path('fetch_gsc_data/', getGSCData.fetch_gsc_data, name='fetch_gsc_data'),
 ]
 
