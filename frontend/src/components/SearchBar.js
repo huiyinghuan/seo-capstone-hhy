@@ -903,7 +903,11 @@ const combinedRows = domains
                 placeholder={`Enter domain ${index + 1}`}
                 className="search-bar-input"
               />
+              
               <Button
+              sx={{
+                marginTop: "10px"
+              }}
                 variant="outlined"
                 color="secondary"
                 onClick={() => handleRemoveSearchBar(index)}
@@ -913,7 +917,12 @@ const combinedRows = domains
             </div>
           </div>
         ))}
-        <Button variant="contained" onClick={handleAddSearchBar}>
+        <Button 
+          variant="contained" 
+          onClick={handleAddSearchBar} 
+          sx={{
+            margin: "0px 0px 10px 0px"
+          }}>
           Add Search Bar
         </Button>
         <Button variant="contained" onClick={handleSearch}>
