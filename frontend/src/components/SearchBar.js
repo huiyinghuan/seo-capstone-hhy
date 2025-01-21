@@ -877,16 +877,6 @@ const createRows = (data) => {
     { label: 'Page Speed', value: data.page_speed || 'Unknown', requirement: 'Aim for faster loading times to improve user experience', valid: data.page_speed === 'Pass', recommendation: 'Improve page speed for better user experience' },
   ];
 };
-
-// const combinedRows = domains
-//   .map((entry, index) => {
-//     const rows = entry.result ? createRows(entry.result.domainData) : [];
-//     return rows.map((row, i) => ({
-//       label: row.label,
-//       domainValid: row.valid,
-//     }));
-//   })
-//   .flat();
   
 const combinedRows = domains
   .map((entry) => {
@@ -897,6 +887,27 @@ const combinedRows = domains
     }));
   })
   .flat();
+
+  const combinedScores = domains.map((entry) => {
+    if (!entry.result) return { domain: entry.domain, scores: [] };
+
+    const rows = createRows(entry.result);
+    const scores = rows.map((row) => ({
+      label: row.label,
+      valid: row.valid,
+    }));
+
+    return { domain: entry.domain, scores };
+  });
+
+
+// new addtion 
+// const primaryDomain = domains.length > 0 ? domains[0].domain : "PrimaryDomain";
+// const competitorDomains = domains.slice(1).map((entry) => entry.domain); // Extract competitor domains
+
+// console.log("Combined rows:", combinedRows);
+// console.log("Primary Domain:", primaryDomain);
+// console.log("Competitors:", competitorDomains);
 
   console.log("Combined rows:", combinedRows);
   return (
@@ -930,9 +941,26 @@ const combinedRows = domains
         </Button>
       </div>
 
-      {/* Display results */}
+      {/* Display results
       <div className="scrollable-table-container">
         {combinedRows.length > 0 && <SEOCompetitorAnalysisSummaryTable rows={combinedRows} />}
+      </div> */}
+
+      {/* Display results */}
+      {/* <div className="scrollable-table-container">
+        {combinedRows.length > 0 && (
+          <SEOCompetitorAnalysisSummaryTable 
+            rows={combinedRows} 
+            domains={[primaryDomain, ...competitorDomains]} 
+          />
+        )}
+      </div> */}
+
+      {/* Competitor Summary Table */}
+      <div className="scrollable-table-container">
+        {combinedScores.length > 0 && (
+          <SEOCompetitorAnalysisSummaryTable data={combinedScores} />
+        )}
       </div>
 
       <br />
@@ -941,6 +969,7 @@ const combinedRows = domains
         <div key={index} className="scrollable-table-container">
             {entry.result && <SEOAuditResultTable rows={createRows(entry.result) } />}
         </div>
+      
       ))}
 
       <br />
