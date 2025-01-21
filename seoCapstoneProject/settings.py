@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'seoProject',
     
 ]
 
@@ -153,6 +154,7 @@ CORS_ORIGIN_WHITELIST = [
 CORS_ALLOW_HEADERS = [
     'content-type',
     'authorization',
+    'x-csrftoken',
     # any other headers you need
 ]
 CORS_ALLOW_CREDENTIALS = True
