@@ -6,10 +6,18 @@
   width: 100%;
 }
 .search-bar-container {
-  position: relative;
-  width: 100%;
-  margin-bottom: 1rem; /* Add spacing below each search bar */
+  /* position: relative;
+  width: 100%; */
+  /* margin-bottom: 1rem; Add spacing below each search bar */
+  flex: 0 0 auto; 
 }
+
+.search-bar-flex-container {
+  display: flex; /* Enable flexbox layout */
+  flex-wrap: wrap; /* Allow wrapping to the next line if there are too many items */
+  gap: 10px; /* Add space between search bars */
+}
+
 
 /* Label styling for placeholder effect */
 .search-bar-label {
@@ -23,17 +31,18 @@
   pointer-events: none; /* Prevent interaction with the label */
 }
 
+
+/*does not affect the result of the columinise searchbar feature*/
 .search-bar-form {
   width: 100%;
-  max-width: 32rem; /* Equivalent to max-w-2xl in Tailwind */
+ /* max-width: 32rem;  Equivalent to max-w-2xl in Tailwind */
   z-index: 1000;/* Ensure it appears above other content */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  margin: 0 auto;
+  /* justify-content: center; */
+  /* margin: 0 auto; */
 }
-
 
 /* Input styling */
 .search-bar-input {
@@ -45,6 +54,8 @@
   font-size: 1rem;
   transition: all 0.2s ease-in-out;
 }
+
+/*does not affect the result of the columinise searchbar feature*/
 
 /* Move label up when input is focused */
 .search-bar-input:focus + .search-bar-label,
@@ -94,3 +105,5 @@
 .scrollable-table-container{
   padding-top: 40px;
 }
+
+

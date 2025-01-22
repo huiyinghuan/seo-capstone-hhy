@@ -828,9 +828,7 @@ const SearchBar = ({ onSearch }) => {
 
     // Mark the search as triggered, if not it will be rendered immediately, affect ui view 
     setSearchTriggered(true);
-
   
-
   // Proceed with SEO data fetching for each domain
   const updatedDomains = await Promise.all(
     domains.map(async (entry) => {
@@ -890,38 +888,102 @@ const combinedRows = domains
 
 
   console.log("Combined rows:", combinedRows);
+  // return (
+  //   <div className="container">
+  //     <div className="search-bar-form">
+  //       {domains.map((entry, index) => (
+  //         <div key={index} className="search-bar-container">
+  //           <div className="search-bar-wrapper">
+  //             <input
+  //               type="text"
+  //               value={entry.domain}
+  //               onChange={(e) => handleDomainChange(index, e.target.value)}
+  //               placeholder={`Enter domain ${index + 1}`}
+  //               className="search-bar-input"
+  //             />
+              
+  //             <Button
+  //             sx={{
+  //               marginTop: "10px"
+  //             }}
+  //               variant="outlined"
+  //               color="secondary"
+  //               onClick={() => handleRemoveSearchBar(index)}
+  //             >
+  //               Remove
+  //             </Button>
+  //           </div>
+  //         </div>
+  //       ))}
+  //       <Button 
+  //         variant="contained" 
+  //         onClick={handleAddSearchBar} 
+  //         sx={{
+  //           margin: "0px 0px 10px 0px"
+  //         }}>
+  //         Add Search Bar
+  //       </Button>
+  //       <Button variant="contained" onClick={handleSearch}>
+  //         Search
+  //       </Button>
+  //     </div>
+
+  //     {/* Competitor Summary Table */}
+  //     <div className="scrollable-table-container">
+  //       {searchTriggered && combinedScores.length > 0 && (
+  //         <SEOCompetitorAnalysisSummaryTable data={combinedScores} />
+  //       )}
+  //     </div>
+
+  //     <br />
+
+  //     {domains.map((entry, index) => (
+  //       <div key={index} className="scrollable-table-container">
+  //           {entry.result && <SEOAuditResultTable rows={createRows(entry.result) } />}
+  //       </div>
+      
+  //     ))}
+
+  //     <br />
+  //   </div>
+  // );
+
   return (
     <div className="container">
       <div className="search-bar-form">
-        {domains.map((entry, index) => (
-          <div key={index} className="search-bar-container">
-            <div className="search-bar-wrapper">
-              <input
-                type="text"
-                value={entry.domain}
-                onChange={(e) => handleDomainChange(index, e.target.value)}
-                placeholder={`Enter domain ${index + 1}`}
-                className="search-bar-input"
-              />
-              
-              <Button
-              sx={{
-                marginTop: "10px"
-              }}
-                variant="outlined"
-                color="secondary"
-                onClick={() => handleRemoveSearchBar(index)}
-              >
-                Remove
-              </Button>
+        {/* Add a flex container to arrange search bars horizontally */}
+        <div className="search-bar-flex-container">
+          {domains.map((entry, index) => (
+            <div key={index} className="search-bar-container">
+              <div className="search-bar-wrapper">
+                <input
+                  type="text"
+                  value={entry.domain}
+                  onChange={(e) => handleDomainChange(index, e.target.value)}
+                  placeholder={`Enter domain ${index + 1}`}
+                  className="search-bar-input"
+                />
+                
+                <Button
+                  sx={{
+                    marginTop: "10px",
+                  }}
+                  variant="outlined"
+                  color="secondary"
+                  onClick={() => handleRemoveSearchBar(index)}
+                >
+                  Remove
+                </Button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+  
         <Button 
           variant="contained" 
           onClick={handleAddSearchBar} 
           sx={{
-            margin: "0px 0px 10px 0px"
+            margin: "20px 0px 20px 0px"
           }}>
           Add Search Bar
         </Button>
@@ -929,26 +991,26 @@ const combinedRows = domains
           Search
         </Button>
       </div>
-
+  
       {/* Competitor Summary Table */}
       <div className="scrollable-table-container">
         {searchTriggered && combinedScores.length > 0 && (
           <SEOCompetitorAnalysisSummaryTable data={combinedScores} />
         )}
       </div>
-
+  
       <br />
-
+  
       {domains.map((entry, index) => (
         <div key={index} className="scrollable-table-container">
-            {entry.result && <SEOAuditResultTable rows={createRows(entry.result) } />}
+            {entry.result && <SEOAuditResultTable rows={createRows(entry.result)} />}
         </div>
-      
       ))}
-
+  
       <br />
     </div>
   );
+  
 };
 
 export default SearchBar;      
