@@ -11,8 +11,8 @@ def fetch_static_html(url):
     try:
         print(f"Fetching static HTML for: {url}")
         response = requests.get(url, timeout=10)
-        # https_status = "Yes" if url.startswith("https") else "No"
-        # print(f"HTTP Status: {response.status_code}")
+       
+        print(f"HTTP Status: {response.status_code}")
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -41,7 +41,7 @@ def fetch_static_html(url):
             structured_data = [script.string for script in soup.find_all('script', {'type': 'application/ld+json'})]
 
             result = {
-                # "https": https_status,
+            
                 "title": title,
                 "meta_description": meta_description,
                 "canonical": canonical,
@@ -115,10 +115,44 @@ def fetch_xml_sitemap(url):
             return "No sitemap"
     except Exception as e:
         return "Error checking sitemap"
+    
+def check_https_status(url):
+    #script_path = r"C:\Users\huiying\Downloads\SIT_Y3_Sem1\capstone\seo-capstone-hhy\seoProject\httpsCheck.mjs"
+    script_path = r"/Users/huanhuiying/Documents/seo-capstone-hhy/seoProject/httpsCheck.mjs"
+
+    try:
+        # Call the .mjs file using Node.js
+        result = subprocess.run(
+            ["node", script_path, url],
+            capture_output=True,
+            text=True,
+            timeout=120
+        )
+
+        print("Raw stdout output:", result.stdout)  # Debug: print raw stdout
+        print("Raw stderr output:", result.stderr)  # Debug: print raw stderr
+    
+        if result.returncode == 0:
+            # Parse the JSON output from the .mjs script
+            output = json.loads(result.stdout)
+            
+            https_audit_result = output.get("httpsAuditResult", "Unknown")
+            print("The https result is: ", https_audit_result) # just for checking result
+
+            if https_audit_result == "Pass":
+                return "Pass"
+            else:
+                return f"HTTPS Status: {https_audit_result}"
+
+        else:
+            return f"Error: {result.stderr}"
+    except Exception as e:
+        return f"Error checking HTTPS status: {e}"
+
 
 def check_mobile_friendly(url):
-    script_path = r"C:\Users\huiying\Downloads\SIT_Y3_Sem1\capstone\seo-capstone-hhy\seoProject\mobileFriendlyCheck.mjs"
-    #script_path = r"/Users/huanhuiying/Documents/seo-capstone-hhy/seoProject/mobileFriendlyCheck.mjs"
+    #script_path = r"C:\Users\huiying\Downloads\SIT_Y3_Sem1\capstone\seo-capstone-hhy\seoProject\mobileFriendlyCheck.mjs"
+    script_path = r"/Users/huanhuiying/Documents/seo-capstone-hhy/seoProject/mobileFriendlyCheck.mjs"
 
     try:
         # Call the .mjs file using Node.js
@@ -150,8 +184,8 @@ def check_mobile_friendly(url):
         return f"Error checking mobile-friendliness: {e}"
 
 def check_page_speed(url):
-    script_path = r"C:\Users\huiying\Downloads\SIT_Y3_Sem1\capstone\seo-capstone-hhy\seoProject\pageSpeedCheck.mjs"
-    #script_path = r"/Users/huanhuiying/Documents/seo-capstone-hhy/seoProject/pageSpeedCheck.mjs"
+    #script_path = r"C:\Users\huiying\Downloads\SIT_Y3_Sem1\capstone\seo-capstone-hhy\seoProject\pageSpeedCheck.mjs"
+    script_path = r"/Users/huanhuiying/Documents/seo-capstone-hhy/seoProject/pageSpeedCheck.mjs"
     try:
         # Call the .mjs file using Node.js
         result = subprocess.run(
@@ -187,37 +221,6 @@ def check_page_speed(url):
     
 
 
-def check_https_status(url):
-    script_path = r"C:\Users\huiying\Downloads\SIT_Y3_Sem1\capstone\seo-capstone-hhy\seoProject\httpsCheck.mjs"
-    
-    try:
-        # Call the .mjs file using Node.js
-        result = subprocess.run(
-            ["node", script_path, url],
-            capture_output=True,
-            text=True,
-            timeout=120
-        )
-
-        print("Raw stdout output:", result.stdout)  # Debug: print raw stdout
-        print("Raw stderr output:", result.stderr)  # Debug: print raw stderr
-    
-        if result.returncode == 0:
-            # Parse the JSON output from the .mjs script
-            output = json.loads(result.stdout)
-            
-            https_audit_result = output.get("httpsAuditResult", "Unknown")
-            print("The https result is: ", https_audit_result) # just for checking result
-
-            if https_audit_result == "Pass":
-                return "Pass"
-            else:
-                return f"HTTPS Status: {https_audit_result}"
-
-        else:
-            return f"Error: {result.stderr}"
-    except Exception as e:
-        return f"Error checking HTTPS status: {e}"
 
 
 
@@ -225,13 +228,12 @@ def fetch_html(url):
     static_data = fetch_static_html(url)
     if static_data:
         sitemap_status = fetch_xml_sitemap(url)
+        static_data["httpsAuditResult"] = check_https_status(url)  # Add HTTPS audit result
         static_data["sitemap_status"] = sitemap_status
         static_data["mobile_friendly"] = check_mobile_friendly(url)
         static_data["page_speed"] = check_page_speed(url)
-        static_data["httpsAuditResult"] = check_https_status(url)  # Add HTTPS audit result
+       
         
-        
-
         # Validate data
         validation_results = validate_seo_data(static_data)
         static_data["validation"] = validation_results

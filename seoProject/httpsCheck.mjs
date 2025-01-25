@@ -62,7 +62,8 @@ async function runLighthouse(url) {
         }
 
         const result = {
-            httpsAuditResult: httpsAuditResult.score === 1 ? "Pass" : "Fail",
+            //httpsAuditResult: httpsAuditResult?.score === 1 ? "Pass" : "Fail",
+            httpsAuditResult: httpsAuditResult?.title === "Uses HTTPS" ? "Pass" : "Fail",
             title: httpsAuditResult.title || "N/A",
             description: httpsAuditResult.description || "N/A",
         };
@@ -76,10 +77,16 @@ async function runLighthouse(url) {
     }
 }
 
-const url = process.argv[2];
-if (!url || !/^https?:\/\/.+$/.test(url)) {
-    console.error("Please provide a valid URL (e.g., https://example.com).");
-    process.exit(1);
-}
+// const url = process.argv[2];
+// if (!url || !/^https?:\/\/.+$/.test(url)) {
+//     console.error("Please provide a valid URL (e.g., https://example.com).");
+//     process.exit(1);
+// }
 
-runLighthouse(url).catch(err => console.error(err));
+// runLighthouse(url).catch(err => console.error(err));
+const url = process.argv[2];
+if (url) {
+    runLighthouse(url).catch(err => console.error(err));
+} else {
+    console.error("No URL provided.");
+}
