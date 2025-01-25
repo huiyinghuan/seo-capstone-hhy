@@ -782,11 +782,20 @@ const SearchBar = ({ onSearch }) => {
             alert(`Error fetching data for ${url}: ${data.error}`);
             return null;
         }
-
+`
+        console.log("Fetched data:", data);`
+        console.log("Fetched data keys:", Object.keys(data));
+        const httpsAudit = data.httpsAuditResult;
+        console.log("Fetched httpdata:", httpsAudit);  // Should log "Pass"
+        
+      
         return {
             ...data,
             mobile_friendly: data.mobile_friendly,
             page_speed: data.page_speed,
+            httpsAuditResult: data.httpsAuditResult,
+            
+            
         };
     } catch (error) {
         console.error(`Error fetching data for ${url}:`, error);
@@ -820,7 +829,7 @@ const SearchBar = ({ onSearch }) => {
   const handleSearch = async () => {
     console.log("Domains before search:", domains);
 
-    const emptyDomain = domains.some(entry => !entry.domain);
+    const emptyDomain = domains.some(entry => !entry.domain.trim());
     if (emptyDomain) {
       alert("Please fill in all domain fields before searching.");
       return;
@@ -844,6 +853,7 @@ const SearchBar = ({ onSearch }) => {
   // Update the domains with fetched data
   console.log("Updated domains:", updatedDomains);
   setDomains(updatedDomains);
+  //setSearchTriggered(false);  Reset search state
 };
 
 const createRows = (data) => {
@@ -861,6 +871,7 @@ const createRows = (data) => {
     { label: 'Sitemap Status', value: data.sitemap_status || 'No sitemap', requirement: 'Submitted to Search Engine', valid: data.sitemap_status !== 'No sitemap', recommendation: 'Submit a sitemap to search engines for better crawling' },
     { label: 'Mobile Friendly', value: data.mobile_friendly || 'Unknown', requirement: 'Responsive & works well on mobile', valid: data.mobile_friendly === 'Mobile-friendly', recommendation: 'Ensure the site is responsive and mobile-friendly' },
     { label: 'Page Speed', value: data.page_speed || 'Unknown', requirement: 'Aim for faster loading times to improve user experience', valid: data.page_speed === 'Pass', recommendation: 'Improve page speed for better user experience' },
+    { label: 'HTTPS Audit', value: data.httpsAuditResult || 'Unknown', requirement: 'HTTPS ensures secure communication', valid: data.httpsAuditResult === 'Pass', recommendation: 'Ensure the website uses HTTPS for secure communication' } 
   ];
 };
   
