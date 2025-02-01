@@ -28,12 +28,32 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 //     </div>
 //   );
 // }
+
+
+// function App() {
+//   return (
+//     <div className="App">
+//       <NavBar />
+//       <HomePage />
+//     </div>
+//   );
+// }
+
+// export default App;
+
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import GSCFeature from './components/GSC';
+//import NewPage from "./pages/ConnectGSC"; // Import your new page component
+
 function App() {
   return (
-    <div className="App">
+    <Router>
       <NavBar />
-      <HomePage />
-    </div>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/gsc-page" element={<GSCFeature />} />
+      </Routes>
+    </Router>
   );
 }
 
