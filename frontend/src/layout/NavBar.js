@@ -1,6 +1,7 @@
 
 import React from "react";
 import { AppBar, Toolbar, Button, Typography, IconButton, Box } from "@mui/material";
+import { Link } from "react-router-dom"; // Import Link for navigation
 import SearchIcon from "@mui/icons-material/Search";
 import "bootstrap/dist/css/bootstrap.min.css";
 // import GoogleOAuthRedirect from "../components/GoogleOAuthRedirect"; // Import the GoogleOAuthRedirects
@@ -34,6 +35,9 @@ const Navbar = () => {
           <a href="#" className="nav-link">
             Reports
           </a>
+          <Link to="/gsc-page" className="nav-link"> {/* New link to the new page */}
+            GSCFeatureTest
+          </Link>
           {/* Connect Button */}
           <Button className="connect-button">
             Connect with GSC

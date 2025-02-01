@@ -4,7 +4,8 @@ from . import views
 from django.conf.urls.static import static
 from django.conf import settings
 from .views import seo_audit
-from .googleOAuthRedirects import get_google_auth_url
+from . import gscFeature
+#from .googleOAuthRedirects import get_google_auth_url
 
 
 urlpatterns = [
@@ -14,8 +15,12 @@ urlpatterns = [
     path('api/sitemap/', views.get_sitemap, name='get_sitemap'),
     path('api/get-data/', views.get_data, name='get_data'),
     # path("auth-url/", get_google_auth_url, name="get_google_auth_url"),
-   
-   
+    # path('api/authorize', gscFeature.authorize_user, name='authorize'),
+    path('api/get-sites', gscFeature.get_sites, name='get_sites'),
+    path('api/get-sitemaps', gscFeature.get_sitemaps, name='get_sitemaps'),
+    path('api/get-search-analytics', gscFeature.get_search_analytics, name='get_search_analytics'),
+    # path('api/inspect-url', gscFeature.inspect_url, name='inspect_url'),
+
 ]
 
 if settings.DEBUG:
