@@ -33,10 +33,10 @@ import SEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTab
           }
           
           console.log("Fetched data:", data);
-          console.log("Fetched data keys:", Object.keys(data));
+          //console.log("Fetched data keys:", Object.keys(data));
           const httpsAudit = data.httpsAuditResult;
           console.log("Fetched httpdata:", httpsAudit);  // Should log "Pass"
-          
+          console.log("Fetched pageSpeedInsight", data.page_speed )
         
           return {
               ...data,
@@ -44,8 +44,6 @@ import SEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTab
               mobile_friendly: data.mobile_friendly,
               page_speed: data.page_speed,
               validation: data.validation,
-              
-              
               
           };
       } catch (error) {
@@ -124,7 +122,8 @@ import SEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTab
       { label: 'Robots Meta Tag', value: data.robots || 'No robots meta tag', requirement: 'Use noindex to prevent page from being indexed & nofollow to prevent links from being followed', valid: data.robots !== 'No robots meta tag', recommendation: 'Ensure robots meta tag is properly set' },
       { label: 'Sitemap Status', value: data.sitemap_status || 'No sitemap', requirement: 'Submitted to Search Engine', valid: data.sitemap_status !== 'No sitemap', recommendation: 'Submit a sitemap to search engines for better crawling' },
       { label: 'Mobile Friendly', value: data.mobile_friendly || 'Unknown', requirement: 'Responsive & works well on mobile', valid: data.mobile_friendly === 'Mobile-friendly', recommendation: 'Ensure the site is responsive and mobile-friendly' },
-      { label: 'Page Speed', value: data.page_speed || 'Unknown', requirement: 'Aim for faster loading times to improve user experience', valid: data.page_speed === 'Pass', recommendation: 'Improve page speed for better user experience' },
+      //{ label: 'Page Speed', value: data.page_speed || 'Unknown', requirement: 'Aim for faster loading times to improve user experience', valid: data.page_speed === 'Pass', recommendation: 'Improve page speed for better user experience' },
+      { label: 'Page Speed', value: data.page_speed.result || 'Unknown', details: data.page_speed.details || 'No details available', valid: data.page_speed.result === 'Pass', recommendation: 'Improve page speed for better user experience' },
       { label: 'HTTPS Audit', value: data.httpsAuditResult || 'Unknown', requirement: 'HTTPS ensures secure communication', valid: data.httpsAuditResult === 'Pass', recommendation: 'Ensure the website uses HTTPS for secure communication' } 
     ];
   };

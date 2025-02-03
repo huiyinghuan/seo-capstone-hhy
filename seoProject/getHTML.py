@@ -197,27 +197,33 @@ def check_page_speed(url):
             # encoding='utf-8' 
         )
 
-        print("Raw stdout output:", result.stdout)  # Debug: print raw stdout
-        print("Raw stderr output:", result.stderr)  # Debug: print raw stderr
+        print("Raw stdout output:", result.stdout)  # Debug: print raw stdout (json)
+        print("Raw stderr output:", result.stderr)  # Debug: print raw stderr (not in json)
 
 
         # Parse the JSON output from the .mjs script
         output = json.loads(result.stdout)
         
-        assessment_result = output.get("Core Web Vital Assessment", "Unknown")
+        #assessment_result = output.get("Core Web Vital Assessment", "Unknown")
+        #detail_output =  output.get("details", "No Detail Output Available")
+
+        assessment_result = output.get("coreWebVitalResult", "Unknown")
+        detail_output =  output.get("details", "No Details Output Available")
         
         if assessment_result == "Pass":
-            return "Pass"
+            return {"result": "Pass", "details": detail_output}
         elif assessment_result == "Fail":
-            print("Core Web Vitals Assessment: Fail")
+            print("Core Web Vitals Assessment: ", assessment_result)
+            print("Detail Output: ", detail_output)
             print("Detailed Output:", json.dumps(output, indent=2))  # Print full output if failed
-            return "Fail"
+            
+            return {"result": "Fail", "details": detail_output}
         
         else:
-            return "Error Output"
+            return {"result": "Error", "message": "Unexpected result from Node.js script"}
 
     except Exception as e:
-        return f"Error checking page speed: {e}"
+         return {"result": "Error", "message": f"Error checking page speed: {e}"}
     
 
 

@@ -120,8 +120,7 @@ const SEOAuditResultTable = ({ rows, headings }) => {
       },
     },
   };
-
-
+  
   return (
     <Paper sx={{ width: "100%", overflow: "hidden", borderRadius: "8px" }}>
       <div style={{ display: "flex", justifyContent: "flex-end", padding: "8px" }}>

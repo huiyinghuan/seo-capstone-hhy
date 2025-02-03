@@ -63,13 +63,33 @@ const getCoreWebVitals = async (url, apiKey) => {
         const metrics = data.loadingExperience?.metrics || {};
         const results = processMetrics(metrics);
         
-        // Return the results as JSON
-        return results;
+         // Return both core result and detailed output
+         return {
+            coreWebVitalResult: results["Core Web Vital Assessment"],
+            details: results
+        };
     } catch (error) {
         console.error("Error fetching Core Web Vitals data:", error);
         return { error: error.message };
     }
 };
+
+
+//does not return the detail output yet older version
+// const getCoreWebVitals = async (url, apiKey) => {
+//     try {
+//         const data = await fetchPageSpeedData(url, apiKey);
+//         const metrics = data.loadingExperience?.metrics || {};
+//         const results = processMetrics(metrics);
+        
+//         // Return the results as JSON
+//         return results;
+//     } catch (error) {
+//         console.error("Error fetching Core Web Vitals data:", error);
+//         return { error: error.message };
+//     }
+// };
+
 
 //const apiKey = "AIzaSyAzkVUI6NA87EyU151_SuhD6-X71KJdR-w";
 const apiKey = "AIzaSyCmjvdDODGkhOaoe0EZ-Gq0BJHEg8LmTIw"; // for macbook
