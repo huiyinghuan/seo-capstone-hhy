@@ -30,6 +30,8 @@ const SEOAuditResultTable = ({ rows, headings }) => {
       return <CheckIcon style={{ color: 'green' }} />;
     } else if (valid === false) {
       return <CloseIcon style={{ color: 'red' }} />;
+    } else if (valid === 'N/A') {
+      return 
     } else {
       return (
         <div style={{ position: 'relative', display: 'inline-block', width: '24px', height: '24px' }}>
