@@ -24,16 +24,46 @@ const SEOAuditResultTable = ({ rows, headings }) => {
   };
 
   //check validation
-
+  // new version
   const getValidationIcon = (valid) => {
     if (valid === true) {
       return <CheckIcon style={{ color: 'green' }} />;
     } else if (valid === false) {
       return <CloseIcon style={{ color: 'red' }} />;
     } else {
-      return <BsDashLg style={{ color: 'orange' }} />; // Half-tick icon for partially valid
+      return (
+        <div style={{ position: 'relative', display: 'inline-block', width: '24px', height: '24px' }}>
+          {/* Green tick */}
+          <CheckIcon style={{ color: 'green', width: '100%', height: '100%' }} />
+          
+          {/* Shorter and thicker red cross in the center */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '55%',
+              width: '60%',
+              height: '2px',
+              backgroundColor: 'green',
+              transform: 'translate(-50%, -50%) rotate(45deg)',
+              borderRadius: '2px',
+            }}
+          />
+        </div>
+      );; // Half-tick icon for partially valid
     }
   };
+
+  // older version 
+  // const getValidationIcon = (valid) => {
+  //   if (valid === true) {
+  //     return <CheckIcon style={{ color: 'green' }} />;
+  //   } else if (valid === false) {
+  //     return <CloseIcon style={{ color: 'red' }} />;
+  //   } else {
+  //     return <BsDashLg style={{ color: 'orange' }} />; // Half-tick icon for partially valid
+  //   }
+  // };
 
    // Function to export data to Excel
    const exportToExcel = () => {
@@ -146,12 +176,12 @@ const SEOAuditResultTable = ({ rows, headings }) => {
                   <TableCell>{row.label}</TableCell>
                   <TableCell>{row.value}</TableCell>
                   <TableCell>{row.requirement}</TableCell>
-                  <TableCell>
+                  {/* <TableCell>
                     {row.valid ? <CheckIcon style={{ color: "green" }} /> : <CloseIcon style={{ color: "red" }} />}
-                  </TableCell>
-                  <TableCell>{row.recommendation}</TableCell>
-                  {/* <TableCell>{row.valid ? 1 : 0}</TableCell> */}
+                  </TableCell> */}
                   <TableCell>{getValidationIcon(row.valid)}</TableCell>
+                  <TableCell>{row.recommendation}</TableCell>
+                  <TableCell>{row.valid ? 1 : 0}</TableCell>  {/** for score */}
                 </TableRow>
                 {row.label === "Page Speed" && (
                   <TableRow>
