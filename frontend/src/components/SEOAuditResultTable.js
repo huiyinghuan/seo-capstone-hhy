@@ -13,7 +13,7 @@ import IconButton from "@mui/material/IconButton";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import './SearchBar.css'; // Import the CSS file
 import * as XLSX from "xlsx"; // Import the xlsx library
-
+import { BsDashLg } from "react-icons/bs"; // Use this as a "half tick" placeholder
 
 const SEOAuditResultTable = ({ rows, headings }) => {
   const [expandedRow, setExpandedRow] = useState(null); // State to track expanded row
@@ -21,6 +21,18 @@ const SEOAuditResultTable = ({ rows, headings }) => {
   // Function to toggle row expansion
   const toggleRow = (index) => {
     setExpandedRow(expandedRow === index ? null : index);
+  };
+
+  //check validation
+
+  const getValidationIcon = (valid) => {
+    if (valid === true) {
+      return <CheckIcon style={{ color: 'green' }} />;
+    } else if (valid === false) {
+      return <CloseIcon style={{ color: 'red' }} />;
+    } else {
+      return <BsDashLg style={{ color: 'orange' }} />; // Half-tick icon for partially valid
+    }
   };
 
    // Function to export data to Excel
@@ -138,7 +150,8 @@ const SEOAuditResultTable = ({ rows, headings }) => {
                     {row.valid ? <CheckIcon style={{ color: "green" }} /> : <CloseIcon style={{ color: "red" }} />}
                   </TableCell>
                   <TableCell>{row.recommendation}</TableCell>
-                  <TableCell>{row.valid ? 1 : 0}</TableCell>
+                  {/* <TableCell>{row.valid ? 1 : 0}</TableCell> */}
+                  <TableCell>{getValidationIcon(row.valid)}</TableCell>
                 </TableRow>
                 {row.label === "Page Speed" && (
                   <TableRow>

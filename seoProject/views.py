@@ -50,6 +50,7 @@ def seo_audit(request):
             'sitemap_status': seo_data.get('sitemap_status', 'No sitemap found'),
             'mobile_friendly': seo_data.get('mobile_friendly', 'Unknown'),
             'page_speed': seo_data.get('page_speed', 'Unknown'),
+            'validation': seo_data.get('validation', {}),
             'httpsAuditResult':seo_data.get('httpsAuditResult','Unknown'),
             'headings': seo_data.get('headings', {}),
             'structured_data': seo_data.get('structured_data', [])

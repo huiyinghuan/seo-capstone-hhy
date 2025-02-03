@@ -117,8 +117,8 @@ def fetch_xml_sitemap(url):
         return "Error checking sitemap"
     
 def check_https_status(url):
-    #script_path = r"C:\Users\huiying\Downloads\SIT_Y3_Sem1\capstone\seo-capstone-hhy\seoProject\httpsCheck.mjs"
-    script_path = r"/Users/huanhuiying/Documents/seo-capstone-hhy/seoProject/httpsCheck.mjs"
+    script_path = r"C:\Users\huiying\Downloads\SIT_Y3_Sem1\capstone\seo-capstone-hhy\seoProject\httpsCheck.mjs"
+    #script_path = r"/Users/huanhuiying/Documents/seo-capstone-hhy/seoProject/httpsCheck.mjs"
 
     try:
         # Call the .mjs file using Node.js
@@ -151,8 +151,8 @@ def check_https_status(url):
 
 
 def check_mobile_friendly(url):
-    #script_path = r"C:\Users\huiying\Downloads\SIT_Y3_Sem1\capstone\seo-capstone-hhy\seoProject\mobileFriendlyCheck.mjs"
-    script_path = r"/Users/huanhuiying/Documents/seo-capstone-hhy/seoProject/mobileFriendlyCheck.mjs"
+    script_path = r"C:\Users\huiying\Downloads\SIT_Y3_Sem1\capstone\seo-capstone-hhy\seoProject\mobileFriendlyCheck.mjs"
+    #script_path = r"/Users/huanhuiying/Documents/seo-capstone-hhy/seoProject/mobileFriendlyCheck.mjs"
 
     try:
         # Call the .mjs file using Node.js
@@ -184,8 +184,8 @@ def check_mobile_friendly(url):
         return f"Error checking mobile-friendliness: {e}"
 
 def check_page_speed(url):
-    #script_path = r"C:\Users\huiying\Downloads\SIT_Y3_Sem1\capstone\seo-capstone-hhy\seoProject\pageSpeedCheck.mjs"
-    script_path = r"/Users/huanhuiying/Documents/seo-capstone-hhy/seoProject/pageSpeedCheck.mjs"
+    script_path = r"C:\Users\huiying\Downloads\SIT_Y3_Sem1\capstone\seo-capstone-hhy\seoProject\pageSpeedCheck.mjs"
+    #script_path = r"/Users/huanhuiying/Documents/seo-capstone-hhy/seoProject/pageSpeedCheck.mjs"
     try:
         # Call the .mjs file using Node.js
         result = subprocess.run(
@@ -261,16 +261,15 @@ def fetch_html(url):
 
     return "Failed", None
 
-
-
+# new version 2 with scoring algo
 def validate_seo_data(data):
     """
-    Validate the scraped SEO data against recommended guidelines.
+    Validate the scraped SEO data against recommended guidelines, including a "half-valid" metric.
     """
     # Define validation requirements
     recommendations = {
-        "title": (50, 60, "Title length should be between 50-60 characters."),
-        "meta_description": (150, 160, "Meta description length should be between 150-160 characters."),
+        "title": (50, 60, "Title length should be between 50-60 characters.", 40, 70),
+        "meta_description": (150, 160, "Meta description length should be between 150-160 characters.", 120, 180),
         # Add more fields if needed
     }
 
@@ -278,24 +277,64 @@ def validate_seo_data(data):
     validation_results = {}
 
     # Validate each field
-    for field, (min_length, max_length, message) in recommendations.items():
+    for field, (min_length, max_length, message, half_min, half_max) in recommendations.items():
         if field in data and data[field]:
             length = len(data[field])
+            is_valid = min_length <= length <= max_length
+            half_valid = half_min <= length <= half_max and not is_valid
+
             validation_results[field] = {
                 "value": data[field],
                 "length": length,
-                "is_valid": min_length <= length <= max_length,
+                "is_valid": is_valid,
+                "half_valid": half_valid,
                 "requirement": message,
             }
         else:
             validation_results[field] = {
-                "value": "No data",
+                "value": "Missing",
                 "length": 0,
                 "is_valid": False,
+                "half_valid": False,
                 "requirement": message,
             }
 
     return validation_results
+
+# old version 1 with scoring algo
+# def validate_seo_data(data):
+#     """
+#     Validate the scraped SEO data against recommended guidelines.
+#     """
+#     # Define validation requirements
+#     recommendations = {
+#         "title": (50, 60, "Title length should be between 50-60 characters."),
+#         "meta_description": (150, 160, "Meta description length should be between 150-160 characters."),
+#         # Add more fields if needed
+#     }
+
+#     # Store validation results
+#     validation_results = {}
+
+#     # Validate each field
+#     for field, (min_length, max_length, message) in recommendations.items():
+#         if field in data and data[field]:
+#             length = len(data[field])
+#             validation_results[field] = {
+#                 "value": data[field],
+#                 "length": length,
+#                 "is_valid": min_length <= length <= max_length,
+#                 "requirement": message,
+#             }
+#         else:
+#             validation_results[field] = {
+#                 "value": "No data",
+#                 "length": 0,
+#                 "is_valid": False,
+#                 "requirement": message,
+#             }
+
+#     return validation_results
 
 
 # Unified function for fetching either static or dynamic HTML
