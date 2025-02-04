@@ -23,7 +23,7 @@ const Navbar = () => {
 
         {/* Navigation Links */}
         <Box display={{ xs: "none", md: "flex" }} alignItems="center" className="ml-auto">
-          <a href="#" className="nav-link">
+          <a href="/" className="nav-link">
             Home
           </a>
           <a href="#" className="nav-link">
