@@ -186,12 +186,22 @@ const SEOAuditResultTable = ({ rows, headings }) => {
                 </TableRow>
                 {row.label === "Page Speed" && (
                   <TableRow>
-                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+                    {/* <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
                       <Collapse in={expandedRow === index} timeout="auto" unmountOnExit>
                         <div style={{ padding: "16px", background: "#f9fafb", borderRadius: "8px" }}>
                           <h4>Core Web Vitals Assessment: {pageSpeedDetails["Core Web Vitals Assessment"]}</h4>
                           <pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
                             {JSON.stringify(pageSpeedDetails.DetailedOutput, null, 2)}
+                          </pre>
+                        </div>
+                      </Collapse>
+                    </TableCell> */}
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+                      <Collapse in={expandedRow === index} timeout="auto" unmountOnExit>
+                        <div style={{ padding: "16px", background: "#f9fafb", borderRadius: "8px" }}>
+                          <h4>Core Web Vitals Assessment: {row?.value || "No data available" || "No data available"}</h4>
+                          <pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+                            {row.details ? JSON.stringify(row.details, null, 2) : "No details available"}
                           </pre>
                         </div>
                       </Collapse>
