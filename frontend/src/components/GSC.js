@@ -150,7 +150,9 @@ function GSCFeature() {
                   </Typography>
                 </Box>
                 <Typography variant="h4" component="p" align="center" padding={2}>
-                  0
+                {analyticsData.length > 0
+                  ? analyticsData.reduce((acc, data) => acc + data.clicks, 0) // Sum all clicks
+                  : 0}
                 </Typography>
               </Card>
             </Grid>
