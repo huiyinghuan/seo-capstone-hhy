@@ -74,6 +74,9 @@ const SEOAuditResultTable = ({ rows, headings }) => {
       Value: row.value,
       Requirement: row.requirement,
       Valid: row.valid ? "✔️" : "❌",
+      Details: typeof row.details === "object" 
+      ? JSON.stringify(row.details, null, 2)  // Convert object to string for readability
+      : row.details || "No details available",
       Recommendation: row.recommendation,
       Score: row.valid ? 1 : 0, //(1 if valid, 0 if not)
     }));
@@ -86,6 +89,7 @@ const SEOAuditResultTable = ({ rows, headings }) => {
           .join("; "),
         Requirement: "",
         Valid: "",
+        Details: "",
         Recommendation: "",
         Score: "", // No score for the headings row
       });
@@ -102,24 +106,7 @@ const SEOAuditResultTable = ({ rows, headings }) => {
 
   // Calculate the total score
   const totalScore = rows.reduce((sum, row) => sum + (row.valid ? 1 : 0), 0);
-  
-  const pageSpeedDetails = {
-    "Core Web Vitals Assessment": "Fail",
-    DetailedOutput: {
-      lcp: {
-        distribution: { Good: "93.0%", NeedsImprovement: "5.2%", Poor: "1.8%" },
-        "75th Percentile": "1.06s",
-      },
-      inp: {
-        distribution: { Good: "96.7%", NeedsImprovement: "1.6%", Poor: "1.7%" },
-        "75th Percentile": "81.00ms",
-      },
-      cls: {
-        distribution: { Good: "19.0%", NeedsImprovement: "32.3%", Poor: "48.7%" },
-        "75th Percentile": "0.48",
-      },
-    },
-  };
+
   
   return (
     <Paper sx={{ width: "100%", overflow: "hidden", borderRadius: "8px" }}>
