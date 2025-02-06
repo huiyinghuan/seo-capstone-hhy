@@ -195,6 +195,20 @@ const SEOAuditResultTable = ({ rows, headings }) => {
                     </TableCell>
                   </TableRow>
                 )}
+                {row.label === "Structured Data" && (
+                  <TableRow>
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+                      <Collapse in={expandedRow === index} timeout="auto" unmountOnExit>
+                        <div style={{ padding: "16px", background: "#f9fafb", borderRadius: "8px" }}>
+                          <h4>Structured Data: {row?.value || "No structured data available"}</h4>
+                          <pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+                            {row.value ? JSON.stringify(row.value, null, 2) : "No details available"}
+                          </pre>
+                        </div>
+                      </Collapse>
+                    </TableCell>
+                  </TableRow>
+                )}
               </React.Fragment>
             ))}
             <TableRow

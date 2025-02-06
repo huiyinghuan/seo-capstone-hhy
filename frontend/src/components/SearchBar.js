@@ -124,7 +124,18 @@ import SEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTab
       { label: 'Mobile Friendly', value: data.mobile_friendly || 'Unknown', requirement: 'Responsive & works well on mobile', valid: data.mobile_friendly === 'Mobile-friendly', recommendation: 'Ensure the site is responsive and mobile-friendly' },
       //{ label: 'Page Speed', value: data.page_speed || 'Unknown', requirement: 'Aim for faster loading times to improve user experience', valid: data.page_speed === 'Pass', recommendation: 'Improve page speed for better user experience' },
       { label: 'Page Speed', value: data.page_speed.result || 'Unknown', details: data.page_speed.details || 'No details available', valid: data.page_speed.result === 'Pass', recommendation: 'Improve page speed for better user experience' },
-      { label: 'HTTPS Audit', value: data.httpsAuditResult || 'Unknown', requirement: 'HTTPS ensures secure communication', valid: data.httpsAuditResult === 'Pass', recommendation: 'Ensure the website uses HTTPS for secure communication' } 
+      { label: 'HTTPS Audit', value: data.httpsAuditResult || 'Unknown', requirement: 'HTTPS ensures secure communication', valid: data.httpsAuditResult === 'Pass', recommendation: 'Ensure the website uses HTTPS for secure communication' },
+      
+       // Add a row for Structured Data
+       { 
+        label: 'Structured Data', 
+        value: data.structured_data ? JSON.stringify(data.structured_data, null, 2) : 'No structured data found',
+        requirement: 'Ensure correct structured data for SEO purposes', 
+        valid: data.structured_data ? 'Valid' : 'Invalid', 
+        recommendation: 'Ensure the structured data is properly implemented according to Schema.org' 
+      }
+    
+    
     ];
   };
     

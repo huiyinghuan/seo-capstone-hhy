@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 
 
 # Load Google Search Console API credentials
-SERVICE_ACCOUNT_FILE = '/Users/huanhuiying/Documents/seo-capstone-hhy/seo-capstone-hhy.json'  # Update with your service account file path
-#SERVICE_ACCOUNT_FILE = 'C:/Users/huiying/Downloads/SIT_Y3_Sem1/capstone/seo-capstone-hhy/seo-capstone-hhy.json'
+#SERVICE_ACCOUNT_FILE = '/Users/huanhuiying/Documents/seo-capstone-hhy/seo-capstone-hhy.json'  # Update with your service account file path
+SERVICE_ACCOUNT_FILE = 'C:/Users/huiying/Downloads/SIT_Y3_Sem1/capstone/seo-capstone-hhy/seo-capstone-hhy.json'
 SCOPES = ['https://www.googleapis.com/auth/webmasters']
 
 # Initialize the Google API client
