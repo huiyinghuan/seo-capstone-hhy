@@ -219,7 +219,7 @@ import SEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTab
     
         {domains.map((entry, index) => (
           <div key={index} className="scrollable-table-container">
-              {entry.result && <SEOAuditResultTable rows={createRows(entry.result)} />}
+              {entry.result && <SEOAuditResultTable rows={createRows(entry.result)} domain={entry.domain} />}
           </div>
         ))}
     

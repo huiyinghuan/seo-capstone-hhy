@@ -15,7 +15,7 @@ import './SearchBar.css'; // Import the CSS file
 import * as XLSX from "xlsx"; // Import the xlsx library
 import { BsDashLg } from "react-icons/bs"; // Use this as a "half tick" placeholder
 
-const SEOAuditResultTable = ({ rows, headings }) => {
+const SEOAuditResultTable = ({ rows, headings, domain}) => {
   const [expandedRow, setExpandedRow] = useState(null); // State to track expanded row
 
   // Function to toggle row expansion
@@ -110,6 +110,17 @@ const SEOAuditResultTable = ({ rows, headings }) => {
   
   return (
     <Paper sx={{ width: "100%", overflow: "hidden", borderRadius: "8px" }}>
+      {/* Domain Header */}
+      <div style={{ 
+        padding: "12px", 
+        backgroundColor: "#eeeeee", 
+        color: "#101010", 
+        textAlign: "center", 
+        fontSize: "18px", 
+        fontWeight: "bold" 
+      }}>
+        SEO Audit Results for: {domain}
+      </div>
       <div style={{ display: "flex", justifyContent: "flex-end", padding: "8px" }}>
         <button onClick={exportToExcel} style={{ padding: "8px 16px", background: "#3b82f6", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" }}>
           Export to Excel
@@ -121,8 +132,9 @@ const SEOAuditResultTable = ({ rows, headings }) => {
         elevation={3}
         sx={{ borderRadius: "8px", maxHeight: "440px" }}
       >
-        <Table stickyHeader sx={{ minWidth: 650 }} aria-label="SEO Audit Results">
+        <Table stickyHeader sx={{ minWidth: 650 }} aria-label="SEO Audit Results" >
           <TableHead sx={{ backgroundColor: "#f9fafb" }}>
+            
             <TableRow>
             <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
                 
