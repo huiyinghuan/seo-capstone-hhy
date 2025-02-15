@@ -40,6 +40,9 @@ def fetch_static_html(url):
             # Structured Data (JSON-LD)
             structured_data = [script.string for script in soup.find_all('script', {'type': 'application/ld+json'})]
 
+            # Image Alt Text Analysis
+            image_alt_text_data = extract_image_alt_text(soup)
+
             result = {
             
                 "title": title,
@@ -47,7 +50,8 @@ def fetch_static_html(url):
                 "canonical": canonical,
                 "robots": robots,
                 "headings": headings,
-                "structured_data": structured_data
+                "structured_data": structured_data,
+                "image_alt_text": image_alt_text_data 
             }
 
             print("Static HTML data:", result)
@@ -92,6 +96,9 @@ def fetch_dynamic_html(url):
         # Structured Data (JSON-LD)
         structured_data = [script.string for script in soup.find_all('script', {'type': 'application/ld+json'})]
 
+         # Image Alt Text Analysis
+        image_alt_text_data = extract_image_alt_text(soup)
+
         driver.quit()
 
         return {
@@ -100,10 +107,30 @@ def fetch_dynamic_html(url):
             "canonical": canonical,
             "robots": robots,
             "headings": headings,
-            "structured_data": structured_data
+            "structured_data": structured_data,
+            "image_alt_text": image_alt_text_data  # Include image alt text data
         }
     except Exception as e:
         return None
+    
+
+def extract_image_alt_text(soup):
+    """
+    Extracts alt text from all images on the page.
+    Returns a dictionary with total images, images with alt text, and missing alt text count.
+    """
+    images = soup.find_all('img')
+    total_images = len(images)
+    images_with_alt = [img.get('alt', '').strip() for img in images if img.get('alt')]
+    missing_alt_count = total_images - len(images_with_alt)
+
+    return {
+        "total_images": total_images,
+        "images_with_alt": len(images_with_alt),
+        "missing_alt": missing_alt_count,
+        "missing_alt_images": [img['src'] for img in images if not img.get('alt') and img.get('src')]  # List images missing alt
+    }
+
 
 def fetch_xml_sitemap(url):
     sitemap_url = urljoin(url, "/sitemap.xml")
@@ -275,7 +302,7 @@ def validate_seo_data(data):
     # Define validation requirements
     recommendations = {
         "title": (50, 60, "Title length should be between 50-60 characters.", 40, 70),
-        "meta_description": (150, 160, "Meta description length should be between 150-160 characters.", 120, 180),
+        "meta_description": (150, 160, "Meta description length should be between 150-160 characters.", 120, 190),
         # Add more fields if needed
     }
 

@@ -53,7 +53,8 @@ def seo_audit(request):
             'validation': seo_data.get('validation', {}),
             'httpsAuditResult':seo_data.get('httpsAuditResult','Unknown'),
             'headings': seo_data.get('headings', {}),
-            'structured_data': seo_data.get('structured_data', [])
+            'structured_data': seo_data.get('structured_data', []),
+            'image_alt_text': seo_data.get('image_alt_text', {})
         }
         return JsonResponse(response)
     except Exception as e:
