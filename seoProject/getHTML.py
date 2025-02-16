@@ -254,9 +254,40 @@ def check_page_speed(url):
     
 
 
+def check_strucutre_data(url):
+    script_path = r"/Users/huanhuiying/Documents/seo-capstone-hhy/seoProject/structureDataCheck.mjs"
+    try:
+        # Call the .mjs file using Node.js
+        result = subprocess.run(
+            ["node", script_path, url],
+            capture_output=True,
+            text=True,
+            timeout=120
+        )
 
+        print("Raw stdout output:", result.stdout)  # Debug: print raw stdout
+        print("Raw stderr output:", result.stderr)  # Debug: print raw stderr
+    
+        # Parse the JSON output from the .mjs script
+        output = json.loads(result.stdout)
 
+        # If there's an error in the output
+        if 'error' in output:
+            return {"result": "Error", "message": output["error"]}
 
+        # Return the result in a structured format
+        return {
+            "totalValidItems": output.get("totalValidItems", 0),
+            "validItems": output.get("validItems", []),
+            "validItemTypes": output.get("validItemTypes", []),
+        }
+
+    except Exception as e:
+        return {"result": "Error", "message": f"Error fetching JSON-LD from URL: {e}"}
+   
+            
+
+        
 def fetch_html(url):
     static_data = fetch_static_html(url)
     if static_data:
@@ -265,6 +296,7 @@ def fetch_html(url):
         static_data["sitemap_status"] = sitemap_status
         static_data["mobile_friendly"] = check_mobile_friendly(url)
         static_data["page_speed"] = check_page_speed(url)
+        static_data["structured_data_validation"] = check_strucutre_data(url)
        
         
         # Validate data
@@ -282,7 +314,8 @@ def fetch_html(url):
         dynamic_data["sitemap_status"] = sitemap_status
         dynamic_data["mobile_friendly"] = check_mobile_friendly(url)
         dynamic_data["page_speed"] = check_page_speed(url)
-        
+        dynamic_data["structured_data_validation"] = check_strucutre_data(url)
+       
 
 
     

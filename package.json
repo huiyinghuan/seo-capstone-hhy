@@ -1,9 +1,14 @@
 {
   "dependencies": {
     "@material-tailwind/react": "^2.1.10",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "axios": "^1.7.9",
+    "cheerio": "^1.0.0",
     "chrome-launcher": "^1.1.2",
     "dotenv": "^16.4.7",
     "fs": "^0.0.1-security",
+    "jsonld": "^8.3.3",
     "lighthouse": "^12.3.0",
     "lucide-react": "^0.468.0",
     "node-fetch": "^3.3.2",

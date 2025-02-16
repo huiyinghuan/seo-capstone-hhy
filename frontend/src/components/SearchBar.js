@@ -43,6 +43,7 @@ import SEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTab
               httpsAuditResult: data.httpsAuditResult,
               mobile_friendly: data.mobile_friendly,
               page_speed: data.page_speed,
+              structured_data_validation: data.structured_data_validation,
               validation: data.validation,
               
           };
@@ -146,10 +147,24 @@ import SEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTab
         requirement: 'All images should have descriptive alt text',
         valid: data.image_alt_text.missing_alt === 0, // Passes validation if no images are missing alt text
         recommendation: 'Ensure all images have meaningful alt text for accessibility and SEO'
-    }
-    
+    },
 
-    
+    // Add a row for Structured Data
+    {
+      label: 'Structured Data',
+      // value: data.structured_data_validation ? JSON.stringify({
+      //   totalValidItems: data.structured_data_validation.totalValidItems,
+      //   // validItems: data.structuredData_Validation.validItems,
+      //   validItemTypes: data.structured_data_validation.validItemTypes
+      // }, null, 2) : 'No structured data found',
+      value: data.structured_data_validation ? 
+      `Detected Valid Items: ${data.structured_data_validation.totalValidItems}\n` + '\n'+
+      `Valid Item Types:\n${data.structured_data_validation.validItemTypes.join(', ')}` :
+      'No structured data found',
+      requirement: 'Ensure correct structured data for SEO purposes',
+      valid: data.structured_data_validation.totalValidItems > 0,
+      recommendation: 'Ensure the structured data is properly implemented according to Schema.org. Based on the result, there are ' + data.structured_data_validation.totalValidItems + ' valid items with the types: ' + (data.structured_data_validation.validItemTypes.join(", ") || 'No valid item types found.')
+    }
     
     
     ];
