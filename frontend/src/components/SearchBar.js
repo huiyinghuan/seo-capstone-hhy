@@ -133,7 +133,21 @@ import SEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTab
         requirement: 'Ensure correct structured data for SEO purposes', 
         valid: data.structured_data ? 'Valid' : 'Invalid', 
         recommendation: 'Ensure the structured data is properly implemented according to Schema.org' 
+      },
+
+       // Add a row for image alt text validation
+       {
+        label: 'Image Alt Text',
+        value: data.total_images > 0
+            ? data.missing_alt_images.length > 0
+                ? data.missing_alt_images.map(src => `${src} → No alt text`).join(', ')
+                : `All ${data.total_images} images have alt text`
+            : 'No images found',
+        requirement: 'All images should have descriptive alt text',
+        valid: data.missing_alt === 0, // Passes validation if no images are missing alt text
+        recommendation: 'Ensure all images have meaningful alt text for accessibility and SEO'
       }
+    
     
     
     ];
