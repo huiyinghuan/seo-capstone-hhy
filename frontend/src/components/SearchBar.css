@@ -107,3 +107,6 @@
 }
 
 
+.value-cell {
+  white-space: pre-wrap;
+}

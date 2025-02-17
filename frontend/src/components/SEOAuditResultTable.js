@@ -174,7 +174,7 @@ const SEOAuditResultTable = ({ rows, headings, domain}) => {
                     </IconButton>
                   </TableCell>
                   <TableCell>{row.label}</TableCell>
-                  <TableCell>{row.value}</TableCell>
+                  <TableCell className="value-cell">{row.value}</TableCell>
                   <TableCell>{row.requirement}</TableCell>
                   {/* <TableCell>
                     {row.valid ? <CheckIcon style={{ color: "green" }} /> : <CloseIcon style={{ color: "red" }} />}
