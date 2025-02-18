@@ -210,10 +210,15 @@ import SEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTab
                     placeholder={`Enter domain ${index + 1}`}
                     className="search-bar-input"
                   />
-                  
                   <Button
                     sx={{
-                      marginTop: "10px",
+                      position: "absolute",
+                      right: "20px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      minWidth: "50px",
+                      height: "50%",
+                      borderRadius: "5px",
                     }}
                     variant="outlined"
                     color="secondary"

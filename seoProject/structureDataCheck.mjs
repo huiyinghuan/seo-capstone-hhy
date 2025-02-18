@@ -345,7 +345,7 @@ async function validateJsonLdFromUrl(url) {
 
 // Example usage in another module
 async function main() {
-    const websiteUrl = 'https://www.channelnewsasia.com/commentary/education-master-degrees-qualifications-useless-tuition-fees-4802721'; // Replace with the target website URL
+    const websiteUrl = 'https://medium.com/@abulojoshua1/add-google-oauth-to-your-python-app-in-just-a-few-easy-steps-5d28a8d303fe'; // Replace with the target website URL
     const result = await validateJsonLdFromUrl(websiteUrl);
 
     // Example of structured result for external use
@@ -353,3 +353,17 @@ async function main() {
 }
 
 main().catch(err => console.error("Error in JSON-LD validation:", err));
+
+
+// // Example usage
+// const websiteUrl = 'https://www.channelnewsasia.com/commentary/education-master-degrees-qualifications-useless-tuition-fees-4802721'; // Replace with the target website URL
+// const result = await validateJsonLdFromUrl(websiteUrl);
+// console.log(`\n📊 Total valid items: ${result.totalValidItems}`);
+// console.log(`\n📋 Valid Item Types: ${result.validItemTypes.join(', ')}`);
+// result.validItems.forEach(item => {
+//     console.log(`\n🏷️ Script ${item.scriptIndex}:`);
+//     item.validItems.forEach(validItem => {
+//         console.log(`- ${validItem.type}`);
+//         console.log(`  Details: ${JSON.stringify(validItem.details, null, 2)}`);
+//     });
+// });
