@@ -15,7 +15,13 @@
 .search-bar-flex-container {
   display: flex; /* Enable flexbox layout */
   flex-wrap: wrap; /* Allow wrapping to the next line if there are too many items */
-  gap: 10px; /* Add space between search bars */
+  gap: 30px; /* Add space between search bars */
+  align-items: center; 
+  margin: 0 auto; 
+  /* display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  width: 100%; */
 }
 
 

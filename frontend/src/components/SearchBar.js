@@ -278,9 +278,10 @@ import { Check as CheckIcon, Close as CloseIcon } from '@mui/icons-material';
 import './SearchBar.css'; // Import the CSS file
 import SEOAuditResultTable from "./SEOAuditResultTable";
 import { FaPlusCircle } from "react-icons/fa";
+import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
 import Button from '@mui/material/Button';
 import SEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTable';
-
+import { Card, CardHeader, CardContent, Typography  } from '@mui/material';
 
   const SearchBar = ({ onSearch }) => {
     const [domains, setDomains] = useState([{ domain: "", result: null }]);
@@ -468,80 +469,169 @@ import SEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTab
 
     console.log("Combined rows:", combinedRows);
    
-    return (
-      <div className="container">
-        <div className="search-bar-form">
-          {/* Add a flex container to arrange search bars horizontally */}
-          <div className="search-bar-flex-container">
-          {/* <div className={`search-bar-flex-container ${domains.length === 1 ? "centered" : ""}`}> */}
-            {domains.map((entry, index) => (
-              <div key={index} className="search-bar-container">
-                <div className="search-bar-wrapper">
-                  <input
-                    type="text"
-                    value={entry.domain}
-                    onChange={(e) => handleDomainChange(index, e.target.value)}
-                    placeholder={`Enter domain ${index + 1}`}
-                    className="search-bar-input"
-                  />
-                  {domains.length > 1 && (
-                  <Button
-                    sx={{
-                      position: "absolute",
-                      right: "20px",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      minWidth: "50px",
-                      height: "50%",
-                      borderRadius: "5px",
-                    }}
-                    variant="outlined"
-                    color="secondary"
-                    onClick={() => handleRemoveSearchBar(index)}
-                  >
-                    Remove
-                  </Button>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+  //   return (
+  //     <div className="container">
+  //       <div className="search-bar-form">
+  //         {/* Add a flex container to arrange search bars horizontally */}
+  //         <div className="search-bar-flex-container">
+  //         {/* <div className={`search-bar-flex-container ${domains.length === 1 ? "centered" : ""}`}> */}
+  //           {domains.map((entry, index) => (
+  //             <div key={index} className="search-bar-container">
+  //               <div className="search-bar-wrapper">
+  //                 <input
+  //                   type="text"
+  //                   value={entry.domain}
+  //                   onChange={(e) => handleDomainChange(index, e.target.value)}
+  //                   placeholder={`Enter domain ${index + 1}`}
+  //                   className="search-bar-input"
+  //                 />
+  //                 {domains.length > 1 && (
+  //                 <Button
+  //                   sx={{
+  //                     position: "absolute",
+  //                     right: "20px",
+  //                     top: "50%",
+  //                     transform: "translateY(-50%)",
+  //                     // minWidth: "50px",
+  //                     // height: "50%",
+  //                     // borderRadius: "5px",
+  //                   }}
+  //                   //variant="outlined"
+  //                   // color="secondary"
+  //                   onClick={() => handleRemoveSearchBar(index)}
+  //                 >
+  //                   <DisabledByDefaultRoundedIcon  sx={{ fontSize: 30 }} />
+  //                 </Button>
+  //                 )}
+  //               </div>
+  //             </div>
+  //           ))}
+  //         </div>
     
-          <Button 
-            variant="contained" 
-            onClick={handleAddSearchBar} 
-            sx={{
-              margin: "20px 0px 20px 0px"
-            }}>
-            Add Search Bar
-          </Button>
-          <Button variant="contained" onClick={handleSearch}>
-            Search
-          </Button>
-        </div>
+  //         <Button 
+  //           variant="contained" 
+  //           onClick={handleAddSearchBar} 
+  //           sx={{
+  //             margin: "20px 0px 20px 0px"
+  //           }}>
+  //           Add Search Bar
+  //         </Button>
+  //         <Button variant="contained" onClick={handleSearch}>
+  //           Search
+  //         </Button>
+  //       </div>
     
-        {/* Competitor Summary Table */}
-        <div className="scrollable-table-container">
-          {searchTriggered && combinedScores.length > 0 && (
-            <SEOCompetitorAnalysisSummaryTable data={combinedScores} />
-          )}
-        </div>
+  //       {/* Competitor Summary Table */}
+  //       <div className="scrollable-table-container">
+  //         {searchTriggered && combinedScores.length > 0 && (
+  //           <SEOCompetitorAnalysisSummaryTable data={combinedScores} />
+  //         )}
+  //       </div>
     
-        <br />
+  //       <br />
     
-        {domains.map((entry, index) => (
-          <div key={index} className="scrollable-table-container">
-              {entry.result && <SEOAuditResultTable rows={createRows(entry.result)} domain={entry.domain} />}
-          </div>
-        ))}
+  //       {domains.map((entry, index) => (
+  //         <div key={index} className="scrollable-table-container">
+  //             {entry.result && <SEOAuditResultTable rows={createRows(entry.result)} domain={entry.domain} />}
+  //         </div>
+  //       ))}
     
-        <br />
-      </div>
-    );
+  //       <br />
+  //     </div>
+  //   );
     
-  };
+  // };
 
-  export default SearchBar;      
+  return (
+    <div className="container">
+      {/* <Card className="max-w-4xl mx-auto mb-12"> */}
+      <Card sx={{ maxWidth: 1000, margin: '0 auto', padding: 2, marginBottom: 4 }}>
+      <CardHeader title="Website SEO Analysis" subheader="Enter up to 5 domains to analyze their SEO performance" />
+        <CardContent>
+          <div className="search-bar-form">
+            {/* Add a flex container to arrange search bars horizontally */}
+            <div className="search-bar-flex-container">
+              {domains.map((entry, index) => (
+                <div key={index} className="search-bar-container relative">
+                  <div className="search-bar-wrapper">
+                    <input
+                      type="text"
+                      value={entry.domain}
+                      onChange={(e) => handleDomainChange(index, e.target.value)}
+                      placeholder={`Enter domain ${index + 1}`}
+                      className="search-bar-input"
+                    />
+                    {domains.length > 1 && (
+                      <Button
+                        sx={{
+                          position: "absolute",
+                          right: "20px",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                        }}
+                        onClick={() => handleRemoveSearchBar(index)}
+                      >
+                        <DisabledByDefaultRoundedIcon sx={{ fontSize: 30 }} />
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="button-group" style={{ width: '100%' }}>
+              {/* add another domain */}
+              <Button 
+                variant="outlined"
+                onClick={handleAddSearchBar} 
+                sx={{
+                  margin: "20px 0px", // Adjust top/bottom margin for spacing
+                  width: '100%', // Set width to 100% for full width
+                  borderColor: 'lightgrey', // to ensure the border has color
+                  borderStyle: 'dashed', // Dashed border style
+                  borderWidth: 2, // Border width
+                  color: 'text.primary', // Text color
+                  padding: '8px 16px', // Adjust padding for the button
+                  '&:hover': {
+                    borderColor: 'primary.main', // Change border color on hover
+                   // backgroundColor: 'transparent', // Keep background transparent on hover
+                  }
+                }}>
+                Add Another Domain
+              </Button>
+              <br></br>
+              <Button variant="contained" onClick={handleSearch} 
+              sx={{ 
+                width: '100%',
+                }}>
+                Search
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Competitor Summary Table */}
+      <div className="scrollable-table-container">
+        {searchTriggered && combinedScores.length > 0 && (
+          <SEOCompetitorAnalysisSummaryTable data={combinedScores} />
+        )}
+      </div>
+
+      <br />
+
+      {domains.map((entry, index) => (
+        <div key={index} className="scrollable-table-container">
+          {entry.result && <SEOAuditResultTable rows={createRows(entry.result)} domain={entry.domain} />}
+        </div>
+      ))}
+      <br />
+    </div>
+  );
+}
+
+
+export default SearchBar;      
 
 
 
