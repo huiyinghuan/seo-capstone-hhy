@@ -13,15 +13,19 @@
 }
 
 .search-bar-flex-container {
-  display: flex; /* Enable flexbox layout */
-  flex-wrap: wrap; /* Allow wrapping to the next line if there are too many items */
-  gap: 30px; /* Add space between search bars */
+  /*display: flex; /* Enable flexbox layout */
+  /*flex-wrap: wrap; /* Allow wrapping to the next line if there are too many items */
+  /*gap: 30px; /* Add space between search bars */
   align-items: center; 
-  margin: 0 auto; 
-  /* display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  width: 100%; */
+  
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 3fr)); /* Dynamically adjust columns */
+  gap: 20px; /* Space between search bars */
+  justify-content: center; /* Center content when there's only 1 */
+  width: 100%;
+  max-width: 900px; /* Ensure it doesn’t stretch too wide */
+  margin: 0 auto; /* Center the entire grid */
+ 
 }
 
 

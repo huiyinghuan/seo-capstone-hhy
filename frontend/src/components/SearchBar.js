@@ -545,7 +545,7 @@ import { Card, CardHeader, CardContent, Typography  } from '@mui/material';
   return (
     <div className="container">
       {/* <Card className="max-w-4xl mx-auto mb-12"> */}
-      <Card sx={{ maxWidth: 1000, margin: '0 auto', padding: 2, marginBottom: 4 }}>
+      <Card sx={{ maxWidth: 1000, margin: '0 auto', padding: 2, marginBottom: 4, textAlign: "center" }}>
       <CardHeader title="Website SEO Analysis" subheader="Enter up to 5 domains to analyze their SEO performance" />
         <CardContent>
           <div className="search-bar-form">
