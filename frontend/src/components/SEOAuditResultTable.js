@@ -10,7 +10,9 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
+import Button from '@mui/material/Button';
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import { WandSparkles } from 'lucide-react';
 import './SearchBar.css'; // Import the CSS file
 import * as XLSX from "xlsx"; // Import the xlsx library
 import { BsDashLg } from "react-icons/bs"; // Use this as a "half tick" placeholder
@@ -21,6 +23,13 @@ const SEOAuditResultTable = ({ rows, headings, domain}) => {
   // Function to toggle row expansion
   const toggleRow = (index) => {
     setExpandedRow(expandedRow === index ? null : index);
+  };
+
+   // Function to handle expanding the row when the "Recommended Fixes" button is clicked, although it works the same as the toggleRow function
+   // however, i do not want both expansion to appear when the button is clicked, i want each to appear based on its needs. so another function 
+   // is created for a clear segregation 
+   const handleRecommendedFixesClick = (index) => {
+    toggleRow(index); // Expand the row when button is clicked
   };
 
   //check validation
@@ -155,6 +164,9 @@ const SEOAuditResultTable = ({ rows, headings, domain}) => {
                 Recommendation
               </TableCell>
               <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
+                Actions
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
                 Score
               </TableCell>
 
@@ -181,8 +193,54 @@ const SEOAuditResultTable = ({ rows, headings, domain}) => {
                   </TableCell> */}
                   <TableCell>{getValidationIcon(row.valid)}</TableCell>
                   <TableCell>{row.recommendation}</TableCell>
+                  <TableCell >
+                   
+                      <Button variant="contained" color="purple" 
+                        sx={{ display: 'inline-flex',
+                              alignItems: 'center',
+                              // padding: '0.5rem 3rem',
+                              backgroundColor: '#F3E7FF',  
+                              color: '#581C87', 
+                              fontSize: '1rem',
+                              fontWeight: 'bold',  // To make the font bold
+                              textTransform: 'none',  // To uncapitalize the letters
+                              whiteSpace: 'nowrap', // Prevents the text from wrapping to the next line
+                              gap: '0.5rem', 
+                              borderRadius: '10px',  
+                              
+                              '&:hover': {
+                                backgroundColor: '#e9d5ff', 
+                            },
+                          }} 
+                        // onClick={() => alert(`Action for ${row.label}`)}>
+                        // Expanding the row when button is clicked
+                        onClick={() => handleRecommendedFixesClick(index)} > 
+                        
+                        <WandSparkles 
+                          sx={{ 
+                            marginRight: 2, 
+                            fontSize: '0.1rem',
+                           }}
+                        />
+                        Recommended Fixes
+                      </Button>
+                  
+                  </TableCell>
                   <TableCell>{row.valid ? 1 : 0}</TableCell>  {/** for score */}
                 </TableRow>
+                {expandedRow === index && (
+                  <TableRow>
+                    <TableCell colSpan={8}>
+                      <Collapse in={expandedRow === index} timeout="auto" unmountOnExit>
+                        <div style={{ padding: "16px", background: "#FaF5FF", borderRadius: "8px", color: "#581C87", fontSize: '1rem',
+                              fontWeight: 'bold' }}>
+                          <h4 style={{color: "#581C87", fontSize: '1rem', fontWeight: 'bold'}} >Recommendations: {row.label}</h4>
+                          <pre>{row.recommendation}</pre>
+                        </div>
+                      </Collapse>
+                    </TableCell>
+                  </TableRow>
+                )}
                 {row.label === "Page Speed" && (
                   <TableRow>
                     {/* <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
@@ -223,6 +281,11 @@ const SEOAuditResultTable = ({ rows, headings, domain}) => {
                 )}
               </React.Fragment>
             ))}
+            <TableRow>
+              <TableCell>
+                  <Button>Recommended Fixes</Button>
+                </TableCell>
+            </TableRow>
             <TableRow
               sx={{
                 position: "sticky",
@@ -232,7 +295,7 @@ const SEOAuditResultTable = ({ rows, headings, domain}) => {
                 fontWeight: "bold",
               }}
             >
-              <TableCell colSpan={7} align="right" sx={{ fontWeight: "bold" }}>
+              <TableCell colSpan={8} align="right" sx={{ fontWeight: "bold" }}>
                 Total Score: {totalScore}
               </TableCell>
             </TableRow>

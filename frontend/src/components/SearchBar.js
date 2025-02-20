@@ -468,79 +468,6 @@ import { Card, CardHeader, CardContent, Typography  } from '@mui/material';
 
 
     console.log("Combined rows:", combinedRows);
-   
-  //   return (
-  //     <div className="container">
-  //       <div className="search-bar-form">
-  //         {/* Add a flex container to arrange search bars horizontally */}
-  //         <div className="search-bar-flex-container">
-  //         {/* <div className={`search-bar-flex-container ${domains.length === 1 ? "centered" : ""}`}> */}
-  //           {domains.map((entry, index) => (
-  //             <div key={index} className="search-bar-container">
-  //               <div className="search-bar-wrapper">
-  //                 <input
-  //                   type="text"
-  //                   value={entry.domain}
-  //                   onChange={(e) => handleDomainChange(index, e.target.value)}
-  //                   placeholder={`Enter domain ${index + 1}`}
-  //                   className="search-bar-input"
-  //                 />
-  //                 {domains.length > 1 && (
-  //                 <Button
-  //                   sx={{
-  //                     position: "absolute",
-  //                     right: "20px",
-  //                     top: "50%",
-  //                     transform: "translateY(-50%)",
-  //                     // minWidth: "50px",
-  //                     // height: "50%",
-  //                     // borderRadius: "5px",
-  //                   }}
-  //                   //variant="outlined"
-  //                   // color="secondary"
-  //                   onClick={() => handleRemoveSearchBar(index)}
-  //                 >
-  //                   <DisabledByDefaultRoundedIcon  sx={{ fontSize: 30 }} />
-  //                 </Button>
-  //                 )}
-  //               </div>
-  //             </div>
-  //           ))}
-  //         </div>
-    
-  //         <Button 
-  //           variant="contained" 
-  //           onClick={handleAddSearchBar} 
-  //           sx={{
-  //             margin: "20px 0px 20px 0px"
-  //           }}>
-  //           Add Search Bar
-  //         </Button>
-  //         <Button variant="contained" onClick={handleSearch}>
-  //           Search
-  //         </Button>
-  //       </div>
-    
-  //       {/* Competitor Summary Table */}
-  //       <div className="scrollable-table-container">
-  //         {searchTriggered && combinedScores.length > 0 && (
-  //           <SEOCompetitorAnalysisSummaryTable data={combinedScores} />
-  //         )}
-  //       </div>
-    
-  //       <br />
-    
-  //       {domains.map((entry, index) => (
-  //         <div key={index} className="scrollable-table-container">
-  //             {entry.result && <SEOAuditResultTable rows={createRows(entry.result)} domain={entry.domain} />}
-  //         </div>
-  //       ))}
-    
-  //       <br />
-  //     </div>
-  //   );
-    
-  // };
 
   return (
     <div className="container">
@@ -617,9 +544,7 @@ import { Card, CardHeader, CardContent, Typography  } from '@mui/material';
           <SEOCompetitorAnalysisSummaryTable data={combinedScores} />
         )}
       </div>
-
       <br />
-
       {domains.map((entry, index) => (
         <div key={index} className="scrollable-table-container">
           {entry.result && <SEOAuditResultTable rows={createRows(entry.result)} domain={entry.domain} />}
