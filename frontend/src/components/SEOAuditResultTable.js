@@ -281,11 +281,6 @@ const SEOAuditResultTable = ({ rows, headings, domain}) => {
                 )}
               </React.Fragment>
             ))}
-            <TableRow>
-              <TableCell>
-                  <Button>Recommended Fixes</Button>
-                </TableCell>
-            </TableRow>
             <TableRow
               sx={{
                 position: "sticky",
