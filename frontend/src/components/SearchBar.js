@@ -286,7 +286,33 @@ import { Card, CardHeader, CardContent, Typography  } from '@mui/material';
   const SearchBar = ({ onSearch }) => {
     const [domains, setDomains] = useState([{ domain: "", result: null }]);
     const [searchTriggered, setSearchTriggered] = useState(false);  // Track if search has been triggered
+  
+    //test
+    const [response, setResponse] = useState(null);
+    const [loading, setLoading] = useState(false);
 
+    const handleTestRecommendations = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/api/get_recommended_fixes/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({}) // No data needed for this test
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch recommendations");
+        }
+
+        const data = await response.json();
+        console.log("Recommendation:", data.recommendation);
+      } catch (error) {
+        console.error("Error fetching recommendations:", error);
+      }
+    };
+
+  // segreate
 
     const validateLength = (value, min, max) => value.length >= min && value.length <= max;
 
@@ -471,6 +497,26 @@ import { Card, CardHeader, CardContent, Typography  } from '@mui/material';
 
   return (
     <div className="container">
+      {/* test */}
+      <div style={{ padding: '20px' }}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleTestRecommendations}
+        disabled={loading}
+      >
+        {loading ? 'Loading...' : 'Test Recommendations'}
+      </Button>
+      
+      {response && (
+        <div style={{ marginTop: '20px' }}>
+          <h3>Response from API:</h3>
+          <pre>{response}</pre>
+        </div>
+      )}
+    </div>
+    
+
       {/* <Card className="max-w-4xl mx-auto mb-12"> */}
       <Card sx={{ maxWidth: 1000, margin: '0 auto', padding: 2, marginBottom: 4, textAlign: "center" }}>
       <CardHeader title="Website SEO Analysis" subheader="Enter up to 5 domains to analyze their SEO performance" />

@@ -17,8 +17,11 @@ import './SearchBar.css'; // Import the CSS file
 import * as XLSX from "xlsx"; // Import the xlsx library
 import { BsDashLg } from "react-icons/bs"; // Use this as a "half tick" placeholder
 
-const SEOAuditResultTable = ({ rows, headings, domain}) => {
+const SEOAuditResultTable = ({ rows, setRows, headings, domain}) => {
   const [expandedRow, setExpandedRow] = useState(null); // State to track expanded row
+  const [loadingFixes, setLoadingFixes] = useState({}); // Track loading state
+  const [recommendedActions, setRecommendedActions] = useState({});
+
 
   // Function to toggle row expansion
   const toggleRow = (index) => {
@@ -28,9 +31,51 @@ const SEOAuditResultTable = ({ rows, headings, domain}) => {
    // Function to handle expanding the row when the "Recommended Fixes" button is clicked, although it works the same as the toggleRow function
    // however, i do not want both expansion to appear when the button is clicked, i want each to appear based on its needs. so another function 
    // is created for a clear segregation 
-   const handleRecommendedFixesClick = (index) => {
-    toggleRow(index); // Expand the row when button is clicked
+  //  const handleRecommendedFixesClick = (index) => {
+  //   toggleRow(index); // Expand the row when button is clicked
+  // };
+
+  //test
+  // Function to handle fetching recommendations when button is clicked
+  const fetchRecommendedFixes = async (index, label) => {
+    try {
+      setLoadingFixes((prev) => ({ ...prev, [index]: true }));
+      const { value, requirement } = rows[index]; // Extract value and requirement
+
+      const response = await fetch("http://127.0.0.1:8000/api/get_recommended_fixes/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({label, value, requirement}) // pass additional data 
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch recommendations");
+      }
+
+      const data = await response.json();
+      const recommendation = data.recommendation || "No recommendation available";
+
+      // // Update the row with the recommendation
+      // const updatedRows = [...rows];
+      // updatedRows[index].recommendation = recommendation;
+      // setRows(updatedRows);
+
+      setRecommendedActions((prev) => ({ ...prev, [index]: recommendation })); // Store in new state
+
+      // Set expanded row
+      toggleRow(index);
+    } catch (error) {
+      console.error("Error fetching recommendations:", error);
+    } finally {
+      setLoadingFixes((prev) => ({ ...prev, [index]: false }));
+    }
   };
+  
+    // segreate
+
+  
 
   //check validation
   // new version
@@ -118,6 +163,7 @@ const SEOAuditResultTable = ({ rows, headings, domain}) => {
 
   
   return (
+    
     <Paper sx={{ width: "100%", overflow: "hidden", borderRadius: "8px" }}>
       {/* Domain Header */}
       <div style={{ 
@@ -214,21 +260,24 @@ const SEOAuditResultTable = ({ rows, headings, domain}) => {
                           }} 
                         // onClick={() => alert(`Action for ${row.label}`)}>
                         // Expanding the row when button is clicked
-                        onClick={() => handleRecommendedFixesClick(index)} > 
-                        
+                        // onClick={() => handleRecommendedFixesClick(index)} > 
+                        disabled={loadingFixes[index]}
+                        onClick={() => fetchRecommendedFixes(index, row.label, row.value)}
+                      >
                         <WandSparkles 
                           sx={{ 
                             marginRight: 2, 
                             fontSize: '0.1rem',
                            }}
                         />
-                        Recommended Fixes
+                        {/* Recommended Fixes */}
+                        {loadingFixes[index] ? "Fetching..." : "Recommended Fixes"}
                       </Button>
                   
                   </TableCell>
                   <TableCell>{row.valid ? 1 : 0}</TableCell>  {/** for score */}
                 </TableRow>
-                {expandedRow === index && (
+                {/* {expandedRow === index && (
                   <TableRow>
                     <TableCell colSpan={8}>
                       <Collapse in={expandedRow === index} timeout="auto" unmountOnExit>
@@ -236,6 +285,18 @@ const SEOAuditResultTable = ({ rows, headings, domain}) => {
                               fontWeight: 'bold' }}>
                           <h4 style={{color: "#581C87", fontSize: '1rem', fontWeight: 'bold'}} >Recommendations: {row.label}</h4>
                           <pre>{row.recommendation}</pre>
+                        </div>
+                      </Collapse>
+                    </TableCell>
+                  </TableRow> */}
+                {/* Expanded Row for Recommendation */}
+                {expandedRow === index && (
+                  <TableRow>
+                    <TableCell colSpan={8}>
+                      <Collapse in={expandedRow === index} timeout="auto" unmountOnExit>
+                        <div style={{ padding: "16px", background: "#FaF5FF", borderRadius: "8px", color: "#581C87", fontSize: "1rem", fontWeight: "bold" }}>
+                          <h4 style={{ color: "#581C87" }}>Recommended Actions: {row.label}</h4>
+                          <pre>{loadingFixes[index] ? "Fetching recommendation..." : recommendedActions[index] || "No recommendation available"}</pre>
                         </div>
                       </Collapse>
                     </TableCell>
@@ -298,6 +359,8 @@ const SEOAuditResultTable = ({ rows, headings, domain}) => {
         </Table>
       </TableContainer>
     </Paper>
+
+    
     
   );
 };

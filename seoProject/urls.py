@@ -6,6 +6,7 @@ from django.conf import settings
 from .views import seo_audit
 from . import gscFeature
 #from .googleOAuthRedirects import get_google_auth_url
+from . import recommedationFeature
 
 
 urlpatterns = [
@@ -19,8 +20,8 @@ urlpatterns = [
     path('api/get-sites', gscFeature.get_sites, name='get_sites'),
     path('api/get-sitemaps', gscFeature.get_sitemaps, name='get_sitemaps'),
     path('api/get-search-analytics', gscFeature.get_search_analytics, name='get_search_analytics'),
-    # path('api/inspect-url', gscFeature.inspect_url, name='inspect_url'),
-
+    path("api/get_recommended_fixes/", recommedationFeature.get_recommended_fixes, name="get_recommended_fixes"),
+    
 ]
 
 if settings.DEBUG:
