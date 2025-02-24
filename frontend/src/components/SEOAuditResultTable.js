@@ -40,14 +40,14 @@ const SEOAuditResultTable = ({ rows, setRows, headings, domain}) => {
   const fetchRecommendedFixes = async (index, label) => {
     try {
       setLoadingFixes((prev) => ({ ...prev, [index]: true }));
-      const { value, requirement } = rows[index]; // Extract value and requirement
+      const { value, requirement, details} = rows[index]; // Extract value and requirement
 
       const response = await fetch("http://127.0.0.1:8000/api/get_recommended_fixes/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({label, value, requirement}) // pass additional data 
+        body: JSON.stringify({label, value, requirement, details}) // pass additional data 
       });
 
       if (!response.ok) {
@@ -240,7 +240,7 @@ const SEOAuditResultTable = ({ rows, setRows, headings, domain}) => {
                   <TableCell>{getValidationIcon(row.valid)}</TableCell>
                   <TableCell>{row.recommendation}</TableCell>
                   <TableCell >
-                   
+                    {(row.valid === false || row.valid === null) && (
                       <Button variant="contained" color="purple" 
                         sx={{ display: 'inline-flex',
                               alignItems: 'center',
@@ -273,7 +273,7 @@ const SEOAuditResultTable = ({ rows, setRows, headings, domain}) => {
                         {/* Recommended Fixes */}
                         {loadingFixes[index] ? "Fetching..." : "Recommended Fixes"}
                       </Button>
-                  
+                    )}
                   </TableCell>
                   <TableCell>{row.valid ? 1 : 0}</TableCell>  {/** for score */}
                 </TableRow>

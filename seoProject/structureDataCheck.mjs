@@ -111,7 +111,7 @@
 // }
 
 // // Example usage
-// const websiteUrl = 'https://www.channelnewsasia.com/commentary/education-master-degrees-qualifications-useless-tuition-fees-4802721'; // Replace with the target website URL
+// const websiteUrl = 'https://www.semrush.com/kb/995-what-is-semrush'; // Replace with the target website URL
 // await validateJsonLdFromUrl(websiteUrl);
 
 
@@ -120,7 +120,7 @@
 // import fetch from 'node-fetch';
 // import * as cheerio from 'cheerio';
 
-// // Function to fetch and validate JSON-LD from a webpage
+// // Function to fetch and validate JSON- LD from a webpage
 // async function validateJsonLdFromUrl(url) {
 //     try {
 //         // Fetch the webpage content
@@ -343,9 +343,9 @@ async function validateJsonLdFromUrl(url) {
     }
 }
 
-// Example usage in another module
+//Example usage in another module
 async function main() {
-    const websiteUrl = 'https://medium.com/@abulojoshua1/add-google-oauth-to-your-python-app-in-just-a-few-easy-steps-5d28a8d303fe'; // Replace with the target website URL
+    const websiteUrl = 'https://www.screamingfrog.co.uk/generate-json-ld-schema-at-scale/'; // Replace with the target website URL
     const result = await validateJsonLdFromUrl(websiteUrl);
 
     // Example of structured result for external use
@@ -355,8 +355,8 @@ async function main() {
 main().catch(err => console.error("Error in JSON-LD validation:", err));
 
 
-// // Example usage
-// const websiteUrl = 'https://www.channelnewsasia.com/commentary/education-master-degrees-qualifications-useless-tuition-fees-4802721'; // Replace with the target website URL
+// Example usage
+// const websiteUrl = 'https://firstpagesage.com/seo-blog/top-seo-tools-comparison/'; // Replace with the target website URL
 // const result = await validateJsonLdFromUrl(websiteUrl);
 // console.log(`\n📊 Total valid items: ${result.totalValidItems}`);
 // console.log(`\n📋 Valid Item Types: ${result.validItemTypes.join(', ')}`);
@@ -367,3 +367,4 @@ main().catch(err => console.error("Error in JSON-LD validation:", err));
 //         console.log(`  Details: ${JSON.stringify(validItem.details, null, 2)}`);
 //     });
 // });
+

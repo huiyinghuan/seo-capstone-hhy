@@ -130,10 +130,27 @@ def get_recommended_fixes(request):
         data = json.loads(request.body)
         label = data.get("label", "Unknown Attribute")
         value = data.get("value", "No Value Provided")
+        details = data.get("details", "No Details Available")
         requirement = data.get("requirement", "No Value Provided")
 
-        prompt = f"Modify the {label}, {value} to ensue the {label} fit the  {requirement}"
+        # prompt = f"Modify the {label}, {value} to ensue the {label} fit the  {requirement}"
         #prompt = "Provide SEO recommendations for a page with the following issues: Missing alt attributes, slow page load time, missing meta description."
+        
+        # Define different prompts based on the label
+        if "Meta Description" in label:
+            prompt = f"Rewrite the following '{label}' to ensure it fits the '{requirement}' while keeping the '{value}'."
+        elif "Title" in label:
+            prompt = f"The current title is '{value}'. Optimize it to be compelling, concise, keyword-rich, and within '{requirement}'. Ensure it accurately describes the page content."
+        elif "Image Alt Text" in label:
+            prompt = f"Generate appropriate '{label}' for each of the following '{value}'. Ensure the descriptions are concise, descriptive, and SEO-friendly, accurately reflecting the content of the images. Avoid generic terms like image or photo and instead describe the subject in detail."
+        elif "Page Speed" in label:
+            prompt = f"Give recommendations on how to improve on core web vital assessment results based on the {details}"
+        else:
+            prompt = f"Modify the {label}, '{value}', to ensure it meets the requirement: '{requirement}'. Provide an SEO-friendly recommendation."
+        
+        
+        
+        
         logger.info(f"Prompt: {prompt}")
 
         response = client.chat.completions.create(
