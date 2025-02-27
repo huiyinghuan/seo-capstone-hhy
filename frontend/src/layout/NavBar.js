@@ -26,7 +26,7 @@ const Navbar = () => {
           <a href="" className="nav-link">
             Home
           </a>
-          <a href="#" className="nav-link">
+          {/* <a href="#" className="nav-link">
             Technical Audits
           </a>
           <a href="#" className="nav-link">
@@ -34,15 +34,15 @@ const Navbar = () => {
           </a>
           <a href="#" className="nav-link">
             Reports
-          </a>
-          <Link to="/gsc-page" className="nav-link"> {/* New link to the new page */}
-            GSCFeatureTest
+          </a> */}
+          <Link to="/gsc-page" className="connect-button nav-link"> {/* New link to the new page */}
+            Connect with GSC
           </Link>
           {/* Connect Button */}
-          <Button className="connect-button">
+          {/* <Button className="connect-button">
             Connect with GSC
-          </Button>
-          {/* <GoogleOAuthRedirect /> */}
+          </Button> */}
+     
         </Box>
       </Toolbar>
     </AppBar>

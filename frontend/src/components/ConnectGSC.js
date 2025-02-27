@@ -65,9 +65,9 @@ const ConnectGSC = () => {
 
   return (
     <div>
-      <Button onClick={handleRedirect}>Connect with GSC</Button>
+      {/* <Button onClick={handleRedirect}>Connect with GSC</Button>
       <Button onClick={handleFetchData}>Pull GSC Data</Button>
-      
+       */}
       {gscData && (
         <div>
           <pre>{JSON.stringify(gscData, null, 2)}</pre>
@@ -77,5 +77,5 @@ const ConnectGSC = () => {
   );
 };
 
-
+// not wokring feature
 export default ConnectGSC;
