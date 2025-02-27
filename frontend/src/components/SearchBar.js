@@ -413,7 +413,7 @@ import { Card, CardHeader, CardContent, Typography  } from '@mui/material';
     }
 
     return [
-      { label: 'HTML Type', value: data.html_type || 'Unknown', requirement: 'N/A', valid: 'N/A', recommendation: 'N/A' },
+      // { label: 'HTML Type', value: data.html_type || 'Unknown', requirement: 'N/A', valid: 'N/A', recommendation: 'N/A' },
       //  valid: validateLength(data.title || '', 50, 60)
       //{ label: 'Title', value: data.title || 'No title', requirement: '50 - 60 Characters', validation: data.validation?.title?.half_valid, recommendation: 'Ensure the title is between 50 - 60 characters' },
       { label: 'Title', value: data.title || 'No title', requirement: '50 - 60 Characters', valid: validateLength(data.title || '', 30, 91) ? (validateLength(data.title || '', 50, 60) ? true : "partial") : false, recommendation: 'Ensure the title is between 50 - 60 characters' },
@@ -428,13 +428,13 @@ import { Card, CardHeader, CardContent, Typography  } from '@mui/material';
       { label: 'HTTPS Audit', value: data.httpsAuditResult || 'Unknown', requirement: 'HTTPS ensures secure communication', valid: data.httpsAuditResult === 'Pass', recommendation: 'Ensure the website uses HTTPS for secure communication' },
       
        // Add a row for Structured Data
-       { 
-        label: 'Structured Data', 
-        value: data.structured_data ? JSON.stringify(data.structured_data, null, 2) : 'No structured data found',
-        requirement: 'Ensure correct structured data for SEO purposes', 
-        valid: data.structured_data ? 'Valid' : 'Invalid', 
-        recommendation: 'Ensure the structured data is properly implemented according to Schema.org' 
-      },
+      //  { 
+      //   label: 'Structured Data', 
+      //   value: data.structured_data ? JSON.stringify(data.structured_data, null, 2) : 'No structured data found',
+      //   requirement: 'Ensure correct structured data for SEO purposes', 
+      //   valid: data.structured_data ? 'Valid' : 'Invalid', 
+      //   recommendation: 'Ensure the structured data is properly implemented according to Schema.org' 
+      // },
 
       // Add a row for image alt text validation
       {
@@ -497,26 +497,6 @@ import { Card, CardHeader, CardContent, Typography  } from '@mui/material';
 
   return (
     <div className="container">
-      {/* test */}
-      <div style={{ padding: '20px' }}>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleTestRecommendations}
-        disabled={loading}
-      >
-        {loading ? 'Loading...' : 'Test Recommendations'}
-      </Button>
-      
-      {response && (
-        <div style={{ marginTop: '20px' }}>
-          <h3>Response from API:</h3>
-          <pre>{response}</pre>
-        </div>
-      )}
-    </div>
-    
-
       {/* <Card className="max-w-4xl mx-auto mb-12"> */}
       <Card sx={{ maxWidth: 1000, margin: '0 auto', padding: 2, marginBottom: 4, textAlign: "center" }}>
       <CardHeader title="Website SEO Analysis" subheader="Enter up to 5 domains to analyze their SEO performance" />

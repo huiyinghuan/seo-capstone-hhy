@@ -110,17 +110,6 @@ const SEOAuditResultTable = ({ rows, setRows, headings, domain}) => {
     }
   };
 
-  // older version 
-  // const getValidationIcon = (valid) => {
-  //   if (valid === true) {
-  //     return <CheckIcon style={{ color: 'green' }} />;
-  //   } else if (valid === false) {
-  //     return <CloseIcon style={{ color: 'red' }} />;
-  //   } else {
-  //     return <BsDashLg style={{ color: 'orange' }} />; // Half-tick icon for partially valid
-  //   }
-  // };
-
    // Function to export data to Excel
    const exportToExcel = () => {
     const formattedRows = rows.map((row) => ({
@@ -158,9 +147,19 @@ const SEOAuditResultTable = ({ rows, setRows, headings, domain}) => {
     XLSX.writeFile(workbook, "SEO_Audit_Results.xlsx");
   };
 
+  const getValidationScore = (valid) => {
+    if (valid === true) {
+      return 1;
+    } else if (valid === false) {
+      return 0;
+    } else {
+      return 0.5; // Score of 0.5 for partially valid cases
+    }
+  };
+  
   // Calculate the total score
-  const totalScore = rows.reduce((sum, row) => sum + (row.valid ? 1 : 0), 0);
-
+  //const totalScore = rows.reduce((sum, row) => sum + (row.valid ? 1 : 0), 0);
+  const totalScore = rows.reduce((sum, row) => sum + getValidationScore(row.valid), 0);
   
   return (
     
@@ -275,7 +274,7 @@ const SEOAuditResultTable = ({ rows, setRows, headings, domain}) => {
                       </Button>
                     )}
                   </TableCell>
-                  <TableCell>{row.valid ? 1 : 0}</TableCell>  {/** for score */}
+                  <TableCell>{getValidationScore(row.valid)} </TableCell>  {/** {row.valid ? 1 : 0}   for score */}
                 </TableRow>
                 {/* {expandedRow === index && (
                   <TableRow>
