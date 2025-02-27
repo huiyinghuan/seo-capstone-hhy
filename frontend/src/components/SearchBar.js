@@ -286,31 +286,7 @@ import { Card, CardHeader, CardContent, Typography  } from '@mui/material';
   const SearchBar = ({ onSearch }) => {
     const [domains, setDomains] = useState([{ domain: "", result: null }]);
     const [searchTriggered, setSearchTriggered] = useState(false);  // Track if search has been triggered
-  
-    //test
-    const [response, setResponse] = useState(null);
-    const [loading, setLoading] = useState(false);
-
-    const handleTestRecommendations = async () => {
-      try {
-        const response = await fetch("http://127.0.0.1:8000/api/get_recommended_fixes/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({}) // No data needed for this test
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch recommendations");
-        }
-
-        const data = await response.json();
-        console.log("Recommendation:", data.recommendation);
-      } catch (error) {
-        console.error("Error fetching recommendations:", error);
-      }
-    };
+    
 
   // segreate
 
@@ -373,6 +349,7 @@ import { Card, CardHeader, CardContent, Typography  } from '@mui/material';
     const handleDomainChange = (index, value) => {
       const updatedDomains = [...domains];
       updatedDomains[index].domain = value;
+      updatedDomains[index].result = null; // Reset result when domain changes
       setDomains(updatedDomains);
     };
 
@@ -387,23 +364,28 @@ import { Card, CardHeader, CardContent, Typography  } from '@mui/material';
 
       // Mark the search as triggered, if not it will be rendered immediately, affect ui view 
       setSearchTriggered(true);
+
+      // Clear previous results before fetching new data
+      const resetDomains = domains.map(entry => ({ ...entry, result: null }));
+      setDomains(resetDomains);
     
-    // Proceed with SEO data fetching for each domain
-    const updatedDomains = await Promise.all(
-      domains.map(async (entry) => {
-        const data = await fetchSEOData(entry.domain);
-        console.log("Fetched data for domain:", entry.domain, data);
-        return {
-          ...entry,
-          result: data || null,
-        };
-      })
-    );
+      // Proceed with SEO data fetching for each domain
+      const updatedDomains = await Promise.all(
+        domains.map(async (entry) => {
+          const data = await fetchSEOData(entry.domain);
+          console.log("Fetched data for domain:", entry.domain, data);
+          return {
+            ...entry,
+            result: data || null,
+          };
+        })
+      );
 
     // Update the domains with fetched data
     console.log("Updated domains:", updatedDomains);
     setDomains(updatedDomains);
-    //setSearchTriggered(false);  Reset search state
+    setSearchTriggered(false);  //Reset search state
+  
   };
 
   const createRows = (data) => {
