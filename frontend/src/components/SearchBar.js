@@ -362,12 +362,25 @@ import { Card, CardHeader, CardContent, Typography  } from '@mui/material';
         return;
       }
 
-      // Mark the search as triggered, if not it will be rendered immediately, affect ui view 
+      // // Mark the search as triggered, if not it will be rendered immediately, affect ui view 
+      // setSearchTriggered(true);
+
+      // Reset searchTriggered before starting a new search
+      setSearchTriggered(false);
+
+      // Reset previous results but do NOT reset searchTriggered yet
+      setDomains((prevDomains) => prevDomains.map(entry => ({ ...entry, result: null })));
+     
+      // Allow React to process state updates before fetching data
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      
+      // Clear previous results before fetching new data
+      // const resetDomains = domains.map(entry => ({ ...entry, result: null }));
+      // setDomains(resetDomains);
+
+      // Mark the search as triggered (so the summary table re-renders properly)
       setSearchTriggered(true);
 
-      // Clear previous results before fetching new data
-      const resetDomains = domains.map(entry => ({ ...entry, result: null }));
-      setDomains(resetDomains);
     
       // Proceed with SEO data fetching for each domain
       const updatedDomains = await Promise.all(
@@ -384,8 +397,7 @@ import { Card, CardHeader, CardContent, Typography  } from '@mui/material';
     // Update the domains with fetched data
     console.log("Updated domains:", updatedDomains);
     setDomains(updatedDomains);
-    setSearchTriggered(false);  //Reset search state
-  
+    // setSearchTriggered(false);  //Reset search state
   };
 
   const createRows = (data) => {
