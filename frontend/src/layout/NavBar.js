@@ -20,29 +20,16 @@ const Navbar = () => {
             SEO Tool
           </Typography>
         </Box>
-
         {/* Navigation Links */}
         <Box display={{ xs: "none", md: "flex" }} alignItems="center" className="ml-auto">
-          <a href="" className="nav-link">
+          {/* <a href="" className="nav-link">
             Home
-          </a>
-          {/* <a href="#" className="nav-link">
-            Technical Audits
-          </a>
-          <a href="#" className="nav-link">
-            Keywords
-          </a>
-          <a href="#" className="nav-link">
-            Reports
           </a> */}
+            {/* Updated Home Link */}
+          <Link to="/" className="nav-link">Home</Link> 
           <Link to="/gsc-page" className="connect-button nav-link"> {/* New link to the new page */}
             Connect with GSC
           </Link>
-          {/* Connect Button */}
-          {/* <Button className="connect-button">
-            Connect with GSC
-          </Button> */}
-     
         </Box>
       </Toolbar>
     </AppBar>

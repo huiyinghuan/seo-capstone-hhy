@@ -281,7 +281,7 @@ import { FaPlusCircle } from "react-icons/fa";
 import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
 import Button from '@mui/material/Button';
 import SEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTable';
-import { Card, CardHeader, CardContent, Typography  } from '@mui/material';
+import { Card, CardHeader, CardContent, Typography, LinearProgress, Button, Box,  } from '@mui/material';
 
   const SearchBar = ({ onSearch }) => {
     const [domains, setDomains] = useState([{ domain: "", result: null }]);
