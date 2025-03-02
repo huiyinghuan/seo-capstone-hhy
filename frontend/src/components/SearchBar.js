@@ -272,7 +272,7 @@
 
 
 
-import React, { useState } from 'react';
+import React, { useState,  useEffect } from 'react';
 import { Search } from 'lucide-react';
 import { Check as CheckIcon, Close as CloseIcon } from '@mui/icons-material'; 
 import './SearchBar.css'; // Import the CSS file
@@ -281,12 +281,30 @@ import { FaPlusCircle } from "react-icons/fa";
 import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
 import Button from '@mui/material/Button';
 import SEOCompetitorAnalysisSummaryTable from './SEOCompetitorAnalysisSummaryTable';
-import { Card, CardHeader, CardContent, Typography, LinearProgress, Button, Box,  } from '@mui/material';
+import { Card, CardHeader, CardContent, Typography, LinearProgress, Box,  } from '@mui/material';
 
   const SearchBar = ({ onSearch }) => {
     const [domains, setDomains] = useState([{ domain: "", result: null }]);
     const [searchTriggered, setSearchTriggered] = useState(false);  // Track if search has been triggered
     
+    //for loading progress bar
+    const [loading, setLoading] = useState(false);
+    const [progress, setProgress] = useState(0);
+
+    useEffect(() => {
+      let timer;
+      if (loading) {
+          setProgress(0);
+          timer = setInterval(() => {
+              setProgress((prev) => (prev >= 90 ? 90 : prev + 10)); // Simulate progress up to 90%
+          }, 500);
+      } else {
+          clearInterval(timer);
+          setProgress(100); // Complete the progress when loading stops
+          setTimeout(() => setProgress(0), 500); // Reset progress after completion
+      }
+      return () => clearInterval(timer);
+  }, [loading]);
 
   // segreate
 
@@ -302,6 +320,7 @@ import { Card, CardHeader, CardContent, Typography, LinearProgress, Button, Box,
           if (!data.hasOwnProperty('httpsAuditResult')) {
               alert(`httpsAuditResult is missing for ${url}`);
           }
+
 
           if (data.error) {
               alert(`Error fetching data for ${url}: ${data.error}`);
@@ -365,6 +384,8 @@ import { Card, CardHeader, CardContent, Typography, LinearProgress, Button, Box,
       // // Mark the search as triggered, if not it will be rendered immediately, affect ui view 
       // setSearchTriggered(true);
 
+      setLoading(true); // start loading
+
       // Reset searchTriggered before starting a new search
       setSearchTriggered(false);
 
@@ -381,6 +402,7 @@ import { Card, CardHeader, CardContent, Typography, LinearProgress, Button, Box,
       // Mark the search as triggered (so the summary table re-renders properly)
       setSearchTriggered(true);
 
+      
     
       // Proceed with SEO data fetching for each domain
       const updatedDomains = await Promise.all(
@@ -398,6 +420,13 @@ import { Card, CardHeader, CardContent, Typography, LinearProgress, Button, Box,
     console.log("Updated domains:", updatedDomains);
     setDomains(updatedDomains);
     // setSearchTriggered(false);  //Reset search state
+
+    setTimeout(() => {
+      setLoading(false); // Stop loading AFTER fetching data
+      setProgress(100); // Complete progress bar
+      setTimeout(() => setProgress(0), 500); // Reset progress
+    }, 500);
+
   };
 
   const createRows = (data) => {
@@ -495,6 +524,14 @@ import { Card, CardHeader, CardContent, Typography, LinearProgress, Button, Box,
       <Card sx={{ maxWidth: 1000, margin: '0 auto', padding: 2, marginBottom: 4, textAlign: "center" }}>
       <CardHeader title="Website SEO Analysis" subheader="Enter up to 5 domains to analyze their SEO performance" />
         <CardContent>
+        {loading && (
+          <Box sx={{ width: '100%', mb: 2 }}>
+              <LinearProgress variant="determinate" value={progress} />
+              <Typography variant="body2" sx={{ textAlign: 'center', mt: 1 }}>
+                  {progress}% Analyzing...
+              </Typography>
+          </Box>
+        )}
           <div className="search-bar-form">
             {/* Add a flex container to arrange search bars horizontally */}
             <div className="search-bar-flex-container">
@@ -547,10 +584,12 @@ import { Card, CardHeader, CardContent, Typography, LinearProgress, Button, Box,
                 Add Another Domain
               </Button>
               <br></br>
-              <Button variant="contained" onClick={handleSearch} 
+              <Button variant="contained" onClick={handleSearch} disabled={loading} 
+              
               sx={{ 
                 width: '100%',
                 }}>
+                {loading ? "Analyzing..." : "Search"}  
                 Search
               </Button>
             </div>
