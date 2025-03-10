@@ -1,18 +1,48 @@
-// 
-
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Button, Card, Grid, Typography, Box, Paper, Tabs, Tab, TextField, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
 import { BarChart3, Search, Globe, Trees as SitemapTree, Brain, TrendingUp, AlertCircle } from "lucide-react";
 
 function GSCFeature() {
+  const [file, setFile] = useState(null);
   const [sites, setSites] = useState([]);
   const [sitemaps, setSitemaps] = useState([]);
   const [analyticsData, setAnalyticsData] = useState([]);
   const [message, setMessage] = useState('');
   const [selectedSiteUrl, setSelectedSiteUrl] = useState('');
-  // const [urlInspectionData, setUrlInspectionData] = useState(null);
+  const fileInputRef = useRef(null);
 
+
+  // Handle file selection
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  // Upload file and get GSC sites
+  const handleUpload = async () => {
+    if (!file) {
+      alert("Please select a JSON file!");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch("http://localhost:8000/api/upload-auth-file", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+      setMessage(data.message || data.error);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      setMessage("Error uploading file");
+    }
+  };
+
+  // for different tabs 
   const [tabValue, setTabValue] = useState("overview");
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -49,7 +79,7 @@ function GSCFeature() {
       return;
     }
     const startDate = "2024-12-04";
-    const endDate = "2025-01-31";
+    const endDate = "2025-04-31";
     try {
       const response = await fetch(`http://localhost:8000/api/get-search-analytics?site_url=${encodeURIComponent(selectedSiteUrl)}&start_date=${startDate}&end_date=${endDate}`);
       const data = await response.json();
@@ -59,32 +89,31 @@ function GSCFeature() {
     }
   };
 
-  // const getUrlInspectionData = async () => {
-  //   if (!selectedSiteUrl) {
-  //     alert('Please select a site first!');
-  //     return;
-  //   }
-  //   const urlToInspect = prompt('Enter the URL to inspect:');  // Allow user to input URL for inspection
-  //   if (!urlToInspect) {
-  //     alert('URL is required for inspection!');
-  //     return;
-  //   }
+//   // const getUrlInspectionData = async () => {
+//   //   if (!selectedSiteUrl) {
+//   //     alert('Please select a site first!');
+//   //     return;
+//   //   }
+//   //   const urlToInspect = prompt('Enter the URL to inspect:');  // Allow user to input URL for inspection
+//   //   if (!urlToInspect) {
+//   //     alert('URL is required for inspection!');
+//   //     return;
+//   //   }
    
-  //   try {
-  //     const response = await fetch(`http://localhost:8000/api/inspect-url?site_url=${encodeURIComponent(selectedSiteUrl)}&url=${encodeURIComponent(urlToInspect)}`);
-  //     const data = await response.json();
-  //     setUrlInspectionData(data);
-  //   } catch (error) {
-  //     console.error("Error fetching URL inspection data:", error);
-  //   } 
-  // };
+//   //   try {
+//   //     const response = await fetch(`http://localhost:8000/api/inspect-url?site_url=${encodeURIComponent(selectedSiteUrl)}&url=${encodeURIComponent(urlToInspect)}`);
+//   //     const data = await response.json();
+//   //     setUrlInspectionData(data);
+//   //   } catch (error) {
+//   //     console.error("Error fetching URL inspection data:", error);
+//   //   } 
+//   // };
   
  
   const handleSiteSelection = (event) => {
     setSelectedSiteUrl(event.target.value); 
   };
   
-
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "#f4f6f8" }}>
     {/* Header */}
@@ -93,6 +122,41 @@ function GSCFeature() {
         <Typography variant="h4" component="h1" fontWeight="bold">
           SEO Analytics Dashboard
         </Typography>
+        {/* Button to trigger file upload */}
+        <Button 
+            variant="contained" 
+            className="connect-button" 
+            // onClick={handleUpload}
+            onClick={() => fileInputRef.current.click()}
+            style={{ marginLeft: '20px' }}
+          >
+          Upload JSON File
+        </Button>
+        {/* Hidden file input with ref */}
+        <input 
+            ref={fileInputRef}
+            type="file" 
+            style={{ display: "none" }} 
+            accept="application/json" 
+            onChange={handleFileChange}
+          />
+        {/* Connect with GSC Test */}
+        <Button 
+          variant="contained" 
+          className="connect-button" 
+          // onClick={() => fileInputRef.current.click()}
+          onClick={handleUpload}
+         >
+          Connect with GSC
+        </Button>
+        {/* <input 
+          type="file" 
+          // ref={fileInputRef} 
+          style={{ display: "none" }} 
+          // accept=".json"
+          accept="application/json" 
+          onChange={handleFileChange}
+        /> */}
         <Box ml="auto" display="flex" alignItems="center" spacing={2}>
           <Button variant="outlined" size="small" startIcon={<Globe />} style={{ marginLeft: "10px" }} onClick={getSites}>
             Get Sites
@@ -132,9 +196,7 @@ function GSCFeature() {
             ))}
           </Select>
         </FormControl>
-      </Box>
-
-      
+      </Box>     
 
       {/* Tab Content */}
       {tabValue === "overview" && (
@@ -165,7 +227,9 @@ function GSCFeature() {
                   </Typography>
                 </Box>
                 <Typography variant="h4" component="p" align="center" padding={2}>
-                  20
+                {analyticsData.length > 0
+                  ? analyticsData.reduce((acc, data) => acc + data.impressions, 0) // Sum all impressions
+                  : 0}
                 </Typography>
               </Card>
             </Grid>
@@ -295,65 +359,9 @@ function GSCFeature() {
       )}
     </main>
   </div>
-
-    // older display
-    // <div>
-    //   <h1>Google Search Console Dashboard</h1>
-    //   <button onClick={getSites}>Get Sites</button>
-    //   <button onClick={getSitemaps}>Get Sitemaps</button>
-    //   <button onClick={getSearchAnalytics}>Get Data</button>
-    //   {/* <button onClick={getUrlInspectionData}>Inspect URL</button> */}
-
-
-    //   <h2>Message:</h2>
-    //   <p>{message}</p>
-
-    //   <h2>Sites:</h2>
-    //   <ul>
-    //     {sites.map((site, index) => (
-    //       <li key={index} onClick={() => handleSiteSelection(site)}>
-    //         {site}
-    //       </li>
-    //     ))}
-    //   </ul>
-
-    //   {selectedSiteUrl && (
-    //     <>
-    //       <h2>Selected Site:</h2>
-    //       <p>{selectedSiteUrl}</p>
-    //     </>
-    //   )}
-    //   <h2>Sitemaps:</h2>
-    //   <ul>
-    //     {sitemaps.map((sitemap, index) => (
-    //       <li key={index}>
-    //         {sitemap}
-    //       </li>
-    //     ))}
-    //   </ul>
-  
-
-    //   <h2>Search Analytics Data:</h2>
-    //   <ul>
-    //     {analyticsData.map((data, index) => (
-    //       <li key={index}>
-    //         {data.date}: {data.clicks} clicks
-    //       </li>
-    //     ))}
-    //   </ul>
-
-    //   <h2>Search Analytics Graph</h2>
-    //   <LineChart width={600} height={300} data={analyticsData}>
-    //     <CartesianGrid strokeDasharray="3 3" />
-    //     <XAxis dataKey="date" />
-    //     <YAxis />
-    //     <Tooltip />
-    //     <Legend />
-    //     <Line type="monotone" dataKey="clicks" stroke="#8884d8" activeDot={{ r: 8 }} />
-    //   </LineChart>
-      
-    // </div>
   );
 }
 
 export default GSCFeature;
+
+

@@ -1,38 +1,67 @@
 import os
 import json
+import logging
+import tempfile
 from django.http import JsonResponse
+from rest_framework.decorators import api_view, parser_classes
+from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser, FormParser
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
-from rest_framework.decorators import api_view
-from googleapiclient.errors import HttpError
 
-import logging
 
 # Setup logger
 logger = logging.getLogger(__name__)
 
-
-# Load Google Search Console API credentials
-SERVICE_ACCOUNT_FILE = '/Users/huanhuiying/Documents/seo-capstone-hhy/seo-capstone-hhy.json'  # Update with your service account file path
-#SERVICE_ACCOUNT_FILE = 'C:/Users/huiying/Downloads/SIT_Y3_Sem1/capstone/seo-capstone-hhy/seo-capstone-hhy.json'
+# Global variable for the service account file
+SERVICE_ACCOUNT_FILE = None
 SCOPES = ['https://www.googleapis.com/auth/webmasters']
-
-# Initialize the Google API client
-credentials = service_account.Credentials.from_service_account_file(
-    SERVICE_ACCOUNT_FILE, scopes=SCOPES
-)
-webmasters_service = build('webmasters', 'v3', credentials=credentials)
+credentials = None
+webmasters_service = None
 
 
-# @api_view(['GET'])
-# def authorize_user(request):
-#     """Simulate an authorization endpoint."""
-#     return JsonResponse({"message": "Successfully authorized using service account"})
+@api_view(['POST'])
+@parser_classes([MultiPartParser, FormParser])
+def upload_auth_file(request):
+    """Handle temporary upload of a service account JSON file and update authentication globally."""
+    global SERVICE_ACCOUNT_FILE, credentials, webmasters_service
+
+    if 'file' not in request.FILES:
+        return Response({"error": "No file provided"}, status=400)
+
+    uploaded_file = request.FILES['file']
+
+    # Save the file temporarily
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".json") as temp_file:
+        for chunk in uploaded_file.chunks():
+            temp_file.write(chunk)
+        SERVICE_ACCOUNT_FILE = temp_file.name  # Store the path in a global variable
+
+    try:
+        # Load the new service account file for authentication
+        credentials = service_account.Credentials.from_service_account_file(
+            SERVICE_ACCOUNT_FILE, scopes=SCOPES
+        )
+        webmasters_service = build('webmasters', 'v3', credentials=credentials)
+
+        # Optional: Test authentication by retrieving sites
+        site_list = webmasters_service.sites().list().execute()
+        sites = [site['siteUrl'] for site in site_list.get('siteEntry', [])]
+
+        return Response({"message": "Authenticated successfully", "sites": sites}, status=200)
+
+    except Exception as e:
+        os.remove(SERVICE_ACCOUNT_FILE)  # Ensure cleanup on failure
+        SERVICE_ACCOUNT_FILE = None  # Reset the global variable
+        return Response({"error": str(e)}, status=500)
 
 
 @api_view(['GET'])
 def get_sites(request):
     """Retrieve the list of verified sites."""
+    if not webmasters_service:
+        return JsonResponse({"error": "Service account file not uploaded"}, status=400)
+
     try:
         site_list = webmasters_service.sites().list().execute()
         sites = [site['siteUrl'] for site in site_list.get('siteEntry', [])]
@@ -44,6 +73,9 @@ def get_sites(request):
 @api_view(['GET'])
 def get_sitemaps(request):
     """Retrieve the list of sitemaps for a given site."""
+    if not webmasters_service:
+        return JsonResponse({"error": "Service account file not uploaded"}, status=400)
+
     site_url = request.GET.get('site_url')
     if not site_url:
         return JsonResponse({"error": "Missing 'site_url' parameter"}, status=400)
@@ -54,11 +86,14 @@ def get_sitemaps(request):
         return JsonResponse({"sitemaps": sitemaps})
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
-    
+
 
 @api_view(['GET'])
 def get_search_analytics(request):
     """Fetch search analytics data based on site and date range."""
+    if not webmasters_service:
+        return JsonResponse({"error": "Service account file not uploaded"}, status=400)
+
     site_url = request.GET.get('site_url')
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
@@ -78,30 +113,7 @@ def get_search_analytics(request):
             siteUrl=site_url, body=request_body
         ).execute()
         rows = response.get('rows', [])
-        data = [{'date': row['keys'][0], 'clicks': row['clicks']} for row in rows]
+        data = [{'date': row['keys'][0], 'clicks': row['clicks'], 'impressions': row['impressions']} for row in rows]
         return JsonResponse(data, safe=False)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
-    
-    
-# @api_view(['GET'])
-# def inspect_url(request):
-#     try:
-#         # Get site_url and url from request parameters
-#         site_url = request.GET.get('site_url')
-#         url = request.GET.get('url')
-
-#         if not site_url or not url:
-#             return JsonResponse({"error": "Missing site_url or url parameters"}, status=400)
-
-#         # Call the URL inspection API
-#         inspection =  webmasters_service.urlInspection().index().inspect(
-#             siteUrl=site_url,
-#             url=url
-#         ).execute()
-
-#         # Return the result as JSON
-#         return JsonResponse(inspection)
-    
-#     except Exception as e:
-#         return JsonResponse({"error": f"Error fetching URL inspection data: {str(e)}"}, status=500)

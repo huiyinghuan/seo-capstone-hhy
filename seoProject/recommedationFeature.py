@@ -148,8 +148,7 @@ def get_recommended_fixes(request):
         else:
             prompt = f"Modify the {label}, '{value}', to ensure it meets the requirement: '{requirement}'. Provide an SEO-friendly recommendation."
         
-        
-        
+    
         
         logger.info(f"Prompt: {prompt}")
 
