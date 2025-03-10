@@ -1,4 +1,3 @@
-import ast
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
@@ -115,6 +114,10 @@ def fetch_dynamic_html(url):
         return None
     
 
+
+
+
+
 def extract_image_alt_text(soup):
     """
     Extracts alt text from all images on the page.
@@ -145,6 +148,7 @@ def fetch_xml_sitemap(url):
         return "Error checking sitemap"
     
 
+
 #scripts section 
 # Get the base directory dynamically
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Gets the current script's directory
@@ -152,49 +156,6 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Gets the current script
 def get_script_path(script_name):
     """Dynamically generate the full path to the script."""
     return os.path.join(BASE_DIR, script_name)
-
-
-def check_siteMap(url):
-    """
-    Calls the checkSiteMap.py script and returns the sitemap URL(s) found.
-    """
-    script_path = get_script_path("checkSiteMap.py")  # Update with your actual script name
-    
-    if not script_path:
-        return "Error: Script path not found for SiteMap check."
-
-    try:
-        # Call the Python script with subprocess
-        result = subprocess.run(
-            ["python", script_path, url],  
-            capture_output=True,
-            text=True,
-            timeout=120
-        )
-
-        print("Raw stdout output:", result.stdout)  # Debug: print raw stdout
-        print("Raw stderr output:", result.stderr)  # Debug: print raw stderr
-
-        if result.returncode == 0:
-            try:
-                # Convert Python dict string to actual dict
-                output = ast.literal_eval(result.stdout.strip())  
-
-                # Ensure we are working with a proper dictionary
-                if isinstance(output, dict) and "sitemaps_found" in output:
-                    sitemaps = [sitemap.strip() for sitemap in output["sitemaps_found"]]
-                    return f"Sitemaps found: {', '.join(sitemaps)}" if sitemaps else "No sitemap found."
-                else:
-                    return "Error: Unexpected output format"
-
-            except (SyntaxError, ValueError):
-                return f"Error: Invalid JSON output: {result.stdout}"
-        else:
-            return f"Error: {result.stderr}"
-
-    except Exception as e:
-        return f"Error checking Sitemap: {e}"
-
 
 
 def check_https_status(url):
@@ -370,8 +331,7 @@ def fetch_html(url):
     if static_data:
         sitemap_status = fetch_xml_sitemap(url)
         static_data["httpsAuditResult"] = check_https_status(url)  # Add HTTPS audit result
-        # static_data["sitemap_status"] = sitemap_status
-        static_data["sitemap_status"] = check_siteMap(url)
+        static_data["sitemap_status"] = sitemap_status
         static_data["mobile_friendly"] = check_mobile_friendly(url)
         static_data["page_speed"] = check_page_speed(url)
         static_data["structured_data_validation"] = check_strucutre_data(url)
