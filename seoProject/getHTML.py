@@ -7,6 +7,8 @@ from urllib.parse import urljoin
 import subprocess
 import json
 import os
+from collections import Counter
+import re
 
 def fetch_static_html(url):
     try:
@@ -154,47 +156,100 @@ def get_script_path(script_name):
     return os.path.join(BASE_DIR, script_name)
 
 
-def check_siteMap(url):
-    """
-    Calls the checkSiteMap.py script and returns the sitemap URL(s) found.
-    """
-    script_path = get_script_path("checkSiteMap.py")  # Update with your actual script name
+# def check_siteMap(url):
+#     """
+#     Calls the checkSiteMap.py script and returns the sitemap URL(s) found.
+#     """
+#     script_path = get_script_path("checkSiteMap.py")  # Update with your actual script name
     
-    if not script_path:
-        return "Error: Script path not found for SiteMap check."
+#     if not script_path:
+#         return "Error: Script path not found for SiteMap check."
 
+#     try:
+#         # Call the Python script with subprocess
+#         result = subprocess.run(
+#             ["python", script_path, url],  
+#             capture_output=True,
+#             text=True,
+#             timeout=120
+#         )
+
+#         print("Raw stdout output:", result.stdout)  # Debug: print raw stdout
+#         print("Raw stderr output:", result.stderr)  # Debug: print raw stderr
+
+#     #     if result.returncode == 0:
+#     #         try:
+#     #             # Convert Python dict string to actual dict
+#     #             # output = ast.literal_eval(result.stdout.strip())  
+#     #             output = json.loads(result.stdout.strip())  # Convert JSON string to dict
+
+#     #             # Ensure we are working with a proper dictionary
+#     #             if isinstance(output, dict) and "sitemaps_found" in output:
+#     #                 sitemaps = [sitemap.strip() for sitemap in output["sitemaps_found"]]
+#     #                 return f"Sitemaps found: {', '.join(sitemaps)}" if sitemaps else "No sitemap found."
+#     #             else:
+#     #                 return "Error: Unexpected output format"
+
+#     #         except (SyntaxError, ValueError):
+#     #             return f"Error: Invalid JSON output: {result.stdout}"
+#     #     else:
+#     #         return f"Error: {result.stderr}"
+
+#     # except Exception as e:
+#     #     return f"Error checking Sitemap: {e}"
+#         if result.returncode == 0:
+#             try:
+#                 # 🔹 Clean up whitespace and newlines before parsing JSON
+#                 json_output = result.stdout.strip()
+
+#                 # 🔹 Ensure the output is a valid JSON string
+#                 output = json.loads(json_output)
+
+#                 if isinstance(output, dict) and "sitemaps" in output:
+#                     # 🔹 Remove carriage returns (`\r`) from sitemap URLs
+#                     sitemaps = [sitemap.strip() for sitemap in output["sitemaps"]]
+#                     return f"Sitemaps found: {', '.join(sitemaps)}" if sitemaps else "No sitemap found."
+#                 else:
+#                     return "Error: Unexpected output format"
+
+#             except json.JSONDecodeError as e:
+#                 return f"Error: Could not parse JSON output: {json_output}\nException: {str(e)}"
+#         else:
+#             return f"Error: {result.stderr.strip()}"
+
+#     except Exception as e:
+#         return f"Error checking Sitemap: {e}"
+     
+def check_siteMap(url):
+    """ 
+    Calls the checkSiteMap.mjs script and returns the sitemap URL(s) found.
+    """
+    script_path = get_script_path("checkSiteMap.mjs") # Update this if the script is in a different location
+    if not script_path:
+        return "Error: Script path not found for HTTPS check."
+    
     try:
-        # Call the Python script with subprocess
         result = subprocess.run(
-            ["python", script_path, url],  
+            ["node", script_path, url],  
             capture_output=True,
             text=True,
-            timeout=120
+            timeout=180  # Set timeout to 30 seconds
         )
-
         print("Raw stdout output:", result.stdout)  # Debug: print raw stdout
-        print("Raw stderr output:", result.stderr)  # Debug: print raw stderr
-
         if result.returncode == 0:
             try:
-                # Convert Python dict string to actual dict
-                output = ast.literal_eval(result.stdout.strip())  
-
-                # Ensure we are working with a proper dictionary
-                if isinstance(output, dict) and "sitemaps_found" in output:
-                    sitemaps = [sitemap.strip() for sitemap in output["sitemaps_found"]]
-                    return f"Sitemaps found: {', '.join(sitemaps)}" if sitemaps else "No sitemap found."
-                else:
-                    return "Error: Unexpected output format"
-
-            except (SyntaxError, ValueError):
-                return f"Error: Invalid JSON output: {result.stdout}"
+                output = json.loads(result.stdout.strip())
+                return output
+            except json.JSONDecodeError:
+                return {"error": "Invalid JSON response", "raw_output": result.stdout.strip()}
         else:
-            return f"Error: {result.stderr}"
+            return {"error": "Script execution failed", "stderr": result.stderr.strip()}
+
+    except subprocess.TimeoutExpired:
+        return {"error": "Sitemap check timed out."}
 
     except Exception as e:
-        return f"Error checking Sitemap: {e}"
-
+        return {"error": f"Unexpected error: {str(e)}"}
 
 
 def check_https_status(url):
@@ -368,7 +423,7 @@ def check_strucutre_data(url):
 def fetch_html(url):
     static_data = fetch_static_html(url)
     if static_data:
-        sitemap_status = fetch_xml_sitemap(url)
+        # sitemap_status = fetch_xml_sitemap(url)
         static_data["httpsAuditResult"] = check_https_status(url)  # Add HTTPS audit result
         # static_data["sitemap_status"] = sitemap_status
         static_data["sitemap_status"] = check_siteMap(url)
@@ -387,9 +442,9 @@ def fetch_html(url):
 
     dynamic_data = fetch_dynamic_html(url)
     if dynamic_data:
-        sitemap_status = fetch_xml_sitemap(url)
+        # sitemap_status = fetch_xml_sitemap(url)
         dynamic_data["httpsAuditResult"] = check_https_status(url)  # Add HTTPS audit result
-        dynamic_data["sitemap_status"] = sitemap_status
+        dynamic_data["sitemap_status"] = check_siteMap(url)
         dynamic_data["mobile_friendly"] = check_mobile_friendly(url)
         dynamic_data["page_speed"] = check_page_speed(url)
         dynamic_data["structured_data_validation"] = check_strucutre_data(url)

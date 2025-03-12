@@ -59,6 +59,7 @@ import { Card, CardHeader, CardContent, Typography, LinearProgress, Box,  } from
           const httpsAudit = data.httpsAuditResult;
           console.log("Fetched httpdata:", httpsAudit);  // Should log "Pass"
           console.log("Fetched pageSpeedInsight", data.page_speed )
+          
         
           return {
               ...data,
@@ -193,7 +194,7 @@ import { Card, CardHeader, CardContent, Typography, LinearProgress, Box,  } from
       { label: 'Meta Description', value: data.meta_description || 'No meta description', requirement: '150 - 160 Characters', valid: validateLength(data.meta_description || '', 130, 170) ? (validateLength(data.meta_description || '', 150, 160) ? true : "partial") : false, recommendation: 'Ensure the meta description is between 150 - 160 characters' },
       { label: 'Canonical', value: data.canonical || 'No canonical tag', requirement: 'Point to preferred version of page to avoid duplicate content issues', valid: data.canonical !== 'No canonical tag', recommendation: 'Add a canonical tag to prevent duplicate content issues' },
       { label: 'Robots Meta Tag', value: data.robots || 'No robots meta tag', requirement: 'Use noindex to prevent page from being indexed & nofollow to prevent links from being followed', valid: data.robots !== 'No robots meta tag', recommendation: 'Ensure robots meta tag is properly set' },
-      { label: 'Sitemap Status', value: data.sitemap_status || 'No sitemap', requirement: 'Submitted to Search Engine', valid: data.sitemap_status !== 'No sitemap found', recommendation: 'Submit a sitemap to search engines for better crawling' },
+      { label: 'Sitemap Status', value: data.sitemap_status.sitemaps.length > 0 ? data.sitemap_status.sitemaps.map(url => ` ${url}`).join('\n'): 'No sitemap' , requirement: 'Submitted to Search Engine', valid: data.sitemap_status.sitemap_found === true , recommendation: 'Submit a sitemap to search engines for better crawling' },
       { label: 'Mobile Friendly', value: data.mobile_friendly || 'Unknown', requirement: 'Responsive & works well on mobile', valid: data.mobile_friendly === 'Mobile-friendly', recommendation: 'Ensure the site is responsive and mobile-friendly' },
       //{ label: 'Page Speed', value: data.page_speed || 'Unknown', requirement: 'Aim for faster loading times to improve user experience', valid: data.page_speed === 'Pass', recommendation: 'Improve page speed for better user experience' },
       { label: 'Page Speed', value: data.page_speed.result || 'Unknown', details: data.page_speed.details || 'No details available', valid: data.page_speed.result === 'Pass', recommendation: 'Improve page speed for better user experience' },
