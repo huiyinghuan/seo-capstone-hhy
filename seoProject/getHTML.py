@@ -19,6 +19,12 @@ def fetch_static_html(url):
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'html.parser')
 
+            # Extract main text content
+            main_text = extract_main_text(soup)
+
+            # Calculate keyword density
+            keyword_density = calculate_keyword_density(main_text)
+
             # Title
             title = soup.find('title').text if soup.find('title') else 'No title'
 
@@ -54,7 +60,8 @@ def fetch_static_html(url):
                 "robots": robots,
                 "headings": headings,
                 "structured_data": structured_data,
-                "image_alt_text": image_alt_text_data 
+                "image_alt_text": image_alt_text_data, 
+                "keyword_density": keyword_density  # Include keyword density data
             }
 
             print("Static HTML data:", result)
@@ -74,6 +81,12 @@ def fetch_dynamic_html(url):
         driver.get(url)
         html = driver.page_source
         soup = BeautifulSoup(html, 'html.parser')
+
+        # Extract main text content
+        main_text = extract_main_text(soup)
+
+        # Calculate keyword density
+        keyword_density = calculate_keyword_density(main_text)
 
         # Title
         title = soup.find('title').text if soup.find('title') else 'No title'
@@ -111,12 +124,64 @@ def fetch_dynamic_html(url):
             "robots": robots,
             "headings": headings,
             "structured_data": structured_data,
-            "image_alt_text": image_alt_text_data  # Include image alt text data
+            "image_alt_text": image_alt_text_data,  # Include image alt text data
+            "keyword_density": keyword_density  # Include keyword density data
         }
     except Exception as e:
         return None
-    
 
+# Getting keyword density & content 
+
+def extract_main_text(soup):
+    """
+    Extracts the main text content from a BeautifulSoup object.
+    """
+    # Remove unwanted elements
+    for tag in soup(['script', 'style', 'noscript', 'iframe']):
+        tag.decompose()
+    
+    # Extract visible text
+    text = ' '.join(soup.stripped_strings)
+    return text
+
+def calculate_keyword_density(text, top_n=10):
+    """
+    Calculates keyword density in a given text.
+    Returns the top N keywords and their densities.
+    """
+    # Tokenize the text into words
+    words = re.findall(r'\b[a-zA-Z]{3,}\b', text.lower())  # Extract words with at least 3 characters
+    
+    total_words = len(words)
+    word_counts = Counter(words)
+    
+    # Calculate density percentage and include the count
+    keyword_density = {
+        word: {
+            "count": count,
+            "density": round((count / total_words) * 100, 2)
+        }
+        for word, count in word_counts.items()
+    }
+    
+    # Get the top N keywords by frequency
+    sorted_keywords = sorted(keyword_density.items(), key=lambda x: x[1]['density'], reverse=True)[:top_n]
+    
+    # Prepare the result in the desired format
+    return {
+        "total_words": total_words,
+        "top_keywords": [
+            {
+                "keyword": word,
+                "count": int(data["count"]),
+                 "density": float(data["density"]) if isinstance(data["density"], (int, float)) else 0  # Ensure density is numeric
+            }
+            for word, data in sorted_keywords
+        ]
+    }
+
+
+# Extracting the image alt text 
 def extract_image_alt_text(soup):
     """
     Extracts alt text from all images on the page.
@@ -135,16 +200,16 @@ def extract_image_alt_text(soup):
     }
 
 
-def fetch_xml_sitemap(url):
-    sitemap_url = urljoin(url, "/sitemap.xml")
-    try:
-        response = requests.get(sitemap_url, timeout=10)
-        if response.status_code == 200:
-            return "Sitemap found"
-        else:
-            return "No sitemap"
-    except Exception as e:
-        return "Error checking sitemap"
+# def fetch_xml_sitemap(url):
+#     sitemap_url = urljoin(url, "/sitemap.xml")
+#     try:
+#         response = requests.get(sitemap_url, timeout=10)
+#         if response.status_code == 200:
+#             return "Sitemap found"
+#         else:
+#             return "No sitemap"
+#     except Exception as e:
+#         return "Error checking sitemap"
     
 
 #scripts section 
@@ -155,70 +220,6 @@ def get_script_path(script_name):
     """Dynamically generate the full path to the script."""
     return os.path.join(BASE_DIR, script_name)
 
-
-# def check_siteMap(url):
-#     """
-#     Calls the checkSiteMap.py script and returns the sitemap URL(s) found.
-#     """
-#     script_path = get_script_path("checkSiteMap.py")  # Update with your actual script name
-    
-#     if not script_path:
-#         return "Error: Script path not found for SiteMap check."
-
-#     try:
-#         # Call the Python script with subprocess
-#         result = subprocess.run(
-#             ["python", script_path, url],  
-#             capture_output=True,
-#             text=True,
-#             timeout=120
-#         )
-
-#         print("Raw stdout output:", result.stdout)  # Debug: print raw stdout
-#         print("Raw stderr output:", result.stderr)  # Debug: print raw stderr
-
-#     #     if result.returncode == 0:
-#     #         try:
-#     #             # Convert Python dict string to actual dict
-#     #             # output = ast.literal_eval(result.stdout.strip())  
-#     #             output = json.loads(result.stdout.strip())  # Convert JSON string to dict
-
-#     #             # Ensure we are working with a proper dictionary
-#     #             if isinstance(output, dict) and "sitemaps_found" in output:
-#     #                 sitemaps = [sitemap.strip() for sitemap in output["sitemaps_found"]]
-#     #                 return f"Sitemaps found: {', '.join(sitemaps)}" if sitemaps else "No sitemap found."
-#     #             else:
-#     #                 return "Error: Unexpected output format"
-
-#     #         except (SyntaxError, ValueError):
-#     #             return f"Error: Invalid JSON output: {result.stdout}"
-#     #     else:
-#     #         return f"Error: {result.stderr}"
-
-#     # except Exception as e:
-#     #     return f"Error checking Sitemap: {e}"
-#         if result.returncode == 0:
-#             try:
-#                 # 🔹 Clean up whitespace and newlines before parsing JSON
-#                 json_output = result.stdout.strip()
-
-#                 # 🔹 Ensure the output is a valid JSON string
-#                 output = json.loads(json_output)
-
-#                 if isinstance(output, dict) and "sitemaps" in output:
-#                     # 🔹 Remove carriage returns (`\r`) from sitemap URLs
-#                     sitemaps = [sitemap.strip() for sitemap in output["sitemaps"]]
-#                     return f"Sitemaps found: {', '.join(sitemaps)}" if sitemaps else "No sitemap found."
-#                 else:
-#                     return "Error: Unexpected output format"
-
-#             except json.JSONDecodeError as e:
-#                 return f"Error: Could not parse JSON output: {json_output}\nException: {str(e)}"
-#         else:
-#             return f"Error: {result.stderr.strip()}"
-
-#     except Exception as e:
-#         return f"Error checking Sitemap: {e}"
      
 def check_siteMap(url):
     """ 

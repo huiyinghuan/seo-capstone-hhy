@@ -55,7 +55,8 @@ def seo_audit(request):
             'headings': seo_data.get('headings', {}),
             'structured_data': seo_data.get('structured_data', []),
             'image_alt_text': seo_data.get('image_alt_text', {}),
-            'structured_data_validation': seo_data.get('structured_data_validation', 'Default Value')
+            'structured_data_validation': seo_data.get('structured_data_validation', 'Default Value'),
+            'keyword_density': seo_data.get('keyword_density', {})
 
         }
         return JsonResponse(response)

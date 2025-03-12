@@ -59,7 +59,7 @@ import { Card, CardHeader, CardContent, Typography, LinearProgress, Box,  } from
           const httpsAudit = data.httpsAuditResult;
           console.log("Fetched httpdata:", httpsAudit);  // Should log "Pass"
           console.log("Fetched pageSpeedInsight", data.page_speed )
-          
+          console.log("keyword density is: ", data.keyword_density)
         
           return {
               ...data,
@@ -68,6 +68,7 @@ import { Card, CardHeader, CardContent, Typography, LinearProgress, Box,  } from
               page_speed: data.page_speed,
               structured_data_validation: data.structured_data_validation,
               validation: data.validation,
+              keyword_density: data.keyword_density,
               
           };
       } catch (error) {
@@ -237,6 +238,18 @@ import { Card, CardHeader, CardContent, Typography, LinearProgress, Box,  } from
       requirement: 'Ensure correct structured data for SEO purposes',
       valid: data.structured_data_validation.totalValidItems > 0,
       recommendation: 'Ensure the structured data is properly implemented according to Schema.org. Based on the result, there are ' + data.structured_data_validation.totalValidItems + ' valid items with the types: ' + (data.structured_data_validation.validItemTypes.join(", ") || 'No valid item types found.')
+    },
+
+    {
+      label: 'Keyword Density',
+      value: data.keyword_density.top_keywords && data.keyword_density.top_keywords.length > 0 
+        ? data.keyword_density.top_keywords.map(keywordData => 
+            `${keywordData.keyword} - Count: ${keywordData.count} - Density: ${keywordData.density}%`).join('\n') 
+        : 'No data available',
+      requirement: 'Ensure the keyword density is within the recommended range (usually 1-3%) for SEO purposes',
+      valid: data.keyword_density.top_keywords && data.keyword_density.top_keywords.every(keywordData => 
+        keywordData.density >= 1 && keywordData.density <= 3),
+      recommendation: 'Ensure keyword density is between 1-3% to avoid keyword stuffing and maintain natural readability'
     }
     
     ];
