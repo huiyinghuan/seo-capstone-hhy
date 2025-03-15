@@ -11,6 +11,7 @@ function GSCFeature() {
   const [analyticsData, setAnalyticsData] = useState([]);
   const [message, setMessage] = useState('');
   const [selectedSiteUrl, setSelectedSiteUrl] = useState('');
+  const [selectedSiteMapUrl, setSelectedSiteMapUrl] = useState('');
   const fileInputRef = useRef(null);
   
 
@@ -93,6 +94,9 @@ function GSCFeature() {
     setSelectedSiteUrl(event.target.value); 
   };
 
+  const handleSiteMapSelection = (event) => {
+    setSelectedSiteMapUrl(event.target.value); 
+  };
 
 
   
