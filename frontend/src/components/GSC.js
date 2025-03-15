@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Button, Card, Grid, Typography, Box, Paper, Tabs, Tab, TextField, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
 import { BarChart3, Search, Globe, Trees as SitemapTree, Brain, TrendingUp, AlertCircle } from "lucide-react";
+import AiInsights from './AiInsights'
 
 function GSCFeature() {
   const [file, setFile] = useState(null);
@@ -11,7 +12,7 @@ function GSCFeature() {
   const [message, setMessage] = useState('');
   const [selectedSiteUrl, setSelectedSiteUrl] = useState('');
   const fileInputRef = useRef(null);
-
+  
 
   // Handle file selection
   const handleFileChange = (event) => {
@@ -88,31 +89,12 @@ function GSCFeature() {
       console.error("Error fetching search analytics:", error);
     }
   };
-
-//   // const getUrlInspectionData = async () => {
-//   //   if (!selectedSiteUrl) {
-//   //     alert('Please select a site first!');
-//   //     return;
-//   //   }
-//   //   const urlToInspect = prompt('Enter the URL to inspect:');  // Allow user to input URL for inspection
-//   //   if (!urlToInspect) {
-//   //     alert('URL is required for inspection!');
-//   //     return;
-//   //   }
-   
-//   //   try {
-//   //     const response = await fetch(`http://localhost:8000/api/inspect-url?site_url=${encodeURIComponent(selectedSiteUrl)}&url=${encodeURIComponent(urlToInspect)}`);
-//   //     const data = await response.json();
-//   //     setUrlInspectionData(data);
-//   //   } catch (error) {
-//   //     console.error("Error fetching URL inspection data:", error);
-//   //   } 
-//   // };
-  
- 
   const handleSiteSelection = (event) => {
     setSelectedSiteUrl(event.target.value); 
   };
+
+
+
   
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "#f4f6f8" }}>
@@ -182,16 +164,16 @@ function GSCFeature() {
       {/* form control */}
       <Box padding={2} display="flex" flexDirection="column" alignItems="flex-start">
         <FormControl variant="outlined" fullWidth style={{ marginTop: "10px", marginBottom: "15px" }}>
-          <InputLabel>Select Site</InputLabel>
+          <InputLabel>{tabValue === "ai-insights" ? "Select Sitemap" : "Select Site"}</InputLabel>
           <Select
-            value={selectedSiteUrl}
-            onChange={handleSiteSelection}
-            label="Select Site"
+            value={tabValue === "ai-insights" ? selectedSiteMapUrl : selectedSiteUrl}
+            onChange={tabValue === "ai-insights" ? handleSiteMapSelection : handleSiteSelection}
+            label={tabValue === "ai-insights" ? "Select Sitemap" : "Select Site"}
             fullWidth // Ensures Select is full width
           >
-            {sites.map((site) => (
-              <MenuItem key={site} value={site}>
-                {site}
+            {(tabValue === "ai-insights" ? sitemaps : sites).map((item, index) => (
+              <MenuItem key={index} value={item}>
+                {item}
               </MenuItem>
             ))}
           </Select>
@@ -309,26 +291,26 @@ function GSCFeature() {
       )}
 
       {/* AI Insights */}
-      {tabValue === "ai-insights" && (
-        <Box mt={4}>
-          <Card>
-            <Box padding={2}>
-              <Box display="flex" alignItems="center">
-                <Brain style={{ fontSize: 24 }} />
-                <Typography variant="h6" fontWeight="bold" style={{ marginLeft: "10px" }}>
-                  AI Content Analysis
-                </Typography>
-              </Box>
-              <Typography color="textSecondary" paragraph style={{ marginTop: "10px" }}>
-                Connect OpenAI to get AI-powered insights about your content and SEO opportunities.
-              </Typography>
-              <Button variant="contained" color="primary">
-                Connect OpenAI
-              </Button>
-            </Box>
-          </Card>
-        </Box>
-      )}
+      {tabValue === "ai-insights" && <AiInsights onConnect={() => console.log("Connecting to OpenAI...")} /> 
+        // <Box mt={4}>
+        //   <Card>
+        //     <Box padding={2}>
+        //       <Box display="flex" alignItems="center">
+        //         <Brain style={{ fontSize: 24 }} />
+        //         <Typography variant="h6" fontWeight="bold" style={{ marginLeft: "10px" }}>
+        //           AI Content Analysis
+        //         </Typography>
+        //       </Box>
+        //       <Typography color="textSecondary" paragraph style={{ marginTop: "10px" }}>
+        //         Connect OpenAI to get AI-powered insights about your content and SEO opportunities.
+        //       </Typography>
+        //       <Button variant="contained" color="primary">
+        //         Connect OpenAI
+        //       </Button>
+        //     </Box>
+        //   </Card>
+        // </Box>
+      }
 
       {/* Keyword Research */}
       {tabValue === "keywords" && (

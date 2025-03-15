@@ -248,6 +248,97 @@ import { Typography, TableFooter } from '@mui/material';
 
 // export default SEOCompetitorAnalysisSummaryTable;
 
+// working v1
+// const SEOCompetitorAnalysisSummaryTable = ({ data }) => {
+//   // Extract unique metrics (row labels) from the scores
+//   const metrics = data.length > 0 ? data[0].scores.map((score) => score.label) : [];
+
+//   // Function to calculate the total score for a domain
+//   const calculateTotalScore = (domainScores) => {
+//     return domainScores.reduce((total, score) => total + (score.valid ? 1 : 0), 0);
+//   };
+
+//   return (
+//     <TableContainer component={Paper} elevation={3} sx={{ borderRadius: '8px', maxHeight: '440px' }}>
+//       <Table stickyHeader sx={{ minWidth: 300 }} aria-label="SEO Competitor Analysis Summary">
+//         <TableHead sx={{ backgroundColor: "#f9fafb" }}>
+//           <TableRow>
+//             <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>Metric</TableCell>
+//             {data.map((entry, index) => (
+//               <>
+//                 <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280",  textAlign: "center"}} key={`domain-${index}`}>
+//                   {entry.domain}
+//                 </TableCell>
+//                 <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280",  textAlign: "center"}} key={`score-${index}`}>
+//                   Score
+//                 </TableCell>
+//               </>
+//             ))}
+//           </TableRow>
+//         </TableHead>
+//         <TableBody>
+//           {metrics.map((metric, metricIndex) => (
+//             <TableRow key={metricIndex}>
+//               <TableCell sx={{ textAlign: "center" }} >{metric}</TableCell>
+//               {data.map((entry, domainIndex) => { 
+//                 const score = entry.scores.find((s) => s.label === metric);
+//                 return (
+//                   <>
+//                     <TableCell 
+//                       key={`metric-${domainIndex}`} c
+//                       lassName={score.valid ? "valid" : "invalid"}
+//                       sx={{ textAlign: "center" }}
+//                     >
+//                       {score.valid ? (
+//                         <CheckIcon sx={{ color: "green" }} />
+//                       ) : (
+//                         <CloseIcon sx={{ color: "red" }} />
+//                       )}
+//                     </TableCell>
+//                     <TableCell key={`score-${domainIndex}`} sx={{ textAlign: "center" }}>
+//                       {/* Calculate and display the score for this domain */}
+//                       {score.valid ? 1 : 0}
+//                     </TableCell>
+//                   </>
+//                 );
+//               })}
+//             </TableRow>
+//           ))}
+//         </TableBody>
+//         <TableFooter sx={{ 
+//           backgroundColor: "#f9fafb", // Match header background for better visibility
+//           fontWeight: "bold",
+//           position: "sticky",
+//           bottom: 0,
+//           zIndex: 3, // Ensures it's above the rest of the table rows
+//           }}
+//         >
+//           <TableRow>
+//             <TableCell>
+//               <Typography sx={{ fontWeight: "bold", textAlign:'center' }}>Total</Typography>
+//             </TableCell>
+//             {data.map((entry, index) => {
+//               const totalScore = calculateTotalScore(entry.scores);
+//               return (
+//                 <>
+//                   <TableCell />
+//                   <TableCell key={`total-score-${index}`} sx={{ fontWeight: "bold", textAlign: 'center' }}>
+//                     {totalScore}
+//                   </TableCell>
+//                 </>
+//               );
+//             })}
+//           </TableRow>
+//         </TableFooter>
+//       </Table>
+//     </TableContainer>
+//   );
+// };
+
+// export default SEOCompetitorAnalysisSummaryTable;
+
+
+// working v2
 const SEOCompetitorAnalysisSummaryTable = ({ data }) => {
   // Extract unique metrics (row labels) from the scores
   const metrics = data.length > 0 ? data[0].scores.map((score) => score.label) : [];
@@ -265,10 +356,10 @@ const SEOCompetitorAnalysisSummaryTable = ({ data }) => {
             <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>Metric</TableCell>
             {data.map((entry, index) => (
               <>
-                <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280",  textAlign: "center"}} key={`domain-${index}`}>
+                <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280", textAlign: "center" }} key={`domain-${entry.domain}`}>
                   {entry.domain}
                 </TableCell>
-                <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280",  textAlign: "center"}} key={`score-${index}`}>
+                <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280", textAlign: "center" }} key={`score-${entry.domain}`}>
                   Score
                 </TableCell>
               </>
@@ -277,15 +368,15 @@ const SEOCompetitorAnalysisSummaryTable = ({ data }) => {
         </TableHead>
         <TableBody>
           {metrics.map((metric, metricIndex) => (
-            <TableRow key={metricIndex}>
-              <TableCell sx={{ textAlign: "center" }} >{metric}</TableCell>
-              {data.map((entry, domainIndex) => { 
+            <TableRow key={`metric-row-${metricIndex}`}>
+              <TableCell sx={{ textAlign: "center" }}>{metric}</TableCell>
+              {data.map((entry, domainIndex) => {
                 const score = entry.scores.find((s) => s.label === metric);
                 return (
                   <>
-                    <TableCell 
-                      key={`metric-${domainIndex}`} c
-                      lassName={score.valid ? "valid" : "invalid"}
+                    <TableCell
+                      key={`metric-${metricIndex}-domain-${domainIndex}`}
+                      className={score.valid ? "valid" : "invalid"}
                       sx={{ textAlign: "center" }}
                     >
                       {score.valid ? (
@@ -294,8 +385,7 @@ const SEOCompetitorAnalysisSummaryTable = ({ data }) => {
                         <CloseIcon sx={{ color: "red" }} />
                       )}
                     </TableCell>
-                    <TableCell key={`score-${domainIndex}`} sx={{ textAlign: "center" }}>
-                      {/* Calculate and display the score for this domain */}
+                    <TableCell key={`score-${metricIndex}-domain-${domainIndex}`} sx={{ textAlign: "center" }}>
                       {score.valid ? 1 : 0}
                     </TableCell>
                   </>
@@ -310,18 +400,17 @@ const SEOCompetitorAnalysisSummaryTable = ({ data }) => {
           position: "sticky",
           bottom: 0,
           zIndex: 3, // Ensures it's above the rest of the table rows
-          }}
-        >
+        }}>
           <TableRow>
             <TableCell>
-              <Typography sx={{ fontWeight: "bold", textAlign:'center' }}>Total</Typography>
+              <Typography sx={{ fontWeight: "bold", textAlign: 'center' }}>Total</Typography>
             </TableCell>
             {data.map((entry, index) => {
               const totalScore = calculateTotalScore(entry.scores);
               return (
                 <>
-                  <TableCell />
-                  <TableCell key={`total-score-${index}`} sx={{ fontWeight: "bold", textAlign: 'center' }}>
+                  <TableCell key={`total-score-${entry.domain}`} />
+                  <TableCell key={`total-score-value-${entry.domain}`} sx={{ fontWeight: "bold", textAlign: 'center' }}>
                     {totalScore}
                   </TableCell>
                 </>
