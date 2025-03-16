@@ -96,6 +96,7 @@ function GSCFeature() {
 
   const handleSiteMapSelection = (event) => {
     setSelectedSiteMapUrl(event.target.value); 
+    console.log("Selected Sitemap URL:", event.target.value); // Debugging
   };
 
 
@@ -295,26 +296,10 @@ function GSCFeature() {
       )}
 
       {/* AI Insights */}
-      {tabValue === "ai-insights" && <AiInsights onConnect={() => console.log("Connecting to OpenAI...")} /> 
-        // <Box mt={4}>
-        //   <Card>
-        //     <Box padding={2}>
-        //       <Box display="flex" alignItems="center">
-        //         <Brain style={{ fontSize: 24 }} />
-        //         <Typography variant="h6" fontWeight="bold" style={{ marginLeft: "10px" }}>
-        //           AI Content Analysis
-        //         </Typography>
-        //       </Box>
-        //       <Typography color="textSecondary" paragraph style={{ marginTop: "10px" }}>
-        //         Connect OpenAI to get AI-powered insights about your content and SEO opportunities.
-        //       </Typography>
-        //       <Button variant="contained" color="primary">
-        //         Connect OpenAI
-        //       </Button>
-        //     </Box>
-        //   </Card>
-        // </Box>
-      }
+      {tabValue === "ai-insights" && <AiInsights selectedSitemap={selectedSiteMapUrl} />}
+      
+      {/* {tabValue === "ai-insights" && <AiInsights onConnect={() => console.log("Connecting to OpenAI...")} /> } */}
+
 
       {/* Keyword Research */}
       {tabValue === "keywords" && (

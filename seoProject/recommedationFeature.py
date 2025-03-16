@@ -175,3 +175,4 @@ def get_recommended_fixes(request):
         # Handle other exceptions
         return JsonResponse({"error": f"Unexpected error: {str(e)}"}, status=500)
 
+# def contentAnalysis 
