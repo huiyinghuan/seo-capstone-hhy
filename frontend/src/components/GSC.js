@@ -148,10 +148,10 @@ function GSCFeature() {
           <Button variant="outlined" size="small" startIcon={<Globe />} style={{ marginLeft: "10px" }} onClick={getSites}>
             Get Sites
           </Button>
-          <Button variant="outlined" size="small" startIcon={<SitemapTree />} style={{ marginLeft: "10px" }} onClick={getSitemaps}>
+          <Button variant="outlined" size="small" startIcon={<SitemapTree />} style={{ marginLeft: "10px" }} disabled={!selectedSiteUrl} onClick={getSitemaps}>
             Get Sitemaps
           </Button>
-          <Button variant="outlined" size="small" startIcon={<TrendingUp />} style={{ marginLeft: "10px" }} onClick={getSearchAnalytics}>
+          <Button variant="outlined" size="small" startIcon={<TrendingUp />} style={{ marginLeft: "10px" }} disabled={!selectedSiteUrl} onClick={getSearchAnalytics}>
             Get Data
           </Button>
         </Box>

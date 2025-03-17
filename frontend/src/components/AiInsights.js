@@ -342,13 +342,22 @@
 //v2
 
 import React, { useState } from 'react';
-import { Box, Card, Typography, Button, LinearProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, List, ListItem } from "@mui/material";
+import { Box, Card, CardContent, Typography, Button, LinearProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, List, ListItem, Collapse, Chip  } from "@mui/material";
+import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import { BrainCog, Loader2, Bot, Target, FileText, AlertTriangle, CheckCircle, Lightbulb, Gauge } from 'lucide-react';
 
 const AiInsights = ({ selectedSitemap }) => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
   const [seoScore, setSEOScore] = useState(0);
+  const [expandedSuggestions, setExpandedSuggestions] = useState([]);
+  const [loadingFixes, setLoadingFixes] = useState({});
+  const [recommendedActions, setRecommendedActions] = useState({});
+
+  // Function to expand/collapse rows (define this if it doesn't exist)
+  const toggleRow = (index) => {
+    setExpandedSuggestions((prev) => ({ ...prev, [index]: !prev[index] }));
+  };
 
   const handleAnalyze = async () => {
     if (!selectedSitemap) {
@@ -372,9 +381,33 @@ const AiInsights = ({ selectedSitemap }) => {
             density: keywordData.density,
           })) || [],
         suggestions: [
-          "Consider adding more descriptive meta descriptions",
-          "Improve header hierarchy",
-          "Add more internal links",
+          {
+            title: "Consider adding more descriptive meta descriptions",
+            description: "Meta descriptions should be compelling and between 150-160 characters to improve CTR.",
+            impact: "medium",
+            recommendations: [
+              "Ensure meta descriptions are unique and relevant.",
+              "Include target keywords naturally.",
+            ],
+          },
+          {
+            title: "Improve header hierarchy",
+            description: "Using a proper heading structure (H1-H6) helps both users and search engines understand content better.",
+            impact: "high",
+            recommendations: [
+              "Use only one H1 per page.",
+              "Maintain a logical order of H2, H3, and H4 elements.",
+            ],
+          },
+          {
+            title: "Add more internal links",
+            description: "Internal linking helps distribute page authority and improves user navigation.",
+            impact: "low",
+            recommendations: [
+              "Link to relevant pages naturally within content.",
+              "Ensure internal links use descriptive anchor text.",
+            ],
+          },
         ],
         invalidFields, // Capture fields with issues
       });
@@ -389,58 +422,64 @@ const AiInsights = ({ selectedSitemap }) => {
 
   const calculateTotalScore = (seoData) => {
     let invalidFields = [];
-
-    const getScore = (condition, fieldName) => {
+    
+    const getScore = (condition, fieldName, actualValue, requirement) => {
       if (condition) return 1;
-      invalidFields.push(fieldName);
+      invalidFields.push({ field: fieldName, value: actualValue, requirement });
       return 0;
     };
-
-    const getPartialScore = (condition, fieldName) => {
+  
+    const getPartialScore = (condition, fieldName, actualValue, requirement) => {
       if (condition) return 0.5;
-      invalidFields.push(fieldName);
+      invalidFields.push({ field: fieldName, value: actualValue, requirement });
       return 0;
     };
-
+  
     const titleScore = seoData.title
-      ? getScore(validateLength(seoData.title, 50, 60), "Title Length")
-      : getPartialScore(validateLength(seoData.title, 30, 91), "Title Length");
-
+      ? getScore(validateLength(seoData.title, 50, 60), "Title Length", seoData.title, "Should be between 50-60 characters")
+      : getPartialScore(validateLength(seoData.title, 30, 91), "Title Length", seoData.title, "Should be between 30-91 characters");
+  
     const metaDescriptionScore = seoData.meta_description
-      ? getScore(validateLength(seoData.meta_description, 150, 160), "Meta Description Length")
-      : getPartialScore(validateLength(seoData.meta_description, 130, 170), "Meta Description Length");
-
-    const canonicalScore = getScore(seoData.canonical !== "No canonical tag", "Canonical Tag Missing");
-
-    const robotsMetaTagScore = getScore(seoData.robots !== "No robots meta tag", "Robots Meta Tag Missing");
-
-    const sitemapScore = getScore(seoData.sitemap_status?.sitemap_found === true, "Sitemap Not Found");
-
-    const mobileFriendlyScore = getScore(seoData.mobile_friendly === "Mobile-friendly", "Mobile-Friendliness Issue");
-
-    const pageSpeedScore = getScore(seoData.page_speed?.result === "Pass", "Page Speed Needs Improvement");
-
-    const httpsAuditScore = getScore(seoData.httpsAuditResult === "Pass", "HTTPS Issue");
-
+      ? getScore(validateLength(seoData.meta_description, 150, 160), "Meta Description Length", seoData.meta_description, "Should be between 150-160 characters")
+      : getPartialScore(validateLength(seoData.meta_description, 130, 170), "Meta Description Length", seoData.meta_description, "Should be between 130-170 characters");
+  
+    const canonicalScore = getScore(seoData.canonical !== "No canonical tag", "Canonical Tag", seoData.canonical, "A valid canonical tag should be present");
+  
+    const robotsMetaTagScore = getScore(seoData.robots !== "No robots meta tag", "Robots Meta Tag", seoData.robots, "A robots meta tag should be included");
+  
+    const sitemapScore = getScore(seoData.sitemap_status?.sitemap_found === true, "Sitemap", seoData.sitemap_status?.sitemap_found, "A valid sitemap should be found");
+  
+    const mobileFriendlyScore = getScore(seoData.mobile_friendly === "Mobile-friendly", "Mobile Friendliness", seoData.mobile_friendly, "Page should be mobile-friendly");
+  
+    const pageSpeedScore = getScore(seoData.page_speed?.result === "Pass", "Page Speed", seoData.page_speed?.result, "Page speed should pass performance benchmarks");
+  
+    const httpsAuditScore = getScore(seoData.httpsAuditResult === "Pass", "HTTPS Audit", seoData.httpsAuditResult, "Website should have a secure HTTPS implementation");
+  
     const imageAltTextScore = getScore(
       seoData.image_alt_text?.total_images > 0 && seoData.image_alt_text?.missing_alt === 0,
-      "Missing Image Alt Text"
+      "Image Alt Text",
+      seoData.image_alt_text?.missing_alt,
+      "All images should have alt text"
     );
-
+  
     const structuredDataScore = getScore(
       seoData.structured_data_validation?.totalValidItems > 0,
-      "Structured Data Issues"
+      "Structured Data",
+      seoData.structured_data_validation?.totalValidItems,
+      "Valid structured data should be present"
     );
-
+  
     const keywordDensityScore = getScore(
       seoData.keyword_density?.top_keywords?.every(
         (keywordData) => keywordData.density >= 1 && keywordData.density <= 3
       ),
-      "Keyword Density Issue"
+      "Keyword Density",
+      seoData.keyword_density?.top_keywords,
+      "Keyword density should be between 1% and 3%"
     );
-
+  
     const totalScore =
-      (titleScore +
+      ((titleScore +
         metaDescriptionScore +
         canonicalScore +
         robotsMetaTagScore +
@@ -451,17 +490,67 @@ const AiInsights = ({ selectedSitemap }) => {
         imageAltTextScore +
         structuredDataScore +
         keywordDensityScore) /
-      11 *
+        11) *
       100;
-
+  
     return { totalScore, invalidFields };
   };
+  
+  const fetchRecommendedFixes = async (index) => {
+    try {
+      setLoadingFixes((prev) => ({ ...prev, [index]: true }));
+  
+      const { field, value, requirement } = analysisResult.invalidFields[index]; // Extract field details
+  
+      const response = await fetch("http://127.0.0.1:8000/api/give_suggestion/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ label: field, value, requirement }) // Send field data to backend
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to fetch recommendations");
+      }
+  
+      const data = await response.json();
+      const recommendation = data.recommendation || "No recommendation available";
+  
+      setRecommendedActions((prev) => ({ ...prev, [index]: recommendation })); // Store recommendation
+      // toggleRow(index); // Expand the row to show fixes
+      // Ensure the corresponding row expands
+      setExpandedSuggestions((prev) => [...prev, index]);
+    } catch (error) {
+      console.error("Error fetching recommendations:", error);
+    } finally {
+      setLoadingFixes((prev) => ({ ...prev, [index]: false }));
+    }
+  };
+  
 
   const validateLength = (str, min, max) => {
     const length = str.length;
     return length >= min && length <= max;
   };
+  const toggleSuggestion = (index) => {
+    setExpandedSuggestions((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+    );
+  };
 
+  const getImpactColor = (impact) => {
+    switch (impact) {
+      case "high":
+        return "error";
+      case "medium":
+        return "warning";
+      case "low":
+        return "success";
+      default:
+        return "default";
+    }
+  };
   const fetchSEOData = async (url) => {
     console.log("Fetching SEO audit for URL:", url);
     try {
@@ -646,7 +735,7 @@ const AiInsights = ({ selectedSitemap }) => {
             </Box>
           </Card>
           <br></br>                   
-          <Card>
+          {/* <Card>
             <Box padding={2}>
               <Box display="flex" alignItems="center">
                 <Lightbulb className="h-5 w-5" style={{ color: "#2563eb" }} />
@@ -674,6 +763,257 @@ const AiInsights = ({ selectedSitemap }) => {
                 </List>
               </Box>
             </Box>
+          </Card> */}
+          <br></br>
+          {/* <Card elevation={2} sx={{ borderRadius: 2, p: 2, mb: 2 }}> */}
+            {/* <Box display="flex" alignItems="center" mb={2}>
+              <Lightbulb sx={{ color: "primary.main", fontSize: 24 }} />
+              <Typography variant="h6" fontWeight="bold" ml={1}>
+                Identified Issues
+              </Typography>
+            </Box> */}
+
+            {/* {analysisResult.invalidFields.map((issue, index) => ( */}
+              
+              {/* <Card key={index} variant="outlined" sx={{ mb: 2, borderRadius: 2 }}>
+                <Button
+                  onClick={() => toggleSuggestion(index)}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "100%",
+                    textAlign: "left",
+                    backgroundColor: "#f8fafc",
+                    "&:hover": { backgroundColor: "#f1f5f9" },
+                    p: 2,
+                  }}
+                >
+                  <Box display="flex" alignItems="center">
+                    <AlertTriangle sx={{ color: "warning.main", mr: 1 }} />
+                    <Typography fontWeight="bold" color="text.primary">
+                      {issue.field}
+                    </Typography>
+                  </Box>
+                  {expandedSuggestions.includes(index) ? <ExpandLess /> : <ExpandMore />}
+                </Button>
+                {/* Button under Typography */}
+              {/* <Box p={2} display="flex" justifyContent="flex-end">
+                <Typography>
+                  {JSON.stringify(issue.value)}
+                </Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<CheckCircle />}
+                  //onClick={() => fetchRecommendedFixes(index, issue.field, issue.value, issue.requirement )}
+                  onClick={() => fetchRecommendedFixes(index)}
+                  disabled={loadingFixes[index]} // Disable button while fetching
+                >
+                  {loadingFixes[index] ? "Fetching..." : "Fix Issue"}
+                </Button>
+              </Box>
+              {/* Display the fetched recommendation inside a collapsible section */}
+              {/* <Collapse in={expandedSuggestions.includes(index)}>
+                <CardContent sx={{ backgroundColor: "white", borderTop: "1px solid #e5e7eb" }}>
+                  {loadingFixes[index] ? (
+                    <Typography color="text.secondary">Fetching recommendation...</Typography>
+                  ) : recommendedActions[index] ? (
+                    <>
+                      <Typography fontWeight="bold" color="text.primary" mb={1}>
+                        Suggested Fix:
+                      </Typography>
+                      <Typography color="text.secondary">{recommendedActions[index]}</Typography>
+                    </>
+                  ) : (
+                    <Typography color="text.secondary">No suggestion available.</Typography>
+                  )}
+                </CardContent>
+              </Collapse>
+              </Card>
+            ))} */}
+          {/* </Card> */}
+
+          <br></br>
+          {/* Suggestions Section */}
+          {/* <Card elevation={2} sx={{ borderRadius: 2, p: 2 }}>
+            <Box display="flex" alignItems="center" mb={2}>
+              <Lightbulb sx={{ color: "primary.main", fontSize: 24 }} />
+              <Typography variant="h6" fontWeight="bold" ml={1}>
+                Improvement Suggestions
+              </Typography>
+            </Box>
+
+            {analysisResult.suggestions.map((suggestion, index) => (
+              <Card key={index} variant="outlined" sx={{ mb: 2, borderRadius: 2 }}>
+                <Button
+                  onClick={() => toggleSuggestion(index)}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "100%",
+                    textAlign: "left",
+                    backgroundColor: "#f8fafc",
+                    "&:hover": { backgroundColor: "#f1f5f9" },
+                    p: 2,
+                  }}
+                >
+                  <Box display="flex" alignItems="center">
+                    <AlertTriangle sx={{ color: "warning.main", mr: 1 }} />
+                    <Typography fontWeight="bold" color="text.primary">
+                      {suggestion.title}
+                    </Typography>
+                    <Chip
+                      label={`${suggestion.impact} impact`}
+                      color={getImpactColor(suggestion.impact)}
+                      size="small"
+                      sx={{ ml: 2 }}
+                    />
+                  </Box>
+                  {expandedSuggestions.includes(index) ? <ExpandLess /> : <ExpandMore />}
+                </Button>
+
+                <Collapse in={expandedSuggestions.includes(index)}>
+                  <CardContent sx={{ backgroundColor: "white", borderTop: "1px solid #e5e7eb" }}>
+                    <Typography color="text.secondary" mb={2}>
+                      {suggestion.description}
+                    </Typography>
+
+                    <Typography fontWeight="bold" color="text.primary" mb={1}>
+                      Recommendations:
+                    </Typography>
+                    <ul style={{ paddingLeft: "20px", margin: 0 }}>
+                      {suggestion.recommendations.map((rec, recIndex) => (
+                        <li key={recIndex} style={{ marginBottom: "4px", color: "#4b5563" }}>
+                          {rec}
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Collapse>
+              </Card>
+            ))}
+          </Card> */}
+          <br></br>
+          {/* Identified Issues Card */}
+          <Card elevation={2} sx={{ borderRadius: 2, p: 2, mb: 2 }}>
+            <Box display="flex" alignItems="center" mb={2}>
+            <Lightbulb sx={{ color: "primary.main", fontSize: 24 }} />
+              <Typography variant="h6" fontWeight="bold" ml={1}>
+                Identified Issues
+              </Typography>
+            </Box>
+
+            {analysisResult.invalidFields.map((issue, index) => (
+              <Card key={index} variant="outlined" sx={{ mb: 2, borderRadius: 2, p: 2 }}>
+                <Box  display="flex" alignItems="center">
+                <AlertTriangle sx={{ color: "warning.main", mr: 1 }} />
+                <Typography fontWeight="bold" color="text.primary">
+                  {issue.field}
+                </Typography>
+                <Box display="flex" mt={0} ml={0}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<CheckCircle />}
+                    onClick={() => fetchRecommendedFixes(index)}
+                    disabled={loadingFixes[index]}
+                  >
+                    {loadingFixes[index] ? "Fetching..." : "Fix Issue"}
+                  </Button>
+                </Box>
+                </Box>
+              </Card>
+            ))}
+          </Card>
+              
+          {/* Improvement Suggestions Card */}
+          <Card elevation={2} sx={{ borderRadius: 2, p: 2 }}>
+            <Box display="flex" alignItems="center" mb={2}>
+              <Lightbulb sx={{ color: "primary.main", fontSize: 24 }} />
+              <Typography variant="h6" fontWeight="bold" ml={1}>
+                Improvement Suggestions
+              </Typography>
+            </Box>
+
+            
+            {analysisResult.invalidFields.map((issue, index) => (
+              <Card key={index} variant="outlined" sx={{ mb: 2, borderRadius: 2 }}>
+                <Button
+                  onClick={() => toggleSuggestion(index)}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "100%",
+                    textAlign: "left",
+                    backgroundColor: "#f8fafc",
+                    "&:hover": { backgroundColor: "#f1f5f9" },
+                    p: 2,
+                  }}
+                >
+                  <Box display="flex" alignItems="center">
+                    <AlertTriangle sx={{ color: "warning.main", mr: 1 }} />
+                    <Typography fontWeight="bold" color="text.primary">
+                      {issue.field}
+                    </Typography>
+                    {/* <Chip label={`${suggestion.impact} impact`} color="primary" size="small" sx={{ ml: 2 }} /> */}
+                  </Box>
+                  {expandedSuggestions.includes(index) ? <ExpandLess /> : <ExpandMore />}
+                </Button>
+
+                {/* <Collapse in={expandedSuggestions.includes(index)}>
+                  <CardContent sx={{ backgroundColor: "white", borderTop: "1px solid #e5e7eb" }}>
+                    <Typography color="text.secondary" mb={2}>
+                      {suggestion.description}
+                    </Typography>
+                    <Typography fontWeight="bold" color="text.primary" mb={1}>
+                      Recommendations:
+                    </Typography>
+                    <ul style={{ paddingLeft: "20px", margin: 0 }}>
+                      {suggestion.recommendations.map((rec, recIndex) => (
+                        <li key={recIndex} style={{ marginBottom: "4px", color: "#4b5563" }}>
+                          {rec}
+                        </li>
+                      ))}
+                    </ul>
+                    <Box display="flex" justifyContent="flex-end" mt={2}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<CheckCircle />}
+                        onClick={() => {
+                          fetchRecommendedFixes(index);
+                          toggleSuggestion(index);
+                        }}
+                        disabled={loadingFixes[index]}
+                      >
+                        {loadingFixes[index] ? "Fetching..." : "Fix Issue"}
+                      </Button>
+                    </Box>
+                  </CardContent>
+                </Collapse> */}
+
+                {/* Display the fetched recommendation inside a collapsible section */}
+                <Collapse in={expandedSuggestions.includes(index)}>
+                    <CardContent sx={{ backgroundColor: "white", borderTop: "1px solid #e5e7eb" }}>
+                      {loadingFixes[index] ? (
+                        <Typography color="text.secondary">Fetching recommendation...</Typography>
+                      ) : recommendedActions[index] ? (
+                        <>
+                          <Typography fontWeight="bold" color="text.primary" mb={1}>
+                            Suggested Fix:
+                          </Typography>
+                          <Typography color="text.secondary">{recommendedActions[index]}</Typography>
+                        </>
+                      ) : (
+                        <Typography color="text.secondary">No suggestion available.</Typography>
+                      )}
+                    </CardContent>
+                  </Collapse>
+              </Card>
+            ))}
           </Card>
 
         </Box>

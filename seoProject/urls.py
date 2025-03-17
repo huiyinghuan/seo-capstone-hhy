@@ -21,6 +21,7 @@ urlpatterns = [
     path("api/get_recommended_fixes/", recommedationFeature.get_recommended_fixes, name="get_recommended_fixes"),
     path('api/get-sites', gscFeature.get_sites, name='get_sites'),
     path("api/upload-auth-file", gscFeature.upload_auth_file, name="upload_auth_file"),
+     path('api/give_suggestion/', recommedationFeature.give_suggestion, name='give_suggestions'),
 ]
 
 if settings.DEBUG:

@@ -175,4 +175,36 @@ def get_recommended_fixes(request):
         # Handle other exceptions
         return JsonResponse({"error": f"Unexpected error: {str(e)}"}, status=500)
 
-# def contentAnalysis 
+def give_suggestion(request):
+    logger.info("get_recommended_fixes function called")
+    
+    try:
+        data = json.loads(request.body)
+        label = data.get("field", "Unknown Attribute")
+        value = data.get("value", "No Value Provided")
+        requirement = data.get("requirement", "No Value Provided")
+        
+        if "Meta Description" in label:
+            prompt = f"Rewrite the following '{label}' to ensure it fits the '{requirement}' while keeping the '{value}'."
+        elif "Title" in label:
+            prompt = f"The current title is '{value}'. Optimize it to be compelling, concise, keyword-rich, and within '{requirement}'."
+        elif "Image Alt Text" in label:
+            prompt = f"Generate appropriate '{label}' for '{value}'. Ensure it's concise and SEO-friendly."
+        else:
+            prompt = f"Modify '{label}', '{value}', to ensure it meets the requirement: '{requirement}'."
+
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo", 
+            messages=[
+                {"role": "system", "content": "You are an SEO expert providing actionable recommendations."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=150
+        )
+        
+        recommendation = response.choices[0].message.content
+        return JsonResponse({"recommendation": recommendation}, status=200)
+
+    except Exception as e:
+        logger.error(f"Unexpected error: {e}")
+        return JsonResponse({"error": f"Unexpected error: {str(e)}"}, status=500)
