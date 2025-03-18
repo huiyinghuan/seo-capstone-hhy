@@ -41,15 +41,23 @@ const SEOAuditResultTable = ({ rows, setRows, headings, domain}) => {
     try {
       setLoadingFixes((prev) => ({ ...prev, [index]: true }));
       const { value, requirement, details} = rows[index]; // Extract value and requirement
+      const location = window.location.hostname;
+      // const response = await fetch("http://127.0.0.1:8000/api/get_recommended_fixes/"
+      // const response = await fetch('http://${location}:8000/api/get_recommended_fixes/', {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },ss
+      //   body: JSON.stringify({label, value, requirement, details}) // pass additional data 
+      // });
 
-      const response = await fetch("http://127.0.0.1:8000/api/get_recommended_fixes/", {
+      const response = await fetch(`http://${window.location.hostname}:8000/api/get_recommended_fixes/`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+        "Content-Type": "application/json",
         },
-        body: JSON.stringify({label, value, requirement, details}) // pass additional data 
-      });
-
+        body: JSON.stringify({ label, value, requirement, details }) // pass additional data
+      });  
       if (!response.ok) {
         throw new Error("Failed to fetch recommendations");
       }

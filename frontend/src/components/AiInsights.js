@@ -912,7 +912,7 @@ const AiInsights = ({ selectedSitemap }) => {
                 <Typography fontWeight="bold" color="text.primary">
                   {issue.field}
                 </Typography>
-                <Box display="flex" mt={0} ml={0}>
+                <Box display="flex" mt={0} ml={5}>
                   <Button
                     variant="contained"
                     color="primary"

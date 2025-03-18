@@ -39,7 +39,8 @@ import { Card, CardHeader, CardContent, Typography, LinearProgress, Box,  } from
 
     const fetchSEOData = async (url) => {
       try {
-          const response = await fetch(`http://localhost:8000/seo-audit/?url=${encodeURIComponent(url)}`);
+          const location = window.location.hostname;
+          const response = await fetch(`http://${location}:8000/seo-audit/?url=${encodeURIComponent(url)}`);
           if (!response.ok) throw new Error(`Error: ${response.statusText}`);
           const data = await response.json();
 
@@ -210,14 +211,7 @@ import { Card, CardHeader, CardContent, Typography, LinearProgress, Box,  } from
       { label: 'Page Speed', value: data.page_speed.result || 'Unknown', details: data.page_speed.details || 'No details available', valid: data.page_speed.result === 'Pass', recommendation: 'Improve page speed for better user experience' },
       { label: 'HTTPS Audit', value: data.httpsAuditResult || 'Unknown', requirement: 'HTTPS ensures secure communication', valid: data.httpsAuditResult === 'Pass', recommendation: 'Ensure the website uses HTTPS for secure communication' },
       
-       // Add a row for Structured Data
-      //  { 
-      //   label: 'Structured Data', 
-      //   value: data.structured_data ? JSON.stringify(data.structured_data, null, 2) : 'No structured data found',
-      //   requirement: 'Ensure correct structured data for SEO purposes', 
-      //   valid: data.structured_data ? 'Valid' : 'Invalid', 
-      //   recommendation: 'Ensure the structured data is properly implemented according to Schema.org' 
-      // },
+    
 
       // Add a row for image alt text validation
       {
@@ -231,23 +225,6 @@ import { Card, CardHeader, CardContent, Typography, LinearProgress, Box,  } from
         valid: data.image_alt_text.missing_alt === 0, // Passes validation if no images are missing alt text
         recommendation: 'Ensure all images have meaningful alt text for accessibility and SEO'
     },
-
-    // Add a row for Structured Data
-    // {
-    //   label: 'Structured Data',
-    //   // value: data.structured_data_validation ? JSON.stringify({
-    //   //   totalValidItems: data.structured_data_validation.totalValidItems,
-    //   //   // validItems: data.structuredData_Validation.validItems,
-    //   //   validItemTypes: data.structured_data_validation.validItemTypes
-    //   // }, null, 2) : 'No structured data found',
-    //   value: data.structured_data_validation
-    //   ? `Detected Valid Items: ${data.structured_data_validation.totalValidItems}\nValid Item Types: ${data.structured_data_validation.validItemTypes.join(', ')}`
-    //   : 'No structured data found',
-
-    //   requirement: 'Ensure correct structured data for SEO purposes',
-    //   valid: data.structured_data_validation.totalValidItems > 0,
-    //   recommendation: 'Ensure the structured data is properly implemented according to Schema.org. Based on the result, there are ' + data.structured_data_validation.totalValidItems + ' valid items with the types: ' + (data.structured_data_validation.validItemTypes.join(", ") || 'No valid item types found.')
-    // },
 
     {
       label: 'Structured Data',
