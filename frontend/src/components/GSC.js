@@ -35,7 +35,7 @@ function GSCFeature() {
 
     try {
       // const location = window.location.hostname;
-      const response = await fetch(`https://${window.location.hostname}:8000/api/upload-auth-file`, {
+      const response = await fetch(`http://${window.location.hostname}:8000/api/upload-auth-file`, {
         method: "POST",
         body: formData,
       });
@@ -58,7 +58,7 @@ function GSCFeature() {
   const getSites = async () => {
     setIsLoadingSites(true);
     try {
-      const response = await fetch(`https://${window.location.hostname}:8000/api/get-sites`);
+      const response = await fetch(`http://${window.location.hostname}:8000/api/get-sites`);
       const data = await response.json();
       setSites(data.sites);
     } catch (error) {
@@ -75,7 +75,7 @@ function GSCFeature() {
     }
     setIsLoadingSitemaps(true);
     try {
-      const response = await fetch(`https://${window.location.hostname}:8000/api/get-sitemaps?site_url=${encodeURIComponent(selectedSiteUrl)}`);
+      const response = await fetch(`http://${window.location.hostname}:8000/api/get-sitemaps?site_url=${encodeURIComponent(selectedSiteUrl)}`);
       const data = await response.json();
       setSitemaps(data.sitemaps);  // Store all URLs in the sitemap
     } catch (error) {
@@ -94,7 +94,7 @@ function GSCFeature() {
     const startDate = "2024-12-04";
     const endDate = "2025-04-31";
     try {
-      const response = await fetch(`https://${window.location.hostname}:8000/api/get-search-analytics?site_url=${encodeURIComponent(selectedSiteUrl)}&start_date=${startDate}&end_date=${endDate}`);
+      const response = await fetch(`http://${window.location.hostname}:8000/api/get-search-analytics?site_url=${encodeURIComponent(selectedSiteUrl)}&start_date=${startDate}&end_date=${endDate}`);
       const data = await response.json();
       setAnalyticsData(data);
     } catch (error) {
