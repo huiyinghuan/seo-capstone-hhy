@@ -13,7 +13,10 @@ function GSCFeature() {
   const [selectedSiteUrl, setSelectedSiteUrl] = useState('');
   const [selectedSiteMapUrl, setSelectedSiteMapUrl] = useState('');
   const fileInputRef = useRef(null);
-  
+  const [isLoadingSites, setIsLoadingSites] = useState(false);
+  const [isLoadingSitemaps, setIsLoadingSitemaps] = useState(false);
+  const [isLoadingAnalytics, setIsLoadingAnalytics] = useState(false);
+
 
   // Handle file selection
   const handleFileChange = (event) => {
@@ -31,7 +34,8 @@ function GSCFeature() {
     formData.append("file", file);
 
     try {
-      const response = await fetch("http://localhost:8000/api/upload-auth-file", {
+      // const location = window.location.hostname;
+      const response = await fetch(`http://${window.location.hostname}:8000/api/upload-auth-file`, {
         method: "POST",
         body: formData,
       });
@@ -52,12 +56,15 @@ function GSCFeature() {
 
 
   const getSites = async () => {
+    setIsLoadingSites(true);
     try {
-      const response = await fetch('http://localhost:8000/api/get-sites');
+      const response = await fetch(`http://${window.location.hostname}:8000/api/get-sites`);
       const data = await response.json();
       setSites(data.sites);
     } catch (error) {
       console.error("Error fetching sites:", error);
+    } finally {
+      setIsLoadingSites(false);
     }
   };
 
@@ -66,12 +73,15 @@ function GSCFeature() {
       alert('Please select a site first!');
       return;
     }
+    setIsLoadingSitemaps(true);
     try {
-      const response = await fetch(`http://localhost:8000/api/get-sitemaps?site_url=${encodeURIComponent(selectedSiteUrl)}`);
+      const response = await fetch(`http://${window.location.hostname}:8000/api/get-sitemaps?site_url=${encodeURIComponent(selectedSiteUrl)}`);
       const data = await response.json();
       setSitemaps(data.sitemaps);  // Store all URLs in the sitemap
     } catch (error) {
       console.error("Error fetching sitemaps:", error);
+    } finally {
+      setIsLoadingSitemaps(false);
     }
   };
 
@@ -80,14 +90,17 @@ function GSCFeature() {
       alert('Please select a site first!');
       return;
     }
+    setIsLoadingAnalytics(true);
     const startDate = "2024-12-04";
     const endDate = "2025-04-31";
     try {
-      const response = await fetch(`http://localhost:8000/api/get-search-analytics?site_url=${encodeURIComponent(selectedSiteUrl)}&start_date=${startDate}&end_date=${endDate}`);
+      const response = await fetch(`http://${window.location.hostname}:8000/api/get-search-analytics?site_url=${encodeURIComponent(selectedSiteUrl)}&start_date=${startDate}&end_date=${endDate}`);
       const data = await response.json();
       setAnalyticsData(data);
     } catch (error) {
       console.error("Error fetching search analytics:", error);
+    } finally {
+      setIsLoadingAnalytics(false);
     }
   };
   const handleSiteSelection = (event) => {
@@ -110,6 +123,7 @@ function GSCFeature() {
           SEO Analytics Dashboard
         </Typography>
         {/* Button to trigger file upload */}
+        
         <Button 
             variant="contained" 
             className="connect-button" 
@@ -163,7 +177,7 @@ function GSCFeature() {
       <Tabs value={tabValue} onChange={handleTabChange} indicatorColor="primary" textColor="primary" variant="fullWidth">
         <Tab label="Overview" value="overview" />
         <Tab label="AI Insights" value="ai-insights" />
-        <Tab label="Keyword Research" value="keywords" />
+        {/* <Tab label="Keyword Research" value="keywords" /> */}
       </Tabs>
       
       {/* form control */}
@@ -201,7 +215,8 @@ function GSCFeature() {
                 <Typography variant="h4" component="p" align="center" padding={2}>
                 {analyticsData.length > 0
                   ? analyticsData.reduce((acc, data) => acc + data.clicks, 0) // Sum all clicks
-                  : 0}
+                  :0}
+                  
                 </Typography>
               </Card>
             </Grid>
@@ -277,17 +292,21 @@ function GSCFeature() {
                   <Typography variant="h6" fontWeight="bold" gutterBottom>
                     Sitemaps
                   </Typography>
-                  <Paper style={{ maxHeight: "200px", overflowY: "auto" }}>
-                    <ul style={{ padding: "10px" }}>
-                      {sitemaps.map((sitemap, index) => (
-                        <li key={index} style={{ marginBottom: "10px" }}>
-                          <a href={sitemap} style={{ color: "#1976d2", textDecoration: "none" }} target="_blank" rel="noopener noreferrer">
-                            {sitemap}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </Paper>
+                  {sitemaps.length === 0 ? (
+                    <Typography color="textSecondary">No sitemaps available</Typography>
+                  ) : (
+                    <Paper style={{ maxHeight: "200px", overflowY: "auto" }}>
+                      <ul style={{ padding: "10px" }}>
+                        {sitemaps.map((sitemap, index) => (
+                          <li key={index} style={{ marginBottom: "10px" }}>
+                            <a href={sitemap} style={{ color: "#1976d2", textDecoration: "none" }} target="_blank" rel="noopener noreferrer">
+                              {sitemap}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </Paper>
+                   )}
                 </Box>
               </Card>
             </Grid>
@@ -302,7 +321,7 @@ function GSCFeature() {
 
 
       {/* Keyword Research */}
-      {tabValue === "keywords" && (
+      {/* {tabValue === "keywords" && (
         <Box mt={4}>
           <Card>
             <Box padding={2}>
@@ -327,7 +346,7 @@ function GSCFeature() {
             </Box>
           </Card>
         </Box>
-      )}
+      )} */}
     </main>
   </div>
   );

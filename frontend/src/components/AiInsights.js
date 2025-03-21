@@ -342,7 +342,7 @@
 //v2
 
 import React, { useState } from 'react';
-import { Box, Card, CardContent, Typography, Button, LinearProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, List, ListItem, Collapse, Chip  } from "@mui/material";
+import { Box, Card, CardContent, Fab, Typography, Button, LinearProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, List, ListItem, Collapse, Chip,  CircularProgress   } from "@mui/material";
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import { BrainCog, Loader2, Bot, Target, FileText, AlertTriangle, CheckCircle, Lightbulb, Gauge } from 'lucide-react';
 
@@ -601,10 +601,18 @@ const AiInsights = ({ selectedSitemap }) => {
             disabled={isAnalyzing}
             variant="contained"
             color="primary"
-            startIcon={isAnalyzing ? <Loader2 className="h-5 w-5 animate-spin" /> : <Bot className="h-5 w-5" />}
-            sx={{ mt: 2 }}
-          >
-            {isAnalyzing ? "Analyzing..." : "Analyze"}
+          //   startIcon={isAnalyzing ? <Loader2 className="h-5 w-5 animate-spin" /> : <Bot className="h-5 w-5" />}
+          //   sx={{ mt: 2 }}
+          // >
+          //   {isAnalyzing ? "Analyzing..." : "Analyze"}
+          startIcon={isAnalyzing ? (
+            <CircularProgress size={24} sx={{ color: 'white' }} />
+          ) : (
+            <Bot className="h-5 w-5" />
+          )}
+          sx={{ mt: 2, position: 'relative' }}
+        >
+          {isAnalyzing ? "Analyzing..." : "Analyze"}
           </Button>
         </Box>
       </Card>
@@ -764,7 +772,7 @@ const AiInsights = ({ selectedSitemap }) => {
               </Box>
             </Box>
           </Card> */}
-          <br></br>
+        
           {/* <Card elevation={2} sx={{ borderRadius: 2, p: 2, mb: 2 }}> */}
             {/* <Box display="flex" alignItems="center" mb={2}>
               <Lightbulb sx={{ color: "primary.main", fontSize: 24 }} />
@@ -834,7 +842,7 @@ const AiInsights = ({ selectedSitemap }) => {
             ))} */}
           {/* </Card> */}
 
-          <br></br>
+      
           {/* Suggestions Section */}
           {/* <Card elevation={2} sx={{ borderRadius: 2, p: 2 }}>
             <Box display="flex" alignItems="center" mb={2}>
@@ -895,7 +903,7 @@ const AiInsights = ({ selectedSitemap }) => {
               </Card>
             ))}
           </Card> */}
-          <br></br>
+       
           {/* Identified Issues Card */}
           <Card elevation={2} sx={{ borderRadius: 2, p: 2, mb: 2 }}>
             <Box display="flex" alignItems="center" mb={2}>
@@ -907,12 +915,12 @@ const AiInsights = ({ selectedSitemap }) => {
 
             {analysisResult.invalidFields.map((issue, index) => (
               <Card key={index} variant="outlined" sx={{ mb: 2, borderRadius: 2, p: 2 }}>
-                <Box  display="flex" alignItems="center">
-                <AlertTriangle sx={{ color: "warning.main", mr: 1 }} />
-                <Typography fontWeight="bold" color="text.primary">
+                <Box  display="flex" alignItems="center" >
+                <AlertTriangle sx={{ color: "warning.main",  mr: 2 }} />
+                <Typography fontWeight="bold" color="text.primary" sx={{ ml: 2 }}>
                   {issue.field}
                 </Typography>
-                <Box display="flex" mt={0} ml={5}>
+                <Box ml="auto" >
                   <Button
                     variant="contained"
                     color="primary"
@@ -936,7 +944,6 @@ const AiInsights = ({ selectedSitemap }) => {
                 Improvement Suggestions
               </Typography>
             </Box>
-
             
             {analysisResult.invalidFields.map((issue, index) => (
               <Card key={index} variant="outlined" sx={{ mb: 2, borderRadius: 2 }}>
@@ -954,8 +961,8 @@ const AiInsights = ({ selectedSitemap }) => {
                   }}
                 >
                   <Box display="flex" alignItems="center">
-                    <AlertTriangle sx={{ color: "warning.main", mr: 1 }} />
-                    <Typography fontWeight="bold" color="text.primary">
+                    <AlertTriangle sx={{ color: "warning.main",  mr: 2}} />
+                    <Typography fontWeight="bold" color="text.primary" sx={{ ml: 2 }} >
                       {issue.field}
                     </Typography>
                     {/* <Chip label={`${suggestion.impact} impact`} color="primary" size="small" sx={{ ml: 2 }} /> */}
@@ -963,37 +970,6 @@ const AiInsights = ({ selectedSitemap }) => {
                   {expandedSuggestions.includes(index) ? <ExpandLess /> : <ExpandMore />}
                 </Button>
 
-                {/* <Collapse in={expandedSuggestions.includes(index)}>
-                  <CardContent sx={{ backgroundColor: "white", borderTop: "1px solid #e5e7eb" }}>
-                    <Typography color="text.secondary" mb={2}>
-                      {suggestion.description}
-                    </Typography>
-                    <Typography fontWeight="bold" color="text.primary" mb={1}>
-                      Recommendations:
-                    </Typography>
-                    <ul style={{ paddingLeft: "20px", margin: 0 }}>
-                      {suggestion.recommendations.map((rec, recIndex) => (
-                        <li key={recIndex} style={{ marginBottom: "4px", color: "#4b5563" }}>
-                          {rec}
-                        </li>
-                      ))}
-                    </ul>
-                    <Box display="flex" justifyContent="flex-end" mt={2}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<CheckCircle />}
-                        onClick={() => {
-                          fetchRecommendedFixes(index);
-                          toggleSuggestion(index);
-                        }}
-                        disabled={loadingFixes[index]}
-                      >
-                        {loadingFixes[index] ? "Fetching..." : "Fix Issue"}
-                      </Button>
-                    </Box>
-                  </CardContent>
-                </Collapse> */}
 
                 {/* Display the fetched recommendation inside a collapsible section */}
                 <Collapse in={expandedSuggestions.includes(index)}>
@@ -1015,6 +991,7 @@ const AiInsights = ({ selectedSitemap }) => {
               </Card>
             ))}
           </Card>
+          
 
         </Box>
       )}
