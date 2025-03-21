@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Button, Card, Grid, Typography, Box, Paper, Tabs, Tab, TextField, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
-import { BarChart3, Search, Globe, Trees as SitemapTree, Brain, TrendingUp, AlertCircle } from "lucide-react";
+import { Button, Card, Grid, Typography, Box, Paper, Tabs, Tab, TextField, Select, MenuItem, InputLabel,  Alert, FormControl } from "@mui/material";
+import { Map, Upload, FileJson, CheckCircle, BarChart3, Search,Lock, Globe, Trees as SitemapTree, Brain, TrendingUp, AlertCircle } from "lucide-react";
 import AiInsights from './AiInsights'
 
 function GSCFeature() {
@@ -16,11 +16,24 @@ function GSCFeature() {
   const [isLoadingSites, setIsLoadingSites] = useState(false);
   const [isLoadingSitemaps, setIsLoadingSitemaps] = useState(false);
   const [isLoadingAnalytics, setIsLoadingAnalytics] = useState(false);
-
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [gscConnected, setGscConnected] = useState(false);
 
   // Handle file selection
+  // const handleFileChange = (event) => {
+  //   setFile(event.target.files[0]);
+  // };
+
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+    const selectedFile = event.target.files?.[0];
+    if (selectedFile) {
+      // Simulate file upload
+      setTimeout(() => {
+        setFile(selectedFile);
+        setUploadSuccess(true);
+        setTimeout(() => setUploadSuccess(false), 3000);
+      }, 1000);
+    }
   };
 
   // Upload file and get GSC sites
@@ -42,6 +55,7 @@ function GSCFeature() {
 
       const data = await response.json();
       setMessage(data.message || data.error);
+      setGscConnected(true);
     } catch (error) {
       console.error("Error uploading file:", error);
       setMessage("Error uploading file");
@@ -124,7 +138,7 @@ function GSCFeature() {
         </Typography>
         {/* Button to trigger file upload */}
         
-        <Button 
+        {/* <Button 
             variant="contained" 
             className="connect-button" 
             // onClick={handleUpload}
@@ -132,24 +146,24 @@ function GSCFeature() {
             style={{ marginLeft: '20px' }}
           >
           Upload JSON File
-        </Button>
+        </Button> */}
         {/* Hidden file input with ref */}
-        <input 
+        {/* <input 
             ref={fileInputRef}
             type="file" 
             style={{ display: "none" }} 
             accept="application/json" 
             onChange={handleFileChange}
-          />
+          /> */}
         {/* Connect with GSC Test */}
-        <Button 
+        {/* <Button 
           variant="contained" 
           className="connect-button" 
           // onClick={() => fileInputRef.current.click()}
           onClick={handleUpload}
          >
           Connect with GSC
-        </Button>
+        </Button> */}
         {/* <input 
           type="file" 
           // ref={fileInputRef} 
@@ -158,31 +172,135 @@ function GSCFeature() {
           accept="application/json" 
           onChange={handleFileChange}
         /> */}
-        <Box ml="auto" display="flex" alignItems="center" spacing={2}>
-          <Button variant="outlined" size="small" startIcon={<Globe />} style={{ marginLeft: "10px" }} onClick={getSites}>
+        
+      </Box>
+    </header>
+    <Box sx={{ padding: 4 }}> 
+      <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4 }}>     
+        <Box sx={{ backgroundColor: '#fff', padding: 3, borderRadius: 2, boxShadow: 1 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Upload className="h-6 w-6 text-gray-400" />
+              <Typography variant="h6" sx={{ marginLeft: 2 }}>
+                Upload JSON File
+              </Typography>
+            </Box>
+            {file && <CheckCircle style={{ fontSize: 24, color: "green", ml: 1 }} />}
+          </Box>
+          <input
+            type="file"
+            accept=".json"
+            onChange={handleFileChange}
+            style={{ marginTop: 16 }}
+            
+          />
+          
+          {uploadSuccess && (
+            <Alert sx={{ marginTop: 2 }} severity="success">
+              Upload successful!
+            </Alert>
+          )}
+        </Box>
+        {/* GSC Connection Status */}
+        <Box sx={{ backgroundColor: '#fff', padding: 3, borderRadius: 2, boxShadow: 1 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Globe className="h-6 w-6 text-gray-400" />
+              <Typography variant="h6" sx={{ marginLeft: 2 }}>
+                GSC Connection Status
+              </Typography>
+            </Box>
+           
+          </Box>
+          
+          <Box sx={{ paddingTop: 1, paddingBottom: 1, display: "flex", alignItems: "center", fontSize: "0.875rem", color: "text.secondary" }}>
+            {gscConnected ? (
+              <>
+                <CheckCircle style={{ fontSize: 20, color: "#30bd69", ml: 2 }} />
+                Connected to Google Search Console
+              </>
+            ) : (
+              <>
+                <Lock sx={{ fontSize: 20, color: "grey.500", mr: 1 }} />
+                Not connected. Please connect to GSC first.
+              </>
+            )}
+          </Box>
+          <Box sx={{ paddingTop: 1, paddingBottom: 1, display: "flex", alignItems: "center", fontSize: "0.875rem", color: "text.secondary" }}>
+  {gscConnected ? (
+    <>
+      <CheckCircle style={{ fontSize: 20, color: "#30bd69", marginLeft: 8 }} />
+      <Typography sx={{ fontSize: 20, color: "green", marginLeft: 2 }}>
+        Connected to Google Search Console
+      </Typography>
+    </>
+  ) : (
+    <>
+      <Lock sx={{ fontSize: 20, color: "grey.500", marginRight: 2 }} />
+      <Typography sx={{ fontSize: 20, color: "text.secondary" }}>
+        Not connected. Please connect to GSC first.
+      </Typography>
+    </>
+  )}
+</Box>
+
+          <Button
+            variant="contained"
+            sx={{
+              mt: 2,
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              py: 1.5,
+              fontSize: "0.875rem",
+              borderRadius: 1,
+              bgcolor: gscConnected ? "green.100" : "green",
+              color: gscConnected ? "green.700" : "white",
+              "&:hover": {
+                bgcolor: gscConnected ? "green.200" : "darkgreen",
+              },
+            }}
+            color={gscConnected ? 'success' : 'primary'}
+            onClick={handleUpload}
+            disabled={gscConnected}
+            startIcon={gscConnected ? <CheckCircle style={{ fontSize: 20, color: "green", mr: 1 }} /> : null}
+          >
+            {gscConnected ? 'Connected to GSC' : 'Connect with GSC Page'}
+        </Button>
+       
+        </Box>
+      </Box>
+    
+    
+    {/* Actions  */}
+      <Box sx={{ backgroundColor: '#fff', padding: 3, borderRadius: 2, boxShadow: 1, marginTop: 4 }}>
+        <Typography variant="h6" fontWeight={600}>Actions</Typography>
+        {/* <Box ml="auto" display="flex" alignItems="center" spacing={2}> */}
+        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', marginTop: 2, marginBottom: 2 }}>
+          <Button variant="contained"  color="primary"  startIcon={<Globe />} style={{ marginLeft: "10px" }} onClick={getSites}>
             Get Sites
           </Button>
-          <Button variant="outlined" size="small" startIcon={<SitemapTree />} style={{ marginLeft: "10px" }} disabled={!selectedSiteUrl} onClick={getSitemaps}>
+          <Button variant="contained" color="secondary" startIcon={<Map />} style={{ marginLeft: "10px" }} disabled={!selectedSiteUrl} onClick={getSitemaps}>
             Get Sitemaps
           </Button>
-          <Button variant="outlined" size="small" startIcon={<TrendingUp />} style={{ marginLeft: "10px" }} disabled={!selectedSiteUrl} onClick={getSearchAnalytics}>
+          <Button variant="contained" color="warning" startIcon={<TrendingUp />} style={{ marginLeft: "10px" }} disabled={!selectedSiteUrl} onClick={getSearchAnalytics}>
             Get Data
           </Button>
         </Box>
       </Box>
-    </header>
-
-    <main style={{ padding: "20px" }}>
+    </Box>
+              
+    <main style={{ paddingLeft: "30px", paddingRight: "30px", paddingTop:"30px" }}>
       {/* Tabs */}
       <Tabs value={tabValue} onChange={handleTabChange} indicatorColor="primary" textColor="primary" variant="fullWidth">
         <Tab label="Overview" value="overview" />
-        <Tab label="AI Insights" value="ai-insights" />
+        <Tab label="AI Insights" value="ai-insights"  />
         {/* <Tab label="Keyword Research" value="keywords" /> */}
-      </Tabs>
-      
+      </Tabs> 
       {/* form control */}
-      <Box padding={2} display="flex" flexDirection="column" alignItems="flex-start">
-        <FormControl variant="outlined" fullWidth style={{ marginTop: "10px", marginBottom: "15px" }}>
+      <Box paddingTop={2} display="flex" flexDirection="column" alignItems="flex-start">
+        <FormControl variant="filled" fullWidth style={{ marginTop: "10px", marginBottom: "15px" }}>
           <InputLabel>{tabValue === "ai-insights" ? "Select Sitemap" : "Select Site"}</InputLabel>
           <Select
             value={tabValue === "ai-insights" ? selectedSiteMapUrl : selectedSiteUrl}
@@ -198,7 +316,7 @@ function GSCFeature() {
           </Select>
         </FormControl>
       </Box>     
-
+      
       {/* Tab Content */}
       {tabValue === "overview" && (
         <Box mt={4}>
@@ -207,7 +325,7 @@ function GSCFeature() {
             <Grid item xs={12} sm={6} md={3}>
               <Card>
                 <Box display="flex" alignItems="center" padding={2}>
-                  <Search style={{ fontSize: 24, color: "#757575" }} />
+                  <Search style={{ fontSize: 24, color: "#4b80dc" }} />
                   <Typography variant="subtitle2" color="textSecondary" style={{ marginLeft: "10px" }}>
                     Total Clicks
                   </Typography>
@@ -223,7 +341,7 @@ function GSCFeature() {
             <Grid item xs={12} sm={6} md={3}>
               <Card>
                 <Box display="flex" alignItems="center" padding={2}>
-                  <TrendingUp style={{ fontSize: 24, color: "#757575" }} />
+                  <TrendingUp style={{ fontSize: 24, color: "#3db961" }} />
                   <Typography variant="subtitle2" color="textSecondary" style={{ marginLeft: "10px" }}>
                     Impressions
                   </Typography>
@@ -238,7 +356,7 @@ function GSCFeature() {
             <Grid item xs={12} sm={6} md={3}>
               <Card>
                 <Box display="flex" alignItems="center" padding={2}>
-                  <Globe style={{ fontSize: 24, color: "#757575" }} />
+                  <FileJson style={{ fontSize: 24, color: "#9a5ddc" }} />
                   <Typography variant="subtitle2" color="textSecondary" style={{ marginLeft: "10px" }}>
                     Indexed Pages
                   </Typography>
@@ -251,7 +369,7 @@ function GSCFeature() {
             <Grid item xs={12} sm={6} md={3}>
               <Card>
                 <Box display="flex" alignItems="center" padding={2}>
-                  <AlertCircle style={{ fontSize: 24, color: "#757575" }} />
+                  <AlertCircle style={{ fontSize: 24, color: "#cc4d52" }} />
                   <Typography variant="subtitle2" color="textSecondary" style={{ marginLeft: "10px" }}>
                     Issues
                   </Typography>
@@ -264,11 +382,11 @@ function GSCFeature() {
 
             {/* Chart */}
             <Grid item xs={12}>
+            <Typography variant="h6" fontWeight="bold" gutterBottom>
+                    Performance Overview
+            </Typography>
               <Card>
                 <Box padding={2}>
-                  <Typography variant="h6" fontWeight="bold" gutterBottom>
-                    Performance Overview
-                  </Typography>
                   <Box height="300px">
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={analyticsData}>
@@ -287,11 +405,11 @@ function GSCFeature() {
 
             {/* Sitemaps */}
             <Grid item xs={12}>
+            <Typography variant="h6" fontWeight="bold" gutterBottom>
+              Sitemaps
+            </Typography>
               <Card>
-                <Box padding={2}>
-                  <Typography variant="h6" fontWeight="bold" gutterBottom>
-                    Sitemaps
-                  </Typography>
+                <Box padding={4} >
                   {sitemaps.length === 0 ? (
                     <Typography color="textSecondary">No sitemaps available</Typography>
                   ) : (
@@ -309,6 +427,7 @@ function GSCFeature() {
                    )}
                 </Box>
               </Card>
+              <br></br>
             </Grid>
           </Grid>
         </Box>

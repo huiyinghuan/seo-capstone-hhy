@@ -247,7 +247,7 @@ const SEOAuditResultTable = ({ rows, setRows, headings, domain}) => {
                   <TableCell>{getValidationIcon(row.valid)}</TableCell>
                   <TableCell>{row.recommendation}</TableCell>
                   <TableCell >
-                    {(row.valid === false || row.valid === null) && (
+                    {(row.valid === false || row.valid === null || row.valid === 'partial') && (
                       <Button variant="contained" color="purple" 
                         sx={{ display: 'inline-flex',
                               alignItems: 'center',
