@@ -130,7 +130,27 @@ def fetch_dynamic_html(url):
     except Exception as e:
         return None
 
-# Getting keyword density & content 
+# Getting keyword density & content
+
+# List of common SEO stop words (can be extended based on your needs)
+SEO_STOP_WORDS = {
+    'a', 'about', 'after', 'again', 'against', 'all', 'am', 'an', 'and', 'any', 'are', 'aren', 'aren\'t', 'as', 'at', 'also',
+    'be', 'because', 'been', 'before', 'being', 'below', 'between', 'both', 'but', 'by', 'can', 'cannot', 'could', 'couldn\'t', 
+    'did', 'didn\'t', 'do', 'does', 'doesn\'t', 'don\'t', 'doing', 'don', 'don\'t', 'down', 'during', 'each', 'few', 'for', 
+    'from', 'further', 'had', 'hadn\'t', 'has', 'hasn\'t', 'haven\'t', 'having', 'he', 'he\'d', 'he\'ll', 'he\'s', 'her', 
+    'here', 'here\'s', 'hereafter', 'herein', 'hereof', 'hereon', 'hers', 'herself', 'he\'s', 'how', 'how\'s', 'howsoever', 
+    'however', 'i', 'i\'d', 'i\'ll', 'i\'m', 'i\'ve', 'if', 'in', 'insofar', 'into', 'is', 'isn\'t', 'is\'s', 'it', 'it\'s', 
+    'it\'d', 'it\'ll', 'it\'s', 'it\'s', 'itself', 'let', 'let\'s', 'me', 'meant', 'more', 'moreover', 'my', 'myself', 'need',
+    'of', 'off', 'on', 'once', 'only', 'or', 'other', 'ought', 'our', 'ours', 'ourselves', 'over', 'own', 'same', 'should', 
+    'should\'ve', 'shouldn\'t', 'so', 'some', 'such', 'than', 'that', 'that\'s', 'that\'ll', 'that\'s', 'the', 'the\'s', 
+    'theirs', 'them', 'themselves', 'then', 'there', 'there\'s', 'thereafter', 'therefore', 'therein', 'thereof', 'thereon',
+    'they', 'they\'d', 'they\'ll', 'they\'re', 'they\'ve', 'this', 'this\'s', 'those', 'though', 'through', 'throughout', 
+    'to', 'together', 'too', 'under', 'until', 'up', 'very', 'was', 'wasn\'t', 'we', 'we\'d', 'we\'ll', 'we\'re', 'we\'ve', 
+    'were', 'weren\'t', 'what', 'what\'s', 'what\'ll', 'what\'re', 'what\'ve', 'when', 'when\'s', 'when\'ll', 'when\'ve', 
+    'where', 'where\'s', 'where\'ll', 'where\'ve', 'whether', 'which', 'which\'s', 'which\'ve', 'while', 'while\'ll',
+    'while\'ve', 'who', 'who\'s', 'who\'ll', 'who\'re', 'who\'ve', 'whom', 'whom\'s', 'why', 'why\'s', 'why\'ll', 'why\'ve',
+    'with', 'within', 'without', 'you', 'you\'d', 'you\'ll', 'you\'re', 'you\'ve', 'your', 'yourself', 'yours', 'yourselves'
+} 
 
 def extract_main_text(soup):
     """
@@ -144,16 +164,19 @@ def extract_main_text(soup):
     text = ' '.join(soup.stripped_strings)
     return text
 
+
+
 def calculate_keyword_density(text, top_n=10):
     """
     Calculates keyword density in a given text.
-    Returns the top N keywords and their densities.
+    Returns the top 10 keywords and their densities.
     """
     # Tokenize the text into words
     words = re.findall(r'\b[a-zA-Z]{3,}\b', text.lower())  # Extract words with at least 3 characters
-    
-    total_words = len(words)
-    word_counts = Counter(words)
+    filtered_words = [word for word in words if word not in SEO_STOP_WORDS]
+
+    total_words = len(filtered_words)
+    word_counts = Counter(filtered_words)
     
     # Calculate density percentage and include the count
     keyword_density = {
