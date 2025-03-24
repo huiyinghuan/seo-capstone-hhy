@@ -54,7 +54,7 @@ const Navbar = () => {
             {/* Updated Home Link */}
           <Link to="/" className="nav-link">Home</Link> 
           <Link to="/gsc-page" className="connect-button nav-link"> {/* New link to the new page */}
-            Connect with GSC Page
+           Connect & Analyse: User SEO Insights 
           </Link>
 
           {/* Connect with GSC Test */}

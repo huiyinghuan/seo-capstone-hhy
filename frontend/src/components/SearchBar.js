@@ -184,7 +184,7 @@ import { Card, CardHeader, CardContent, Typography, LinearProgress, Box,  } from
   const createRows = (data) => {
     console.log("Creating rows for data:", data);
     if (!data) {
-      return []; // Return an empty array if data is undefined or null
+      return []; // Return empty array if data is undefined or null
     }
 
     return [

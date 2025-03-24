@@ -213,36 +213,24 @@ function GSCFeature() {
            
           </Box>
           
-          <Box sx={{ paddingTop: 1, paddingBottom: 1, display: "flex", alignItems: "center", fontSize: "0.875rem", color: "text.secondary" }}>
+        
+          <Box sx={{ paddingTop: 2, paddingBottom: 1, display: "flex", alignItems: "center", fontSize: "0.875rem", color: "text.secondary" }}>
             {gscConnected ? (
               <>
-                <CheckCircle style={{ fontSize: 20, color: "#30bd69", ml: 2 }} />
-                Connected to Google Search Console
+                <CheckCircle style={{ fontSize: 15, color: "#30bd69", marginLeft: 1 }} />
+                <Typography sx={{ fontSize: 13, fontWeight: 'medium', color: "#3ea066", marginLeft: 0.5 }}>
+                  Connected to Google Search Console
+                </Typography>
               </>
             ) : (
               <>
-                <Lock sx={{ fontSize: 20, color: "grey.500", mr: 1 }} />
-                Not connected. Please connect to GSC first.
+                <Lock sx={{ fontSize: 15, color: "grey.500", marginLeft: 2 }} />
+                <Typography sx={{ fontSize: 15, fontWeight: 600, color: "text.secondary", marginLeft: 1  }}>
+                  Not connected. Please connect to GSC first.
+                </Typography>
               </>
             )}
           </Box>
-          <Box sx={{ paddingTop: 1, paddingBottom: 1, display: "flex", alignItems: "center", fontSize: "0.875rem", color: "text.secondary" }}>
-  {gscConnected ? (
-    <>
-      <CheckCircle style={{ fontSize: 20, color: "#30bd69", marginLeft: 8 }} />
-      <Typography sx={{ fontSize: 20, color: "green", marginLeft: 2 }}>
-        Connected to Google Search Console
-      </Typography>
-    </>
-  ) : (
-    <>
-      <Lock sx={{ fontSize: 20, color: "grey.500", marginRight: 2 }} />
-      <Typography sx={{ fontSize: 20, color: "text.secondary" }}>
-        Not connected. Please connect to GSC first.
-      </Typography>
-    </>
-  )}
-</Box>
 
           <Button
             variant="contained"
@@ -255,10 +243,10 @@ function GSCFeature() {
               py: 1.5,
               fontSize: "0.875rem",
               borderRadius: 1,
-              bgcolor: gscConnected ? "green.100" : "green",
+              backgroundColor: gscConnected ? "green.100" : "green",
               color: gscConnected ? "green.700" : "white",
               "&:hover": {
-                bgcolor: gscConnected ? "green.200" : "darkgreen",
+                backgroundColor: gscConnected ? "green.200" : "darkgreen",
               },
             }}
             color={gscConnected ? 'success' : 'primary'}
@@ -266,7 +254,7 @@ function GSCFeature() {
             disabled={gscConnected}
             startIcon={gscConnected ? <CheckCircle style={{ fontSize: 20, color: "green", mr: 1 }} /> : null}
           >
-            {gscConnected ? 'Connected to GSC' : 'Connect with GSC Page'}
+            {gscConnected ? 'Connected to GSC' : 'Connect with GSC'}
         </Button>
        
         </Box>
