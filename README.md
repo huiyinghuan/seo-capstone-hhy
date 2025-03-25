@@ -10,9 +10,11 @@ The **SEO Competitor Analysis Tool** is a powerful platform that provides side-b
 ## Features
 
 - **Competitor Analysis on URL Level:** Compare the SEO performance of any website with its competitors.
+- **Technical SEO Audits:** Technical SEO audits 
 - **Actionable SEO Insights:** Get actionable recommendations to improve SEO based on the technical audit.
 - **Real-Time SEO Audit:** Perform on-demand SEO audits for your website and competitors.
 - **User-Friendly Interface:** The platform is intuitive and requires no sign-up or login, prioritizing user convenience and privacy.
+- **Content Analysis**: The platfor allows users to connect to Google Search Console, selecting their sites got content analysis
 - **No Data Retention:** Data is not stored after a session ends, ensuring privacy.
 
 ## Technologies Used
