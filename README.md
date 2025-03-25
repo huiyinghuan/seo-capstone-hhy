@@ -50,3 +50,53 @@ To run this project locally, you will need:
    ```bash
    git clone https://github.com/your-username/seo-competitor-analysis-tool.git](https://github.com/huiyinghuan/seo-capstone-hhy.git)
    cd seo-capstone-hhy
+   ```
+
+2. Install Python dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+3. Start the Django development server:
+
+```bash
+python manage.py runserver
+```
+
+4. The backend API will be available at http://localhost:8000.
+
+### Frontend Setup (React)
+
+1. Navigate to the frontend directory:
+
+   ```bash
+   cd frontend
+   ```
+2. Install the necessary dependencies:
+   
+   ```bash
+   npm install
+   ```
+3. Start the React development server:
+   ```bash
+   npm start
+   ```
+   
+### **Usage** 🚀  
+
+1. **Open the frontend** in your browser.  
+2. **Enter a URL** to start the SEO audit.  
+3. The tool will perform a technical audit, providing insights such as:
+   - Title length
+   -  Meta Description
+   - Canonical tag presence
+   - Meta Tag
+   - Sitemap Status
+   - Mobile Friendliness
+   - Image Alt Text
+   - Structured Data
+   - Keyword Density
+     
+4. If any issues, the "Action" column will display the "Recommended Fixes" button, which will trigger suggestions for fixing the issues.
+5. Apply the recommendations directly or use them as a guide to improve your site's SEO.
