@@ -13,7 +13,7 @@ import re
 def fetch_static_html(url):
     try:
         print(f"Fetching static HTML for: {url}")
-        response = requests.get(url, timeout=10)
+        response = requests.get(url, timeout=30)
        
         print(f"HTTP Status: {response.status_code}")
         if response.status_code == 200:
