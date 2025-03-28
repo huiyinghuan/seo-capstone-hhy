@@ -242,9 +242,9 @@ import { Card, CardHeader, CardContent, Typography, LinearProgress, Box,  } from
         ? data.keyword_density.top_keywords.map(keywordData => 
             `${keywordData.keyword} - Count: ${keywordData.count} - Density: ${keywordData.density}%`).join('\n') 
         : 'No data available',
-      requirement: 'Ensure the keyword density is within the recommended range (usually 1-3%) for SEO purposes',
+      requirement: 'Ensure the keyword density is within the recommended range (0.5% - 3%) to advoid keyword stuffing',
       valid: data.keyword_density.top_keywords && data.keyword_density.top_keywords.every(keywordData => 
-        keywordData.density >= 1 && keywordData.density <= 3),
+        keywordData.density >= 0.5 && keywordData.density <= 3),
       recommendation: 'Ensure keyword density is between 1-3% to avoid keyword stuffing and maintain natural readability'
     }
     
