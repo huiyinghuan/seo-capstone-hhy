@@ -195,11 +195,9 @@ const SEOAuditResultTable = ({ rows, setRows, headings, domain}) => {
         sx={{ borderRadius: "8px", maxHeight: "440px" }}
       >
         <Table stickyHeader sx={{ minWidth: 650 }} aria-label="SEO Audit Results" >
-          <TableHead sx={{ backgroundColor: "#f9fafb" }}>
-            
+          <TableHead sx={{ backgroundColor: "#f9fafb" }}> 
             <TableRow>
-            <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
-                
+            <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>  
               </TableCell>
               <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
                 Attribute
@@ -222,7 +220,6 @@ const SEOAuditResultTable = ({ rows, setRows, headings, domain}) => {
               <TableCell sx={{ fontWeight: "bold", textTransform: "uppercase", color: "#6b7280" }}>
                 Score
               </TableCell>
-
             </TableRow>
           </TableHead>
           <TableBody>
@@ -284,19 +281,6 @@ const SEOAuditResultTable = ({ rows, setRows, headings, domain}) => {
                   </TableCell>
                   <TableCell>{getValidationScore(row.valid)} </TableCell>  {/** {row.valid ? 1 : 0}   for score */}
                 </TableRow>
-                {/* {expandedRow === index && (
-                  <TableRow>
-                    <TableCell colSpan={8}>
-                      <Collapse in={expandedRow === index} timeout="auto" unmountOnExit>
-                        <div style={{ padding: "16px", background: "#FaF5FF", borderRadius: "8px", color: "#581C87", fontSize: '1rem',
-                              fontWeight: 'bold' }}>
-                          <h4 style={{color: "#581C87", fontSize: '1rem', fontWeight: 'bold'}} >Recommendations: {row.label}</h4>
-                          <pre>{row.recommendation}</pre>
-                        </div>
-                      </Collapse>
-                    </TableCell>
-                  </TableRow> */}
-                {/* Expanded Row for Recommendation */}
                 {expandedRow === index && (
                   <TableRow>
                     <TableCell colSpan={8}>
@@ -311,16 +295,6 @@ const SEOAuditResultTable = ({ rows, setRows, headings, domain}) => {
                 )}
                 {row.label === "Page Speed" && (
                   <TableRow>
-                    {/* <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
-                      <Collapse in={expandedRow === index} timeout="auto" unmountOnExit>
-                        <div style={{ padding: "16px", background: "#f9fafb", borderRadius: "8px" }}>
-                          <h4>Core Web Vitals Assessment: {pageSpeedDetails["Core Web Vitals Assessment"]}</h4>
-                          <pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
-                            {JSON.stringify(pageSpeedDetails.DetailedOutput, null, 2)}
-                          </pre>
-                        </div>
-                      </Collapse>
-                    </TableCell> */}
                     <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
                       <Collapse in={expandedRow === index} timeout="auto" unmountOnExit>
                         <div style={{ padding: "16px", background: "#f9fafb", borderRadius: "8px" }}>
