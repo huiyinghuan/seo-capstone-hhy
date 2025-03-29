@@ -33,7 +33,8 @@ const AiInsights = ({ selectedSitemap }) => {
       const { totalScore, invalidFields } = calculateTotalScore(seoData);
 
       setAnalysisResult({
-        readabilityScore: 85, // Placeholder
+        readabilityScore: seoData.flesch_reading_ease || 0, // default to 0 if score is missing
+        //readabilityScore: 85, // Placeholder
         seoScore: totalScore,
         keywordDensity:
           seoData.keyword_density?.top_keywords?.map((keywordData) => ({
@@ -236,6 +237,7 @@ const AiInsights = ({ selectedSitemap }) => {
         structured_data_validation: data.structured_data_validation,
         validation: data.validation,
         keyword_density: data.keyword_density,
+        flesch_reading_ease: data.flesch_reading_ease
       };
     } catch (error) {
       console.error(`Error fetching data for ${url}:`, error);

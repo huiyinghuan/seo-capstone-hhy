@@ -7,6 +7,7 @@ from urllib.parse import urljoin
 import subprocess
 import json
 import os
+import textstat
 from collections import Counter
 import re
 
@@ -21,9 +22,12 @@ def fetch_static_html(url):
 
             # Extract main text content
             main_text = extract_main_text(soup)
-
+            
             # Calculate keyword density
             keyword_density = calculate_keyword_density(main_text)
+
+            # Calculate readibility ease
+            flesch_reading_ease = calculate_readability_scores(main_text)
 
             # Title
             title = soup.find('title').text if soup.find('title') else 'No title'
@@ -61,7 +65,8 @@ def fetch_static_html(url):
                 "headings": headings,
                 "structured_data": structured_data,
                 "image_alt_text": image_alt_text_data, 
-                "keyword_density": keyword_density  # Include keyword density data
+                "keyword_density": keyword_density,  # Include keyword density data
+                "flesch_reading_ease": flesch_reading_ease
             }
 
             print("Static HTML data:", result)
@@ -87,6 +92,9 @@ def fetch_dynamic_html(url):
 
         # Calculate keyword density
         keyword_density = calculate_keyword_density(main_text)
+
+        # Calculate readibility ease
+        flesch_reading_ease = calculate_readability_scores(main_text)
 
         # Title
         title = soup.find('title').text if soup.find('title') else 'No title'
@@ -125,7 +133,8 @@ def fetch_dynamic_html(url):
             "headings": headings,
             "structured_data": structured_data,
             "image_alt_text": image_alt_text_data,  # Include image alt text data
-            "keyword_density": keyword_density  # Include keyword density data
+            "keyword_density": keyword_density,  # Include keyword density data
+            "flesch_reading_ease": flesch_reading_ease
         }
     except Exception as e:
         return None
@@ -202,6 +211,16 @@ def calculate_keyword_density(text, top_n=10):
             for word, data in sorted_keywords
         ]
     }
+
+def calculate_readability_scores(text):
+    # Calculate Flesch Reading Ease score
+    flesch_reading_ease = textstat.flesch_reading_ease(text)
+
+    # Calculate Flesch-Kincaid Grade Level
+    # flesch_kincaid_grade = textstat.flesch_kincaid_grade(text)
+
+    return flesch_reading_ease
+
 
 
 # Extracting the image alt text 
