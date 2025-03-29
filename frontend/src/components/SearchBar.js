@@ -40,7 +40,11 @@ import { Card, CardHeader, CardContent, Typography, LinearProgress, Box,  } from
     const fetchSEOData = async (url) => {
       try {
           const location = window.location.hostname;
-          const response = await fetch(`http://${location}:8000/seo-audit/?url=${encodeURIComponent(url)}`);
+          //for local run
+          //const response = await fetch(`http://${location}:8000/seo-audit/?url=${encodeURIComponent(url)}`);
+
+          //for server
+          const response = await fetch(`http://98.70.29.253/seo-audit/?url=${encodeURIComponent(url)}`);
           if (!response.ok) throw new Error(`Error: ${response.statusText}`);
           const data = await response.json();
 
