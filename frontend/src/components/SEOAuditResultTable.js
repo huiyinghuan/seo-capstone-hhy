@@ -51,23 +51,23 @@ const SEOAuditResultTable = ({ rows, setRows, headings, domain}) => {
       //   body: JSON.stringify({label, value, requirement, details}) // pass additional data 
       // });
 
-      // for local & dynamic 
-      // const response = await fetch(`http://${window.location.hostname}:8000/api/get_recommended_fixes/`, {
-      //   method: "POST",
-      //   headers: {
-      //   "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({ label, value, requirement, details }) // pass additional data
-      // });  
-
-      // for server
-      const response = await fetch(`http://98.70.29.253/api/get_recommended_fixes/`, {
+      //for local & dynamic 
+      const response = await fetch(`http://${window.location.hostname}:8000/api/get_recommended_fixes/`, {
         method: "POST",
         headers: {
         "Content-Type": "application/json",
         },
         body: JSON.stringify({ label, value, requirement, details }) // pass additional data
-      }); 
+      });  
+
+      // for server
+      // const response = await fetch(`http://98.70.29.253/api/get_recommended_fixes/`, {
+      //   method: "POST",
+      //   headers: {
+      //   "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({ label, value, requirement, details }) // pass additional data
+      // }); 
 
 
       if (!response.ok) {

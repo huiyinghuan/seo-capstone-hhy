@@ -49,10 +49,13 @@ function GSCFeature() {
     try {
       // const location = window.location.hostname;
       //for local 
-      //const response = await fetch(`http://${window.location.hostname}:8000/api/upload-auth-file
+      //const response = await fetch(`http://${window.location.hostname}:8000/api/upload-auth-file`
 
       // for server
-      const response = await fetch(`http://98.70.29.253/api/upload-auth-file`, {
+      // const response = await fetch(`http://98.70.29.253/api/upload-auth-file`
+
+      //for local 
+      const response = await fetch(`http://${window.location.hostname}:8000/api/upload-auth-file`, {
         method: "POST",
         body: formData,
       });
@@ -80,7 +83,10 @@ function GSCFeature() {
       // const response = await fetch(`http://${window.location.hostname}:8000/api/get-sites`)
       
       //for server
-      const response = await fetch(`http://98.70.29.253/api/get-sites`);
+      // const response = await fetch(`http://98.70.29.253/api/get-sites`)
+
+      //for local
+      const response = await fetch(`http://${window.location.hostname}:8000/api/get-sites`);
       const data = await response.json();
       setSites(data.sites);
     } catch (error) {
@@ -101,7 +107,10 @@ function GSCFeature() {
       // const response = await fetch(`http://${window.location.hostname}:8000/api/get-sitemaps?site_url=${encodeURIComponent(selectedSiteUrl)}`);
 
       //for server
-      const response = await fetch(`http://98.70.29.253/api/get-sitemaps?site_url=${encodeURIComponent(selectedSiteUrl)}`);
+      //const response = await fetch(`http://98.70.29.253/api/get-sitemaps?site_url=${encodeURIComponent(selectedSiteUrl)}`);
+      
+      // for local
+      const response = await fetch(`http://${window.location.hostname}:8000/api/get-sitemaps?site_url=${encodeURIComponent(selectedSiteUrl)}`);
       const data = await response.json();
       setSitemaps(data.sitemaps);  // Store all URLs in the sitemap
     } catch (error) {
@@ -120,11 +129,12 @@ function GSCFeature() {
     const startDate = "2024-12-04";
     const endDate = "2025-04-31";
     try {
-      //for local 
-      //const response = await fetch(`http://${window.location.hostname}:8000/api/get-search-analytics?site_url=${encodeURIComponent(selectedSiteUrl)}&start_date=${startDate}&end_date=${endDate}`);
-
+      
       // for server
-      const response = await fetch(`http://98.70.29.253/api/get-search-analytics?site_url=${encodeURIComponent(selectedSiteUrl)}&start_date=${startDate}&end_date=${endDate}`);
+      //const response = await fetch(`http://98.70.29.253/api/get-search-analytics?site_url=${encodeURIComponent(selectedSiteUrl)}&start_date=${startDate}&end_date=${endDate}`);
+
+      //for local 
+      const response = await fetch(`http://${window.location.hostname}:8000/api/get-search-analytics?site_url=${encodeURIComponent(selectedSiteUrl)}&start_date=${startDate}&end_date=${endDate}`);
       const data = await response.json();
       setAnalyticsData(data);
     } catch (error) {

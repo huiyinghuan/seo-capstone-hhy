@@ -194,7 +194,8 @@ def give_suggestion(request):
             prompt = f"Modify '{label}', '{value}', to ensure it meets the requirement: '{requirement}'."
 
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo", 
+            #model="gpt-3.5-turbo", 
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": "You are an SEO expert providing actionable recommendations."},
                 {"role": "user", "content": prompt}
