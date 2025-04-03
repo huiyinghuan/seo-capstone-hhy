@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"  # Expose backend on port 8000
+    env_file:
+      - ./backend/.env  # Load environment variables from .env file
+   
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"  # Expose frontend on port 3000
+    depends_on:
+      - backend  # Ensure backend is available before starting frontend
+
