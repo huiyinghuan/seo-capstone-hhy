@@ -41,10 +41,10 @@ import { Card, CardHeader, CardContent, Typography, LinearProgress, Box,  } from
       try {
           const location = window.location.hostname;
           //for local run
-          //const response = await fetch(`http://${location}:8000/seo-audit/?url=${encodeURIComponent(url)}`);
+          const response = await fetch(`http://${location}:8000/seo-audit/?url=${encodeURIComponent(url)}`);
 
           //for server
-          const response = await fetch(`http://98.70.29.253/seo-audit/?url=${encodeURIComponent(url)}`);
+          //const response = await fetch(`http://98.70.29.253/seo-audit/?url=${encodeURIComponent(url)}`);
           if (!response.ok) throw new Error(`Error: ${response.statusText}`);
           const data = await response.json();
 
