@@ -40,11 +40,14 @@ import { Card, CardHeader, CardContent, Typography, LinearProgress, Box,  } from
     const fetchSEOData = async (url) => {
       try {
           const location = window.location.hostname;
-          //for local run
-          const response = await fetch(`http://${location}:8000/seo-audit/?url=${encodeURIComponent(url)}`);
 
           //for server
           //const response = await fetch(`http://98.70.29.253/seo-audit/?url=${encodeURIComponent(url)}`);
+          //for local run
+          //const response = await fetch(`http://${location}:8000/seo-audit/?url=${encodeURIComponent(url)}`);
+
+          //for local run
+          //const response = await fetch(`http://${location}:8000/seo-audit/?url=${encodeURIComponent(url)}`);
           if (!response.ok) throw new Error(`Error: ${response.statusText}`);
           const data = await response.json();
 
@@ -201,14 +204,36 @@ import { Card, CardHeader, CardContent, Typography, LinearProgress, Box,  } from
       { label: 'Canonical', value: data.canonical || 'No canonical tag', requirement: 'Point to preferred version of page to avoid duplicate content issues', valid: data.canonical !== 'No canonical tag', recommendation: 'Add a canonical tag to prevent duplicate content issues' },
       { label: 'Robots Meta Tag', value: data.robots || 'No robots meta tag', requirement: 'Use noindex to prevent page from being indexed & nofollow to prevent links from being followed', valid: data.robots !== 'No robots meta tag', recommendation: 'Ensure robots meta tag is properly set' },
       //{ label: 'Sitemap Status', value: data.sitemap_status.sitemaps.length > 0 ? data.sitemap_status.sitemaps.map(url => ` ${url}`).join('\n'): 'No sitemap' , requirement: 'Submitted to Search Engine', valid: data.sitemap_status.sitemap_found === true , recommendation: 'Submit a sitemap to search engines for better crawling' },
+      // {
+      //   label: 'Sitemap Status',
+      //   value: data.sitemap_status && data.sitemap_status.sitemaps && data.sitemap_status.sitemaps.length > 0
+      //     ? data.sitemap_status.sitemaps.map(url => ` ${url}`).join('\n')
+      //     : 'No sitemap',
+      //   requirement: 'Submitted to Search Engine',
+      //   valid: data.sitemap_status && data.sitemap_status.sitemap_found === true,
+      //   recommendation: 'Submit a sitemap to search engines for better crawling'
+      // },
       {
         label: 'Sitemap Status',
-        value: data.sitemap_status && data.sitemap_status.sitemaps && data.sitemap_status.sitemaps.length > 0
-          ? data.sitemap_status.sitemaps.map(url => ` ${url}`).join('\n')
-          : 'No sitemap',
+        // value: data.sitemap_status && data.sitemap_status.sitemap_url 
+        //   ? data.sitemap_status.sitemap_url
+        //   : 'No sitemap',
+        // value: data.sitemap_status && data.sitemap_status.sitemap_found && data.sitemap_status.sitemaps?.length > 0
+        // ? data.sitemap_status.sitemaps.map(url => ` ${url}`).join('\n')
+        // : 'No sitemap',
+
+        value: data.sitemap_status && data.sitemap_status.sitemap_found 
+      ? (data.sitemap_status.sitemap_url 
+          ? data.sitemap_status.sitemap_url 
+          : data.sitemap_status.sitemaps?.length > 0 
+            ? data.sitemap_status.sitemaps.map(url => ` ${url}`).join('\n') 
+            : 'No sitemap')
+      : 'No sitemap',
+      
         requirement: 'Submitted to Search Engine',
         valid: data.sitemap_status && data.sitemap_status.sitemap_found === true,
         recommendation: 'Submit a sitemap to search engines for better crawling'
+
       },
       { label: 'Mobile Friendly', value: data.mobile_friendly || 'Unknown', requirement: 'Responsive & works well on mobile', valid: data.mobile_friendly === 'Mobile-friendly', recommendation: 'Ensure the site is responsive and mobile-friendly' },
       //{ label: 'Page Speed', value: data.page_speed || 'Unknown', requirement: 'Aim for faster loading times to improve user experience', valid: data.page_speed === 'Pass', recommendation: 'Improve page speed for better user experience' },
