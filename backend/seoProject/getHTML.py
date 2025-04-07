@@ -295,7 +295,7 @@ def check_siteMap(url):
         return {"error": f"Unexpected error: {str(e)}"}
 
 
-def check_https_status(url):
+# def check_https_status(url):
     #script_path = r"C:\Users\huiying\Downloads\SIT_Y3_Sem1\capstone\seo-capstone-hhy\seoProject\httpsCheck.mjs"
     #script_path = r"/Users/huanhuiying/Documents/seo-capstone-hhy/seoProject/httpsCheck.mjs"
     # script_path = get_script_path("https_check")
@@ -329,6 +329,54 @@ def check_https_status(url):
 
         else:
             return f"Error: {result.stderr}"
+    except Exception as e:
+        return f"Error checking HTTPS status: {e}"
+
+import subprocess
+import json
+
+def check_https_status(url):
+    script_path = get_script_path("httpsCheck.mjs")  # Dynamically get the script path
+    if not script_path:
+        return "Error: Script path not found for HTTPS check."
+
+    try:
+        # Call the .mjs file using Node.js
+        result = subprocess.run(
+            ["node", script_path, url],
+            capture_output=True,
+            text=True,
+            timeout=120
+        )
+
+        # Debugging: print raw stdout and stderr to understand the output and errors
+        print("Raw stdout output:", result.stdout)  # Debug: print raw stdout
+        print("Raw stderr output:", result.stderr)  # Debug: print raw stderr
+    
+        if result.returncode == 0:
+            # Debugging: Check if the output is valid JSON
+            try:
+                # Parse the JSON output from the .mjs script
+                output = json.loads(result.stdout)
+                print("Parsed JSON output:", output)  # Debug: print the parsed JSON
+
+                https_audit_result = output.get("httpsAuditResult", "Unknown")
+                print("The https result is: ", https_audit_result) # Debug: print the HTTPS result
+
+                if https_audit_result == "Pass":
+                    return "Pass"
+                else:
+                    return f"HTTPS Status: {https_audit_result}"
+
+            except json.JSONDecodeError as json_error:
+                print("Error parsing JSON:", json_error)
+                print("Raw output before parsing:", result.stdout)
+                return f"Error: Invalid JSON received. {json_error}"
+
+        else:
+            print("Error: Non-zero return code. StdErr:", result.stderr)
+            return f"Error: {result.stderr}"
+    
     except Exception as e:
         return f"Error checking HTTPS status: {e}"
 
