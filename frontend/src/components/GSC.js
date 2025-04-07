@@ -55,7 +55,7 @@ function GSCFeature() {
       // const response = await fetch(`http://98.70.29.253/api/upload-auth-file`
 
       //for local 
-      const response = await fetch(`http://${window.location.hostname}:8000/api/upload-auth-file`, {
+      //const response = await fetch(`http://${window.location.hostname}:8000/api/upload-auth-file`, {
       //const response = await fetch(`http://98.70.29.253/api/upload-auth-file`
       
       //for local 
@@ -85,7 +85,7 @@ function GSCFeature() {
     setIsLoadingSites(true);
     try {
       //for local
-      const response = await fetch(`http://${window.location.hostname}:8000/api/get-sites`);
+      //const response = await fetch(`http://${window.location.hostname}:8000/api/get-sites`);
       
       //for server
       // const response = await fetch(`http://98.70.29.253/api/get-sites`)
@@ -109,7 +109,7 @@ function GSCFeature() {
     setIsLoadingSitemaps(true);
     try {
       // for local
-      const response = await fetch(`http://${window.location.hostname}:8000/api/get-sitemaps?site_url=${encodeURIComponent(selectedSiteUrl)}`);
+      //const response = await fetch(`http://${window.location.hostname}:8000/api/get-sitemaps?site_url=${encodeURIComponent(selectedSiteUrl)}`);
 
       //for server
       //const response = await fetch(`http://98.70.29.253/api/get-sitemaps?site_url=${encodeURIComponent(selectedSiteUrl)}`);
