@@ -85,6 +85,9 @@ RUN apt-get update && apt-get install -y \
     libatk-bridge2.0-0 \
     libatk1.0-0 \
     libcups2 \
+    libxss1 \
+    libappindicator3-1 \
+    libgbm-dev \
     libdbus-1-3 \
     libgdk-pixbuf2.0-0 \
     libnspr4 \
